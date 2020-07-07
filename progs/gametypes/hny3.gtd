@@ -1,0 +1,7 @@
+Hoonymode
+
+1v1 game mode where a new round starts after each death. The first player to win 11 rounds wins the match.
+
+All in-game behaviour (weapons, physics, items, etc) remains the same as standard DM: the change is in how the game progresses from one frag to the next. During warmup, two spawnpoints are chosen by the players. One will typically be a "stronger" spawn and the other "weaker". When the game begins, these are where the players will spawn, with the strong spawn considered the equivalent of having the "serve".
+
+Each player death (regardless of source, i.e. a suicide is considered a kill for the opponent) is treated as a distinct point. After a point is scored, play does not continue as in DM: instead, the players and the arena are reset, and a new point is contested for. Players switch spawnpoints at this time, so the player who had the weak spawn for the previous point now has the strong one, effecting a change of serve. Players are given a few seconds between points to reconsider strategies etc.

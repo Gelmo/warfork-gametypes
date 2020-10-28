@@ -664,6 +664,8 @@ void GT_InitGametype() {
 	gametype.canShowMinimap = true;
 	gametype.teamOnlyMinimap = true;
 
+	gametype.mmCompatible = true;
+
 	gametype.spawnpointRadius = 256;
 	if(gametype.isInstagib) {
 		gametype.spawnpointRadius *= 2;

@@ -557,7 +557,7 @@ void GT_InitGametype() {
 	// spawning at initialization do it in GT_SpawnGametype, which is called
 	// right after the map entities spawning.
 	gametype.title = "Freeze Tag Arena";
-	gametype.version = "0.9.3";
+	gametype.version = "0.9.4";
 	gametype.author = "Mike^4JS";
 
 	gametype.spawnableItemsMask = 0;

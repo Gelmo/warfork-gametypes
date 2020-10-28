@@ -18,8 +18,8 @@ bool[] spawnNextRound(maxClients);
 //String[] defrostMessage(maxClients);
 bool doRemoveRagdolls = false;
 
-Cvar ftagAllowPowerups("ftag_allowPowerups", "0", CVAR_ARCHIVE);
-Cvar ftagAllowPowerupDrop("ftag_powerupDrop", "1", CVAR_ARCHIVE);
+Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
 // Vec3 doesn't have dot product ffs
 float dot(const Vec3 v1, const Vec3 v2) {
@@ -27,38 +27,47 @@ float dot(const Vec3 v1, const Vec3 v2) {
 }
 
 void FTAG_giveInventory(Client @client) {
-	client.inventoryClear();
+	// give the weapons and ammo as defined in cvars
+    String othertoken, weakammotoken, ammotoken;
+    String itemList = g_noclass_inventory.string;
+    String ammoCounts = g_class_strong_ammo.string;
 
-	client.inventorySetCount(WEAP_GUNBLADE, 1);
-	client.inventorySetCount(AMMO_GUNBLADE, 1);
-	//client.inventoryGiveItem(WEAP_MACHINEGUN);
-	//client.inventorySetCount(AMMO_BULLETS, 50);
+    client.inventoryClear();
 
-	client.armor = 50;
+    for ( int i = 0; ;i++ )
+    {
+        othertoken = itemList.getToken( i );
+        if ( othertoken.len() == 0 )
+            break; // done
+
+        Item @item = @G_GetItemByName( othertoken );
+        if ( @item == null )
+            continue;
+
+        client.inventoryGiveItem( item.tag );
+
+        // if it's ammo, set the ammo count as defined in the cvar
+        if ( ( item.type & IT_AMMO ) != 0 )
+        {
+            othertoken = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
+
+            if ( othertoken.len() > 0 )
+            {
+                client.inventorySetCount( item.tag, othertoken.toInt() );
+            }
+        }
+    }
+
+    // give armor
+    client.armor = 150;
+
+    // select rocket launcher
+    client.selectWeapon( WEAP_ROCKETLAUNCHER );
 }
 
 void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflicter) {
 	if(@target.client == null) {
 		return;
-	}
-
-	if((G_PointContents(target.origin) & CONTENTS_NODROP) == 0) {
-		if(target.client.weapon > WEAP_GUNBLADE) {
-			GENERIC_DropCurrentWeapon(target.client, true);
-		}
-		target.dropItem(AMMO_PACK_WEAK);
-
-		if(ftagAllowPowerupDrop.boolean) {
-			if(target.client.inventoryCount(POWERUP_QUAD) > 0) {
-				target.dropItem(POWERUP_QUAD);
-				target.client.inventorySetCount(POWERUP_QUAD, 0);
-			}
-
-			if(target.client.inventoryCount(POWERUP_SHELL) > 0) {
-				target.dropItem(POWERUP_SHELL);
-				target.client.inventorySetCount(POWERUP_SHELL, 0);
-			}
-		}
 	}
 
 	if(match.getState() != MATCH_STATE_PLAYTIME) {
@@ -160,80 +169,12 @@ bool GT_Command(Client @client, const String &cmdString, const String &argsStrin
 		return true;
 	} else if(cmdString == "callvotevalidate") {
 		String votename = argsString.getToken(0);
-		if(votename == "ftag_powerups") {
-			String voteArg = argsString.getToken(1);
-			if(voteArg.len() < 1) {
-				client.printMessage("Callvote " + votename + " requires at least one argument\n");
-				return false;
-			}
-
-			if(voteArg != "0" && voteArg != "1") {
-				client.printMessage("Callvote " + votename + " expects a 1 or a 0 as argument\n");
-				return false;
-			}
-
-			int value = voteArg.toInt();
-
-			if(value == 0 && !ftagAllowPowerups.boolean) {
-				client.printMessage("Powerups are already disabled\n");
-				return false;
-			}
-
-			if(value == 1 && ftagAllowPowerups.boolean) {
-				client.printMessage("Powerups are already enabled\n");
-				return false;
-			}
-
-			return true;
-		}
-
-		if(votename == "ftag_powerup_drop") {
-			String voteArg = argsString.getToken(1);
-			if(voteArg.len() < 1) {
-				client.printMessage("Callvote " + votename + " requires at least one argument\n");
-				return false;
-			}
-
-			if(voteArg != "0" && voteArg != "1") {
-				client.printMessage("Callvote " + votename + " expects a 1 or a 0 as argument\n");
-				return false;
-			}
-
-			int value = voteArg.toInt();
-
-			if(value == 0 && !ftagAllowPowerupDrop.boolean) {
-				client.printMessage("Powerup drop is already disabled\n");
-				return false;
-			}
-
-			if(value == 1 && ftagAllowPowerupDrop.boolean) {
-				client.printMessage("Powerup drop is already enabled\n");
-				return false;
-			}
-
-			return true;
-		}
 
 		client.printMessage("Unknown callvote " + votename + "\n");
 		return false;
 
 	} else if(cmdString == "callvotepassed") {
 		String votename = argsString.getToken(0);
-		if(votename == "ftag_powerups") {
-			ftagAllowPowerups.set(argsString.getToken(1).toInt() > 0 ? 1 : 0);
-
-			// force restart to update
-			match.launchState(MATCH_STATE_POSTMATCH);
-
-			// if i do this, powerups spawn but are unpickable
-			/*if(ftagAllowPowerups.boolean) {
-				gametype.spawnableItemsMask |= IT_POWERUP;
-			} else {
-				gametype.spawnableItemsMask &= ~IT_POWERUP;
-			}*/
-		} else if(votename == "ftag_powerup_drop") {
-			ftagAllowPowerupDrop.set(argsString.getToken(1).toInt() > 0 ? 1 : 0);
-		}
 		return true;
 	}
 	return false;
@@ -279,19 +220,10 @@ String @GT_ScoreboardMessage(uint maxlen) {
 					+ ent.client.stats.score + " " + defrosts[ent.client.playerNum] + " " +
 					+ ent.client.ping + " " + readyIcon + " ";
 			} else {
-				int carrierIcon;
-				if(ent.client.inventoryCount(POWERUP_QUAD) > 0) {
-					carrierIcon = prcShockIcon;
-				} else if(ent.client.inventoryCount(POWERUP_SHELL) > 0) {
-					carrierIcon = prcShellIcon;
-				} else {
-					carrierIcon = 0;
-				}
-
-				// "Name Clan Score Frags Dfrst Ping C R"
+				// "Name Clan Score Frags Dfrst Ping R"
 				entry = "&p " + playerID + " " + ent.client.clanName + " "
 					+ ent.client.stats.score + " " + ent.client.stats.frags + " " + defrosts[ent.client.playerNum] + " "
-					+ ent.client.ping + " " + carrierIcon + " " + readyIcon + " ";
+					+ ent.client.ping + " " + readyIcon + " ";
 			}
 
 			if(scoreboardMessage.len() + entry.len() < maxlen) {
@@ -626,20 +558,14 @@ void GT_InitGametype() {
 	// spawning entities from it is forbidden. ifyou want to make any entity
 	// spawning at initialization do it in GT_SpawnGametype, which is called
 	// right after the map entities spawning.
-	gametype.title = "Freeze Tag";
+	gametype.title = "Freeze Tag Arena";
 	gametype.version = "0.9.3";
 	gametype.author = "Mike^4JS";
 
-	gametype.spawnableItemsMask = IT_WEAPON | IT_AMMO | IT_ARMOR | IT_POWERUP | IT_HEALTH;
-	if(!ftagAllowPowerups.boolean) {
-		gametype.spawnableItemsMask &= ~IT_POWERUP;
-	}
-	if(gametype.isInstagib) {
-		gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
-	}
-	gametype.respawnableItemsMask = gametype.spawnableItemsMask;
-	gametype.dropableItemsMask = gametype.spawnableItemsMask;
-	gametype.pickableItemsMask = gametype.spawnableItemsMask | gametype.dropableItemsMask;
+	gametype.spawnableItemsMask = 0;
+	gametype.respawnableItemsMask = 0;
+	gametype.dropableItemsMask = 0;
+	gametype.pickableItemsMask = 0;
 
 	gametype.isTeamBased = true;
 	gametype.isRace = false;
@@ -679,22 +605,16 @@ void GT_InitGametype() {
 		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18");
 		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Dfrst Ping R");
 	} else {
-		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 " + "%p 18 " + "%p 18");
-		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Dfrst Ping " + "C " + " R");
+		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %r l1" );
+		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Dfrst Ping R" );
 	}
 
 	// precache images that can be used by the scoreboard
 	prcYesIcon = G_ImageIndex("gfx/hud/icons/vsay/yes");
-	prcShockIcon = G_ImageIndex("gfx/hud/icons/powerup/quad");
-	prcShellIcon = G_ImageIndex("gfx/hud/icons/powerup/warshell");
 
 	// add commands
 	G_RegisterCommand("drop");
 	G_RegisterCommand("gametype");
-
-	// add callvotes
-	G_RegisterCallvote("ftag_powerups", "1 or 0", "bool", "Enables or disables powerups in Freeze Tag.");
-	G_RegisterCallvote("ftag_powerup_drop", "1 or 0", "bool", "Enables or disables powerup dropping in Freeze Tag.");
 
 	if(!G_FileExists("configs/server/gametypes/" + gametype.name + ".cfg")) {
 		String config;
@@ -702,21 +622,21 @@ void GT_InitGametype() {
 		config = "// '" + gametype.title + "' gametype configuration file\n"
 			+ "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
-			+ "set ftag_allowPowerups \"1\"\n"
-			+ "set ftag_powerupDrop \"1\"\n"
+			+ "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
+            + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
 			+ "\n// map rotation\n"
-			+ "set g_maplist \"wfdm1 wfdm2 wfdm3 wfdm4 wfdm5 wfdm6 wfdm7 wfdm8 wfdm9 wfdm10 wfdm11 wfdm12 wfdm13 wfdm14 wfdm15 wfdm16 wfdm17 wfdm18 wfdm19 wfdm20\" // list of maps in automatic rotation\n"
+			+ "set g_maplist \"wfca1 wfca2\" // list of maps in automatic rotation\n"
 			+ "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
 			+ "\n// game settings\n"
-			+ "set g_scorelimit \"15\"\n"
+			+ "set g_scorelimit \"11\"\n"
 			+ "set g_timelimit \"0\"\n"
 			+ "set g_warmup_enabled \"1\"\n"
 			+ "set g_warmup_timelimit \"1.5\"\n"
 			+ "set g_match_extendedtime \"0\"\n"
-			+ "set g_allow_falldamage \"1\"\n"
-			+ "set g_allow_selfdamage \"1\"\n"
-			+ "set g_allow_teamdamage \"1\"\n"
-			+ "set g_allow_stun \"1\"\n"
+			+ "set g_allow_falldamage \"0\"\n"
+			+ "set g_allow_selfdamage \"0\"\n"
+			+ "set g_allow_teamdamage \"0\"\n"
+			+ "set g_allow_stun \"0\"\n"
 			+ "set g_teams_maxplayers \"0\"\n"
 			+ "set g_teams_allow_uneven \"0\"\n"
 			+ "set g_countdown_time \"5\"\n"

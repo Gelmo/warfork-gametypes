@@ -960,12 +960,12 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 
         if(!slideOnlyInstaGib.boolean){
             ent.client.inventorySetCount( WEAP_GRENADELAUNCHER, 1 );
-            ent.client.inventorySetCount( AMMO_GRENADES, 1 );
-            ent.client.inventorySetCount( AMMO_WEAK_GRENADES, 1 ); 
+            ent.client.inventorySetCount( AMMO_GRENADES, 99 );
+            ent.client.inventorySetCount( AMMO_WEAK_GRENADES, 99 ); 
 
             ent.client.inventorySetCount( WEAP_ROCKETLAUNCHER, 1 );
-            ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 1 ); 
-            ent.client.inventorySetCount( AMMO_ROCKETS, 1 );
+            ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 99 ); 
+            ent.client.inventorySetCount( AMMO_ROCKETS, 99 );
         }
 
         // select rocket launcher
@@ -975,12 +975,12 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     {
 
         ent.client.inventorySetCount( WEAP_GRENADELAUNCHER, 1 );
-        ent.client.inventorySetCount( AMMO_GRENADES, 1 );
-        ent.client.inventorySetCount( AMMO_WEAK_GRENADES, 1 ); 
+        ent.client.inventorySetCount( AMMO_GRENADES, 99 );
+        ent.client.inventorySetCount( AMMO_WEAK_GRENADES, 99 ); 
 
         ent.client.inventorySetCount( WEAP_ROCKETLAUNCHER, 1 );
-        ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 1 ); 
-        ent.client.inventorySetCount( AMMO_ROCKETS, 1 );
+        ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 99 ); 
+        ent.client.inventorySetCount( AMMO_ROCKETS, 99 );
 
         // select rocket launcher
         ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );

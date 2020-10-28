@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ///*****************************************************************
 
 Cvar g_noclass_inventory( "g_noclass_inventory", "rl lg eb cells rockets lasers", 0 );
-Cvar g_class_strong_ammo( "g_class_strong_ammo", "99 999 99", 0 ); // RL LG EB
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "99 99 99", 0 ); // RL LG EB
 
 // a player has just died. The script is warned about it so it can account scores
 void DM_playerKilled( Entity @target, Entity @attacker, Entity @inflictor )

@@ -45,9 +45,9 @@ const uint SECONDARY_NONE = 0; // used for pending test
 const uint SECONDARY_MIN = WEAP_LASERGUN;
 const uint SECONDARY_LG = WEAP_LASERGUN;
 
-const int AMMO_EB = 1;
-const int AMMO_RL = 1;
-const int AMMO_LG = 1;
+const int AMMO_EB = 99;
+const int AMMO_RL = 99;
+const int AMMO_LG = 99;
 
 const float PLAYER_ARMOR = 100.0f;
 

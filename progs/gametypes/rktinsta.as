@@ -161,22 +161,13 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     if ( ent.isGhosting() )
         return;
 
-    if ( gametype.isInstagib )
-    {
-        ent.client.inventoryGiveItem( WEAP_ROCKETLAUNCHER );
-        ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 1 );
-        ent.client.inventorySetCount( AMMO_ROCKETS, 1 );
-    }
-    else
-	{
 
-        ent.client.inventorySetCount( WEAP_ROCKETLAUNCHER, 1 );
-        ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 1 ); 
-        ent.client.inventorySetCount( AMMO_ROCKETS, 1 );
+    ent.client.inventorySetCount( WEAP_ROCKETLAUNCHER, 1 );
+    ent.client.inventorySetCount( AMMO_WEAK_ROCKETS, 0 ); 
+    ent.client.inventorySetCount( AMMO_ROCKETS, 99 );
 
-        // select rocket launcher
-        ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
-    }
+    // select rocket launcher
+    ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
 
     // auto-select best weapon in the inventory
     if( ent.client.pendingWeapon == WEAP_NONE )
@@ -322,9 +313,7 @@ void GT_InitGametype()
         G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
     }
 
-    gametype.spawnableItemsMask = 0;
-    if ( gametype.isInstagib )
-        gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
+    gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
 
     gametype.respawnableItemsMask = 0;
     gametype.dropableItemsMask = 0;
@@ -355,10 +344,7 @@ void GT_InitGametype()
 
 	gametype.mmCompatible = true;
 	
-    gametype.spawnpointRadius = 256;
-
-    if ( gametype.isInstagib )
-        gametype.spawnpointRadius *= 2;
+    gametype.spawnpointRadius *= 2;
 
     // set spawnsystem type
     for ( int team = TEAM_PLAYERS; team < GS_MAX_TEAMS; team++ )

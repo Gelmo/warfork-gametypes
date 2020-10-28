@@ -1,0 +1,10 @@
+/shared/constants.as;
+/shared/files.as;
+
+generic/matchstates.as;
+generic/bots.as;
+generic/items.as;
+ftag/ftag.as;
+ftag/ftag_cp.as;
+
+legacy/quake1.as;

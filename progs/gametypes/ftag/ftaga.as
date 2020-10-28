@@ -8,8 +8,6 @@ const uint FTAG_DEFROST_ATTACK_DELAY = 2000;
 const float FTAG_DEFROST_RADIUS = 192.0f;
 
 int prcYesIcon;
-int prcShockIcon;
-int prcShellIcon;
 int[] defrosts(maxClients);
 uint[] lastShotTime(maxClients);
 int[] playerSTAT_PROGRESS_SELFdelayed(maxClients);

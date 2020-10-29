@@ -4,6 +4,7 @@ Custom Gametypes for Warfork
 ## Notable gametypes:
 - ftag and ftaga (Freeze Tag and Freeze Tag Arena)
 - Free For All Arena (FFA CA, no teams, no rounds)
+- Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
 - Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
 - FBomb (Fixed bomb until 2.2 is released)
 - UBomb (Unholy Bomb Arena, FBomb with holy trinity loadout, inifinite ammo, and no self/team dmg)

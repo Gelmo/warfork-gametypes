@@ -37,7 +37,7 @@ void FTAG_giveInventory(Client @client) {
 	client.armor = 50;
 }
 
-void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflicter) {
+void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflictor) {
 	if(@target.client == null) {
 		return;
 	}

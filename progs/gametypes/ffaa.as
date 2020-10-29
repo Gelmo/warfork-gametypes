@@ -323,7 +323,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "FFA Arena";
-    gametype.version = "1.02";
+    gametype.version = "1.0.3";
     gametype.author = "Warsow Development Team";
     // Forked by Gelmo
 

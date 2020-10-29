@@ -26,6 +26,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /// LOCAL FUNCTIONS
 ///*****************************************************************
 
+Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
+
 // a player has just died. The script is warned about it so it can account scores
 void DM_playerKilled( Entity @target, Entity @attacker, Entity @inflictor )
 {
@@ -45,18 +48,6 @@ void DM_playerKilled( Entity @target, Entity @attacker, Entity @inflictor )
     if ( ( G_PointContents( target.origin ) & CONTENTS_NODROP ) == 0 )
     {
         target.dropItem( AMMO_PACK );
-
-        if ( target.client.inventoryCount( POWERUP_QUAD ) > 0 )
-        {
-            target.dropItem( POWERUP_QUAD );
-            target.client.inventorySetCount( POWERUP_QUAD, 0 );
-        }
-
-        if ( target.client.inventoryCount( POWERUP_SHELL ) > 0 )
-        {
-            target.dropItem( POWERUP_SHELL );
-            target.client.inventorySetCount( POWERUP_SHELL, 0 );
-        }
     }
     
     award_playerKilled( @target, @attacker,@inflictor );
@@ -68,33 +59,7 @@ void DM_playerKilled( Entity @target, Entity @attacker, Entity @inflictor )
 
 bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
 {
-    if ( cmdString == "drop" )
-    {
-        String token;
-
-        for ( int i = 0; i < argc; i++ )
-        {
-            token = argsString.getToken( i );
-            if ( token.len() == 0 )
-                break;
-
-            if ( token == "weapon" || token == "fullweapon" )
-            {
-                GENERIC_DropCurrentWeapon( client, true );
-            }
-            else if ( token == "strong" )
-            {
-                GENERIC_DropCurrentAmmoStrong( client );
-            }
-            else
-            {
-                GENERIC_CommandDropItem( client, token );
-            }
-        }
-
-        return true;
-    }
-    else if ( cmdString == "cvarinfo" )
+    if ( cmdString == "cvarinfo" )
     {
         GENERIC_CheatVarResponse( client, cmdString, argsString, argc );
         return true;
@@ -212,47 +177,47 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     }
     else
     {
-        Item @item;
-        Item @ammoItem;
+    	// give the weapons and ammo as defined in cvars
+    	String token, weakammotoken, ammotoken;
+    	String itemList = g_noclass_inventory.string;
+    	String ammoCounts = g_class_strong_ammo.string;
 
-        // the gunblade can't be given (because it can't be dropped)
-        ent.client.inventorySetCount( WEAP_GUNBLADE, 1 );
-        ent.client.inventorySetCount( AMMO_GUNBLADE, 1 ); // enable gunblade blast
+    	ent.client.inventoryClear();
 
-        // give all weapons
-        for ( int i = WEAP_GUNBLADE + 1; i < WEAP_TOTAL; i++ )
+        for ( int i = 0; ;i++ )
         {
-            if ( i == WEAP_INSTAGUN ) // dont add instagun...
+            token = itemList.getToken( i );
+            if ( token.len() == 0 )
+                break; // done
+
+            Item @item = @G_GetItemByName( token );
+            if ( @item == null )
                 continue;
 
-            ent.client.inventoryGiveItem( i );
+            ent.client.inventoryGiveItem( item.tag );
 
-            if ( match.getState() <= MATCH_STATE_WARMUP )
+            // if it's ammo, set the ammo count as defined in the cvar
+            if ( ( item.type & IT_AMMO ) != 0 )
             {
-                @item = @G_GetItem( i );
+                token = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
 
-                @ammoItem = item.weakAmmoTag == AMMO_NONE ? null : @G_GetItem( item.weakAmmoTag );
-                if ( @ammoItem != null )
-                    ent.client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
-
-                @ammoItem = @G_GetItem( item.ammoTag );
-                if ( @ammoItem != null )
-                    ent.client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
+                if ( token.len() > 0 )
+                {
+                    ent.client.inventorySetCount( item.tag, token.toInt() );
+                }
             }
         }
 
-        if ( match.getState() <= MATCH_STATE_WARMUP )
-        {
-            ent.client.inventoryGiveItem( ARMOR_YA );
-			ent.client.inventoryGiveItem( ARMOR_YA );
-        }
-		else
-		{
-			ent.health = ent.maxHealth * 1.25;
-		}
+        // give armor
+        ent.client.armor = 150;
+
+        // select rocket launcher
+        ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
     }
 
-	ent.client.selectWeapon( -1 ); // auto-select best weapon in the inventory
+	// auto-select best weapon in the inventory
+    if( ent.client.pendingWeapon == WEAP_NONE )
+		ent.client.selectWeapon( -1 );
 
     // add a teleportation effect
     ent.respawnEffect();
@@ -309,8 +274,8 @@ void GT_MatchStateStarted()
     switch ( match.getState() )
     {
     case MATCH_STATE_WARMUP:
-        gametype.pickableItemsMask = gametype.spawnableItemsMask;
-        gametype.dropableItemsMask = gametype.spawnableItemsMask;
+        gametype.pickableItemsMask = ( IT_AMMO );
+        gametype.dropableItemsMask = ( IT_AMMO );
         GENERIC_SetUpWarmup();
 		SpawnIndicators::Create( "info_player_deathmatch", TEAM_PLAYERS );
         break;
@@ -323,8 +288,8 @@ void GT_MatchStateStarted()
         break;
 
     case MATCH_STATE_PLAYTIME:
-        gametype.pickableItemsMask = gametype.spawnableItemsMask;
-        gametype.dropableItemsMask = gametype.spawnableItemsMask;
+        gametype.pickableItemsMask = ( IT_AMMO );
+        gametype.dropableItemsMask = ( IT_AMMO );
         GENERIC_SetUpMatch();
         break;
 
@@ -360,6 +325,7 @@ void GT_InitGametype()
     gametype.title = "FFA Arena";
     gametype.version = "1.02";
     gametype.author = "Warsow Development Team";
+    // Forked by Gelmo
 
     // if the gametype doesn't have a config file, create it
     if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )
@@ -370,21 +336,24 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                  + "// This config will be executed each time the gametype is started\n"
                  + "\n\n// map rotation\n"
-                 + "set g_maplist \"wdm1 wdm2 wdm4 wdm5 wdm6 wdm7 wdm9 wdm10 wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17\" // list of maps in automatic rotation\n"
-                 + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
+                 + "set g_maplist \"wca1\" // list of maps in automatic rotation\n"
+                 + "set g_maprotation \"0\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
-                 + "set g_scorelimit \"0\"\n"
-                 + "set g_timelimit \"15\"\n"
+                 + "set g_scorelimit \"11\"\n"
+                 + "set g_timelimit \"0\"\n"
                  + "set g_warmup_timelimit \"1\"\n"
                  + "set g_match_extendedtime \"0\"\n"
                  + "set g_allow_falldamage \"0\"\n"
                  + "set g_allow_selfdamage \"0\"\n"
                  + "set g_allow_teamdamage \"0\"\n"
-                 + "set g_allow_stun \"1\"\n"
-                 + "set g_teams_maxplayers \"0\"\n"
+                 + "set g_allow_stun \"0\"\n"
+                 + "set g_teams_maxplayers \"8\"\n"
                  + "set g_teams_allow_uneven \"0\"\n"
-                 + "set g_countdown_time \"5\"\n"
-                 + "set g_maxtimeouts \"3\" // -1 = unlimited\n"
+                 + "set g_countdown_time \"3\"\n"
+                 + "set g_maxtimeouts \"1\" // -1 = unlimited\n"
+                 + "\n// classes settings\n"
+                 + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
+                 + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );
@@ -392,13 +361,10 @@ void GT_InitGametype()
         G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
     }
 
-    gametype.spawnableItemsMask = ( IT_AMMO | IT_ARMOR | IT_POWERUP | IT_HEALTH );
-    if ( gametype.isInstagib )
-        gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
-
-    gametype.respawnableItemsMask = gametype.spawnableItemsMask;
-    gametype.dropableItemsMask = gametype.spawnableItemsMask;
-    gametype.pickableItemsMask = gametype.spawnableItemsMask;
+    gametype.spawnableItemsMask = 0;
+    gametype.respawnableItemsMask = 0;
+    gametype.dropableItemsMask = ( IT_AMMO );
+    gametype.pickableItemsMask = ( IT_AMMO );
 
     gametype.isTeamBased = false;
     gametype.isRace = false;
@@ -407,11 +373,11 @@ void GT_InitGametype()
 
     gametype.ammoRespawn = 20;
     gametype.armorRespawn = 25;
-    gametype.weaponRespawn = 5;
+    gametype.weaponRespawn = 15;
     gametype.healthRespawn = 25;
     gametype.powerupRespawn = 90;
     gametype.megahealthRespawn = 20;
-    gametype.ultrahealthRespawn = 40;
+    gametype.ultrahealthRespawn = 60;
 
     gametype.readyAnnouncementEnabled = false;
     gametype.scoreAnnouncementEnabled = false;
@@ -421,7 +387,8 @@ void GT_InitGametype()
     gametype.infiniteAmmo = false;
     gametype.canForceModels = true;
     gametype.canShowMinimap = false;
-    gametype.teamOnlyMinimap = false;
+    gametype.teamOnlyMinimap = true;
+    gametype.removeInactivePlayers = true;
 
 	gametype.mmCompatible = true;
 	
@@ -439,7 +406,6 @@ void GT_InitGametype()
     G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Ping R" );
 
     // add commands
-    G_RegisterCommand( "drop" );
     G_RegisterCommand( "gametype" );
 
     G_Print( "Gametype '" + gametype.title + "' initialized\n" );

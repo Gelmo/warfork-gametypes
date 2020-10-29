@@ -18,16 +18,17 @@ Custom Gametypes for Warfork
 - Thunder DA (Duel arena with LG-only)
 - Ignore the hny/hoony modes currently; WIP and need significant work
 - Ignore the ffaa mode; will soon be reworked
-- Ignore wipeout; this is an old version, upstream is under a new name that I don't recall, will update this note soon with correct link
+- Ignore wipeout; this is an old version, upstream is called Exhaustion
 
 # Todo:
 
 ## Ftag:
-- Push frozen players?
-- Remove defrost hazard multiplier for arena?
+- Push frozen players? - Not possible in 2.1, maybe when ascgame is merged. "They’re non solid because people were teleporting into frozen ppl and getting stuck"
+- Remove defrost hazard multiplier for arena? - Disabled in 0.9.4 for arena, testing
 - Respawn both teams each round for arena?
 - Show frozen teammates through wall
-- Notify player when all teammates are frozen
+- Fix defrost status indicator
+- Implement Awards
 
 ## Round-Based Duels
 

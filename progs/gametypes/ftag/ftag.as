@@ -46,7 +46,7 @@ void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflicter) {
 		if(target.client.weapon > WEAP_GUNBLADE) {
 			GENERIC_DropCurrentWeapon(target.client, true);
 		}
-		target.dropItem(AMMO_PACK_WEAK);
+		target.dropItem(AMMO_PACK);
 
 		if(ftagAllowPowerupDrop.boolean) {
 			if(target.client.inventoryCount(POWERUP_QUAD) > 0) {

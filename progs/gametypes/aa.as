@@ -1013,7 +1013,7 @@ for ( int i = 0; i < numEntities; i++ )
 void GT_InitGametype()
 {
     gametype.title = "Ammo Arena";
-    gametype.version = "1.00";
+    gametype.version = "1.0.0";
     gametype.author = "Warsow Development Team";
 
     // if the gametype doesn't have a config file, create it
@@ -1025,7 +1025,7 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                  + "// This config will be executed each time the gametype is started\n"
                  + "\n\n// map rotation\n"
-                 + "set g_maplist \"wfda1 wfda2 wfda3 wfda5 wfdm5 wfdm2 wfdm15 cwm2 cwm3 cwl2 cws2 aerorun\" // list of maps in automatic rotation\n"
+                 + "set g_maplist \"wfda1 wfda2 wfda3 wfda5 wfdm5 wfdm2 wfdm15\" // list of maps in automatic rotation\n"
                  + "set g_maprotation \"0\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
                  + "set g_scorelimit \"2\"\n"

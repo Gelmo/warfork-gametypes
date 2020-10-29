@@ -457,6 +457,12 @@ void GT_ThinkRules() {
 				}
 			}
 
+			if(count == 1) {
+				for(int h = 0; @team.ent(h) != null; h++) {
+					G_CenterPrintMsg( @team.ent(h), "Last unfrozen teammate!\n" );
+				}
+			}
+
 			if(count == 0) {
 				FTAG_NewRound(team);
 				break;

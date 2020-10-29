@@ -633,8 +633,9 @@ void GT_InitGametype() {
 	// spawning at initialization do it in GT_SpawnGametype, which is called
 	// right after the map entities spawning.
 	gametype.title = "Freeze Tag";
-	gametype.version = "0.9.4";
+	gametype.version = "0.9.4.1";
 	gametype.author = "Mike^4JS";
+	// Forked by Gelmo
 
 	gametype.spawnableItemsMask = IT_WEAPON | IT_AMMO | IT_ARMOR | IT_POWERUP | IT_HEALTH;
 	if(!ftagAllowPowerups.boolean) {

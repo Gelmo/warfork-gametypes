@@ -24,7 +24,7 @@ Custom Gametypes for Warfork
 
 ## Ftag:
 - Push frozen players? - Not possible in 2.1, maybe when ascgame is merged. "They’re non solid because people were teleporting into frozen ppl and getting stuck"
-- Remove defrost hazard multiplier for arena? - Disabled in 0.9.4 for arena, testing
+- Remove defrost hazard multiplier for arena? - Disabled in 0.9.4.1 for arena, testing
 - Respawn both teams each round for arena?
 - Show frozen teammates through wall
 - Fix defrost status indicator

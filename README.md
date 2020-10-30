@@ -15,16 +15,16 @@ Custom Gametypes for Warfork
   - Unholy FFA (RL/LG/EB-only, infinite ammo, FFA style with self dmg)
   - Rocket Arena (RL-only, infinite ammo, FFA style without self dmg)
   - Team FFA (TDM but you spawn w/ weapons)
-
-### To be Packaged:
-- FBomb (Fixed bomb until 2.2 is released)
-- UBomb (Unholy Bomb Arena, FBomb with holy trinity loadout, inifinite ammo, and no self/team dmg)
-- Instagib Pack
+- gt_instap - Instagib Pack
   - Instagib (works on servers without g/sv_instagib set to 1, so you can play it on the Normal Weapons tab)
   - Gunblade Instagib (projectile instagib, splash damage does NOT count)
   - Rocket Instagib (projectile instagib, splash damage does count)
   - Slide (rocket and grenade instagib (with splash damage) but CA style, typically played on slick maps)
   - SlideFFA (rocket and grenade instagib (with splash damage) but FFA style, typically played on slick maps)
+
+### Not Packaged:
+- FBomb (Fixed bomb until 2.2 is released)
+- UBomb (Unholy Bomb Arena, FBomb with holy trinity loadout, inifinite ammo, and no self/team dmg)
 - Ignore wipeout; this is an old version, upstream is called Exhaustion
 - Ignore the hny/hoony modes currently; WIP and need significant work
 

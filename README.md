@@ -10,6 +10,11 @@ Custom Gametypes for Warfork
 - Thunder Pack
   - Thunder (LG-only, infinite ammo, FFA style, players have 300 health)
   - Thunder DA (Duel arena with LG-only)
+- FFA Pack
+  - Unholy Arena (RL/LG/EB-only, infinite ammo, FFA style without self dmg)
+  - Unholy FFA (RL/LG/EB-only, infinite ammo, FFA style with self dmg)
+  - Rocket Arena (RL-only, infinite ammo, FFA style without self dmg)
+  - Team FFA (TDM but you spawn w/ weapons)
 
 ### To be Packaged:
 - FBomb (Fixed bomb until 2.2 is released)
@@ -20,11 +25,6 @@ Custom Gametypes for Warfork
   - Rocket Instagib (projectile instagib, splash damage does count)
   - Slide (rocket and grenade instagib (with splash damage) but CA style, typically played on slick maps)
   - SlideFFA (rocket and grenade instagib (with splash damage) but FFA style, typically played on slick maps)
-- FFA Pack
-  - Unholy Arena (RL/LG/EB-only, infinite ammo, FFA style without self dmg)
-  - Unholy FFA (RL/LG/EB-only, infinite ammo, FFA style with self dmg)
-  - Rocket Arena (RL-only, infinite ammo, FFA style without self dmg)
-  - Team FFA (TDM  but you spawn w/ weapons)
 - Ignore wipeout; this is an old version, upstream is called Exhaustion
 - Ignore the hny/hoony modes currently; WIP and need significant work
 

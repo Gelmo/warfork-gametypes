@@ -179,20 +179,20 @@ class cCARound
     void newRound()
     {
 
-                String alphaname = G_GetTeam(TEAM_ALPHA).ent(0).client.name;
-                String betaname  = G_GetTeam(TEAM_BETA ).ent(0).client.name;
+        String alphaname = G_GetTeam(TEAM_ALPHA).ent(0).client.name;
+        String betaname  = G_GetTeam(TEAM_BETA ).ent(0).client.name;
  
-                if(numRounds == 1)
-                {
-                    G_CenterPrintMsg(null, S_COLOR_GREEN + 'Round '+numRounds+'\n'
-                                   + S_COLOR_WHITE + alphaname
-                                   + S_COLOR_GREEN + " vs. "
-                                   + S_COLOR_WHITE + betaname );
-                }
-                if(numRounds > 1)
-                {
-                    G_CenterPrintMsg( null, S_COLOR_GREEN + 'Round '+numRounds+'\n');
-                }
+        if(numRounds == 1)
+        {
+            G_CenterPrintMsg(null, S_COLOR_GREEN + 'Round '+numRounds+'\n'
+                           + S_COLOR_WHITE + alphaname
+                           + S_COLOR_GREEN + " vs. "
+                           + S_COLOR_WHITE + betaname );
+        }
+        if(numRounds > 1)
+        {
+            G_CenterPrintMsg( null, S_COLOR_GREEN + 'Round '+numRounds+'\n');
+        }
 
         G_RemoveDeadBodies();
         G_RemoveAllProjectiles();
@@ -242,8 +242,8 @@ class cCARound
         {
             this.setupSpawnPoints();
 
-                        this.alpha_oneVS = 0;
-                        this.beta_oneVS = 0;
+            this.alpha_oneVS = 0;
+            this.beta_oneVS = 0;
 
             Entity @ent;
             Team @team;

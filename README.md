@@ -3,14 +3,14 @@ Custom Gametypes for Warfork
 
 ## Notable gametypes:
 ### Packaged:
-- Freeze Tag and Freeze Tag Arena
-- Free For All Arena (FFA CA, no teams, no rounds)
-- Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
-- Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
-- Thunder Pack
+- gt_ftag - Freeze Tag and Freeze Tag Arena
+- gt_ffaa - Free For All Arena (FFA CA, no teams, no rounds)
+- gt_aa - Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
+- gt_rbduel - Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
+- gt_thunder - Thunder Pack
   - Thunder (LG-only, infinite ammo, FFA style, players have 300 health)
   - Thunder DA (Duel arena with LG-only)
-- FFA Pack
+- gt_ffap - FFA Pack
   - Unholy Arena (RL/LG/EB-only, infinite ammo, FFA style without self dmg)
   - Unholy FFA (RL/LG/EB-only, infinite ammo, FFA style with self dmg)
   - Rocket Arena (RL-only, infinite ammo, FFA style without self dmg)

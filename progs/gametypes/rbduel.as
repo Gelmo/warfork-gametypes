@@ -1032,6 +1032,7 @@ void GT_InitGametype()
                  + "set g_teams_allow_uneven \"0\"\n"
                  + "set g_countdown_time \"5\"\n"
                  + "set g_maxtimeouts \"-1\" // -1 = unlimited\n"
+                 + "set g_challengers_queue \"1\"\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );

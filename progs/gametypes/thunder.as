@@ -286,7 +286,7 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                  + "// This config will be executed each time the gametype is started\n"
                  + "\n\n// map rotation\n"
-                 + "set g_maplist \"wdm1 wdm2 wdm4 wdm5 wdm6 wdm7 wdm9 wdm10 wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17\" // list of maps in automatic rotation\n"
+                 + "set g_maplist \"wfdm1 wfdm2 wfdm3 wfdm4 wfdm5 wfdm6 wfdm7 wfdm8 wfdm9 wfdm10 wfdm11 wfdm12 wfdm13 wfdm14 wfdm15 wfdm16 wfdm17 wfdm18 wfdm19 wfdm20\" // list of maps in automatic rotation\n"
                  + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
                  + "set g_scorelimit \"0\"\n"

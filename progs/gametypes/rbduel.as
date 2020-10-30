@@ -17,9 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
-Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 25 5 6 6 25 50 1", 0 ); // GB MG RG GL RL PG LG EB
-
 const int CA_ROUNDSTATE_NONE = 0;
 const int CA_ROUNDSTATE_PREROUND = 1;
 const int CA_ROUNDSTATE_ROUND = 2;
@@ -259,7 +256,10 @@ class cCARound
                     ent.client.respawn( false );
                 }
             }
-            G_Items_RespawnByType( 0, 0, 0 );
+            G_Items_RespawnByType( IT_ARMOR, 0, 15 );
+            G_Items_RespawnByType( IT_HEALTH, HEALTH_MEGA, 15 );
+            G_Items_RespawnByType( IT_HEALTH, HEALTH_ULTRA, 15 );
+            G_Items_RespawnByType( IT_POWERUP, 0, brandom( 20, 40 ) );
             gametype.pickableItemsMask = gametype.spawnableItemsMask;
             gametype.dropableItemsMask = gametype.spawnableItemsMask;
             gametype.shootingDisabled = false;
@@ -835,47 +835,44 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     }
     else
     {
-    	// give the weapons and ammo as defined in cvars
-    	String token, weakammotoken, ammotoken;
-    	String itemList = g_noclass_inventory.string;
-    	String ammoCounts = g_class_strong_ammo.string;
+        Item @item;
+        Item @ammoItem;
 
-    	ent.client.inventoryClear();
+        // the gunblade can't be given (because it can't be dropped)
+        ent.client.inventorySetCount( WEAP_GUNBLADE, 1 );
+        ent.client.inventorySetCount( AMMO_GUNBLADE, 1 ); // enable gunblade blast
 
-        for ( int i = 0; ;i++ )
+        if ( match.getState() <= MATCH_STATE_WARMUP )
         {
-            token = itemList.getToken( i );
-            if ( token.len() == 0 )
-                break; // done
-
-            Item @item = @G_GetItemByName( token );
-            if ( @item == null )
-                continue;
-
-            ent.client.inventoryGiveItem( item.tag );
-
-            // if it's ammo, set the ammo count as defined in the cvar
-            if ( ( item.type & IT_AMMO ) != 0 )
+            for ( int i = WEAP_GUNBLADE + 1; i < WEAP_TOTAL; i++ )
             {
-                token = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
+                if ( i == WEAP_INSTAGUN ) // dont add instagun...
+                    continue;
 
-                if ( token.len() > 0 )
-                {
-                    ent.client.inventorySetCount( item.tag, token.toInt() );
-                }
+                ent.client.inventoryGiveItem( i );
+
+                @item = @G_GetItem( i );
+
+                @ammoItem = @G_GetItem( item.ammoTag );
+                if ( @ammoItem != null )
+                    ent.client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
+
+                @ammoItem = item.weakAmmoTag == AMMO_NONE ? null : @G_GetItem( item.weakAmmoTag );
+                if ( @ammoItem != null )
+                    ent.client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
             }
+
+            // give him 2 YAs
+            ent.client.inventoryGiveItem( ARMOR_YA );
+            ent.client.inventoryGiveItem( ARMOR_YA );
         }
-
-        // give armor
-        ent.client.armor =200;
-
-        // select rocket launcher
-        ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
     }
 
-    // auto-select best weapon in the inventory
-    if( ent.client.pendingWeapon == WEAP_NONE )
-		ent.client.selectWeapon( -1 );
+    // select rocket launcher if available
+    if ( ent.client.canSelectWeapon( WEAP_ROCKETLAUNCHER ) )
+        ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
+    else
+        ent.client.selectWeapon( -1 ); // auto-select best weapon in the inventory
 
 	ent.svflags |= SVF_FORCETEAM;
 
@@ -997,16 +994,6 @@ void GT_Shutdown()
 // playing, but nothing has yet started.
 void GT_SpawnGametype()
 {
-for ( int i = 0; i < numEntities; i++ )
-  {
-    Entity@ ent = @G_GetEntity( i );
-    if ( @ent.item != null && ent.item.tag == AMMO_BOLTS ) {
-      ent.freeEntity();
-    }
-    if ( @ent.item != null && ent.item.tag == AMMO_BULLETS ) {
-      ent.freeEntity();
-    }
-  }
 }
 
 // Important: This function is called before any entity is spawned, and
@@ -1051,10 +1038,13 @@ void GT_InitGametype()
         G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
     }
 
-    gametype.spawnableItemsMask = ( IT_AMMO );
+    gametype.spawnableItemsMask = ( IT_WEAPON | IT_AMMO | IT_ARMOR | IT_HEALTH );
+    if ( gametype.isInstagib )
+        gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
+
     gametype.respawnableItemsMask = gametype.spawnableItemsMask;
     gametype.dropableItemsMask = gametype.spawnableItemsMask;
-    gametype.pickableItemsMask = gametype.spawnableItemsMask;
+    gametype.pickableItemsMask = ( gametype.spawnableItemsMask | gametype.dropableItemsMask );
 
     gametype.isTeamBased = true;
     gametype.isRace = false;

@@ -744,10 +744,14 @@ String @GT_ScoreboardMessage( uint maxlen )
             }
             else
             {
-                // "Name Clan Score Frags Ping R"
-                entry = "&p " + playerID + " " + ent.client.clanName + " "
-                        + ent.client.stats.score + " " + ent.client.stats.frags + " "
-                        + ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
+                // "Name Clan Score Frags Sui Ping R"
+                entry = "&p " + playerID + " "
+                        + ent.client.clanName + " "
+                        + ent.client.stats.score + " "
+                        + ent.client.stats.frags + " "
+                        + ent.client.stats.suicides + " "
+                        + ent.client.ping + " "
+                        + ( ent.client.isReady() ? "1" : "0" ) + " ";
             }
 
             if ( scoreboardMessage.len() + entry.len() < maxlen )
@@ -1098,8 +1102,8 @@ void GT_InitGametype()
     }
     else
     {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Ping R" );
+        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 44 %i 42 %i 38 %l 38 %r l1" );
+        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Sui Ping R" );
     }
 
     // add commands

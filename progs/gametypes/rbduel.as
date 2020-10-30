@@ -1016,8 +1016,8 @@ for ( int i = 0; i < numEntities; i++ )
 
 void GT_InitGametype()
 {
-    gametype.title = "Ammo Arena";
-    gametype.version = "1.00";
+    gametype.title = "Round-Based Duel";
+    gametype.version = "1.0.0";
     gametype.author = "Warsow Development Team";
 
     // if the gametype doesn't have a config file, create it
@@ -1029,24 +1029,21 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                  + "// This config will be executed each time the gametype is started\n"
                  + "\n\n// map rotation\n"
-                 + "set g_maplist \"wfda1 wfda2 wfda3 wfda5 wfdm5 wfdm2 wfdm15 cwm2 cwm3 cwl2 cws2 aerorun\" // list of maps in automatic rotation\n"
+                 + "set g_maplist \"\" // list of maps in automatic rotation\n"
                  + "set g_maprotation \"0\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
-                 + "set g_scorelimit \"2\"\n"
+                 + "set g_scorelimit \"3\"\n"
                  + "set g_timelimit \"0\"\n"
                  + "set g_warmup_timelimit \"1\"\n"
-                 + "set g_match_extendedtime \"0\"\n"
-                 + "set g_allow_falldamage \"0\"\n"
-                 + "set g_allow_selfdamage \"0\"\n"
-                 + "set g_allow_teamdamage \"0\"\n"
-                 + "set g_allow_stun \"0\"\n"
+                 + "set g_match_extendedtime \"1\"\n"
+                 + "set g_allow_falldamage \"1\"\n"
+                 + "set g_allow_selfdamage \"1\"\n"
+                 + "set g_allow_teamdamage \"1\"\n"
+                 + "set g_allow_stun \"1\"\n"
                  + "set g_teams_maxplayers \"1\"\n"
                  + "set g_teams_allow_uneven \"0\"\n"
                  + "set g_countdown_time \"5\"\n"
-                 + "set g_maxtimeouts \"1\" // -1 = unlimited\n"
-                 + "\n// classes settings\n"
-                 + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
-                 + "set g_class_strong_ammo \"1 25 5 6 6 25 50 1\" // GB MG RG GL RL PG LG EB\n"
+                 + "set g_maxtimeouts \"-1\" // -1 = unlimited\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );
@@ -1066,11 +1063,11 @@ void GT_InitGametype()
 
     gametype.ammoRespawn = 20;
     gametype.armorRespawn = 25;
-    gametype.weaponRespawn = 15;
+    gametype.weaponRespawn = 10;
     gametype.healthRespawn = 25;
     gametype.powerupRespawn = 90;
     gametype.megahealthRespawn = 20;
-    gametype.ultrahealthRespawn = 60;
+    gametype.ultrahealthRespawn = 40;
 
     gametype.readyAnnouncementEnabled = false;
     gametype.scoreAnnouncementEnabled = false;
@@ -1080,8 +1077,7 @@ void GT_InitGametype()
     gametype.infiniteAmmo = false;
     gametype.canForceModels = true;
     gametype.canShowMinimap = false;
-    gametype.teamOnlyMinimap = true;
-    gametype.removeInactivePlayers = true;
+    gametype.teamOnlyMinimap = false;
 
 	gametype.mmCompatible = true;
 	

@@ -256,10 +256,10 @@ class cCARound
                     ent.client.respawn( false );
                 }
             }
+            G_Items_RespawnByType( 0, 0, 0 );
             G_Items_RespawnByType( IT_ARMOR, 0, 15 );
             G_Items_RespawnByType( IT_HEALTH, HEALTH_MEGA, 15 );
             G_Items_RespawnByType( IT_HEALTH, HEALTH_ULTRA, 15 );
-            G_Items_RespawnByType( IT_POWERUP, 0, brandom( 20, 40 ) );
             gametype.pickableItemsMask = gametype.spawnableItemsMask;
             gametype.dropableItemsMask = gametype.spawnableItemsMask;
             gametype.shootingDisabled = false;

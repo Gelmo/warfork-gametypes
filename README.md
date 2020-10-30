@@ -7,6 +7,9 @@ Custom Gametypes for Warfork
 - Free For All Arena (FFA CA, no teams, no rounds)
 - Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
 - Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
+- Thunder Pack
+  - Thunder (LG-only, infinite ammo, FFA style, players have 300 health)
+  - Thunder DA (Duel arena with LG-only)
 
 ### To be Packaged:
 - FBomb (Fixed bomb until 2.2 is released)
@@ -22,9 +25,6 @@ Custom Gametypes for Warfork
   - Unholy FFA (RL/LG/EB-only, infinite ammo, FFA style with self dmg)
   - Rocket Arena (RL-only, infinite ammo, FFA style without self dmg)
   - Team FFA (TDM  but you spawn w/ weapons)
-- Thunder Pack
-  - Thunder (LG-only, infinite ammo, FFA style, players have 300 health)
-  - Thunder DA (Duel arena with LG-only)
 - Ignore wipeout; this is an old version, upstream is called Exhaustion
 - Ignore the hny/hoony modes currently; WIP and need significant work
 

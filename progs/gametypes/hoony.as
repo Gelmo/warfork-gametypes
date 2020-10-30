@@ -1029,8 +1029,9 @@ for ( int i = 0; i < numEntities; i++ )
 void GT_InitGametype()
 {
     gametype.title = "Hoonymode";
-    gametype.version = "1.00";
+    gametype.version = "1.0.0";
     gametype.author = "Warsow Development Team";
+    // Forked by Gelmo
 
     // if the gametype doesn't have a config file, create it
     if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )

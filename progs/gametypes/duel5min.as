@@ -436,7 +436,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "Duel";
-    gametype.version = "1.02";
+    gametype.version = "1.0.0";
     gametype.author = "Warsow Development Team";
 
     // if the gametype doesn't have a config file, create it

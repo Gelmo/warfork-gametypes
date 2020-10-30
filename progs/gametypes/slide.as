@@ -1123,6 +1123,7 @@ void GT_InitGametype()
     gametype.title = "iSlide";
     gametype.version = "1.04";
     gametype.author = "LexSerest (replace Clan Arena)";
+    // Forked by Gelmo
 
     // if the gametype doesn't have a config file, create it
     if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )

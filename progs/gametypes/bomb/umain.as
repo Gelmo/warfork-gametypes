@@ -819,8 +819,9 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
 	gametype.title = "Unholy Bomb Arena";
-	gametype.version = "1.0";
+	gametype.version = "1.0.0";
 	gametype.author = "Warsow Development Team";
+	// Forked by Gelmo
 
 	gametype.spawnableItemsMask = 0;
 	gametype.respawnableItemsMask = 0;

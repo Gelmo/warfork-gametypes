@@ -1237,6 +1237,7 @@ void GT_InitGametype()
     gametype.title = "Hoonymode";
     gametype.version = "0.1.3";
     gametype.author = "^6iim^2osaurus";
+    // Forked by Gelmo
 
     hoonyRound.init();
 

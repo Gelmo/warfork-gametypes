@@ -279,8 +279,9 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "Rocket Instagib";
-    gametype.version = "1.02";
+    gametype.version = "1.0.0";
     gametype.author = "Warsow Development Team";
+    // Forked by Gelmo
 
     // if the gametype doesn't have a config file, create it
     if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )

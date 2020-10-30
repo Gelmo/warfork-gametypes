@@ -843,9 +843,10 @@ void GT_SpawnGametype()
 
 void GT_InitGametype()
 {
-    gametype.title = "Thunderstruck Duel Arena";
-    gametype.version = "1.02";
+    gametype.title = "Thunder Duel Arena";
+    gametype.version = "1.0.0";
     gametype.author = "Warsow Development Team";
+    // Forked by Gelmo
 
     daRound.init();
 

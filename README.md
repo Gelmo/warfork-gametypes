@@ -6,6 +6,7 @@ Custom Gametypes for Warfork
 - Freeze Tag and Freeze Tag Arena
 - Free For All Arena (FFA CA, no teams, no rounds)
 - Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
+- Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
 
 ### To be Packaged:
 - FBomb (Fixed bomb until 2.2 is released)
@@ -22,7 +23,6 @@ Custom Gametypes for Warfork
 - Thunder DA (Duel arena with LG-only)
 - Ignore wipeout; this is an old version, upstream is called Exhaustion
 - Ignore the hny/hoony modes currently; WIP and need significant work
-- Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
 
 # Todo:
 

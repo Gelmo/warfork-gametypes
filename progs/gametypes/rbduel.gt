@@ -9,7 +9,7 @@ generic/items.as;
 generic/spawnpoints.as;
 generic/awards.as;
 
-aa.as;
+rbduel.as;
 
 legacy/quake1.as;
 

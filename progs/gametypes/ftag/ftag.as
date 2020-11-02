@@ -20,6 +20,8 @@ bool doRemoveRagdolls = false;
 
 Cvar ftagAllowPowerups("ftag_allowPowerups", "1", CVAR_ARCHIVE);
 Cvar ftagAllowPowerupDrop("ftag_powerupDrop", "1", CVAR_ARCHIVE);
+Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
 // Vec3 doesn't have dot product ffs
 float dot(const Vec3 v1, const Vec3 v2) {
@@ -27,14 +29,42 @@ float dot(const Vec3 v1, const Vec3 v2) {
 }
 
 void FTAG_giveInventory(Client @client) {
-	client.inventoryClear();
+	// give the weapons and ammo as defined in cvars
+    String othertoken, weakammotoken, ammotoken;
+    String itemList = g_noclass_inventory.string;
+    String ammoCounts = g_class_strong_ammo.string;
 
-	client.inventorySetCount(WEAP_GUNBLADE, 1);
-	client.inventorySetCount(AMMO_GUNBLADE, 1);
-	//client.inventoryGiveItem(WEAP_MACHINEGUN);
-	//client.inventorySetCount(AMMO_BULLETS, 50);
+    client.inventoryClear();
 
-	client.armor = 50;
+    for ( int i = 0; ;i++ )
+    {
+        othertoken = itemList.getToken( i );
+        if ( othertoken.len() == 0 )
+            break; // done
+
+        Item @item = @G_GetItemByName( othertoken );
+        if ( @item == null )
+            continue;
+
+        client.inventoryGiveItem( item.tag );
+
+        // if it's ammo, set the ammo count as defined in the cvar
+        if ( ( item.type & IT_AMMO ) != 0 )
+        {
+            othertoken = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
+
+            if ( othertoken.len() > 0 )
+            {
+                client.inventorySetCount( item.tag, othertoken.toInt() );
+            }
+        }
+    }
+
+    // give armor
+    client.armor = 150;
+
+    // select rocket launcher
+    client.selectWeapon( WEAP_ROCKETLAUNCHER );
 }
 
 void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflictor) {
@@ -637,7 +667,7 @@ void GT_InitGametype() {
 	gametype.author = "Mike^4JS";
 	// Forked by Gelmo
 
-	gametype.spawnableItemsMask = IT_WEAPON | IT_AMMO | IT_ARMOR | IT_POWERUP | IT_HEALTH;
+	gametype.spawnableItemsMask = ( IT_WEAPON | IT_AMMO | IT_ARMOR | IT_POWERUP | IT_HEALTH );
 	if(!ftagAllowPowerups.boolean) {
 		gametype.spawnableItemsMask &= ~IT_POWERUP;
 	}
@@ -646,7 +676,7 @@ void GT_InitGametype() {
 	}
 	gametype.respawnableItemsMask = gametype.spawnableItemsMask;
 	gametype.dropableItemsMask = gametype.spawnableItemsMask;
-	gametype.pickableItemsMask = gametype.spawnableItemsMask | gametype.dropableItemsMask;
+	gametype.pickableItemsMask = ( gametype.spawnableItemsMask | gametype.dropableItemsMask );
 
 	gametype.isTeamBased = true;
 	gametype.isRace = false;
@@ -713,11 +743,13 @@ void GT_InitGametype() {
 			+ "\n// " + gametype.title + " specific settings\n"
 			+ "set ftag_allowPowerups \"1\"\n"
 			+ "set ftag_powerupDrop \"1\"\n"
+			+ "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
+            + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
 			+ "\n// map rotation\n"
 			+ "set g_maplist \"wfdm7 wfdm8 wfdm13 wfdm16 wfdm18 wfctf1 wfctf2 wfctf3 wfctf4\" // list of maps in automatic rotation\n"
 			+ "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
 			+ "\n// game settings\n"
-			+ "set g_scorelimit \"15\"\n"
+			+ "set g_scorelimit \"11\"\n"
 			+ "set g_timelimit \"0\"\n"
 			+ "set g_warmup_enabled \"1\"\n"
 			+ "set g_warmup_timelimit \"1.5\"\n"

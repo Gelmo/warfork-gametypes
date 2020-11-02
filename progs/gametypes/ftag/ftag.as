@@ -18,7 +18,7 @@ bool[] spawnNextRound(maxClients);
 //String[] defrostMessage(maxClients);
 bool doRemoveRagdolls = false;
 
-Cvar ftagAllowPowerups("ftag_allowPowerups", "0", CVAR_ARCHIVE);
+Cvar ftagAllowPowerups("ftag_allowPowerups", "1", CVAR_ARCHIVE);
 Cvar ftagAllowPowerupDrop("ftag_powerupDrop", "1", CVAR_ARCHIVE);
 
 // Vec3 doesn't have dot product ffs

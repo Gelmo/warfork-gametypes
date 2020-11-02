@@ -574,10 +574,13 @@ void GT_InitGametype() {
 	gametype.author = "Mike^4JS";
 	// Forked by Gelmo
 
-	gametype.spawnableItemsMask = 0;
-	gametype.respawnableItemsMask = 0;
-	gametype.dropableItemsMask = 0;
-	gametype.pickableItemsMask = 0;
+	gametype.spawnableItemsMask = ( IT_WEAPON | IT_AMMO );
+	if(gametype.isInstagib) {
+		gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
+	}
+	gametype.respawnableItemsMask = gametype.spawnableItemsMask;
+	gametype.dropableItemsMask = gametype.spawnableItemsMask;
+	gametype.pickableItemsMask = ( gametype.spawnableItemsMask | gametype.dropableItemsMask );
 
 	gametype.isTeamBased = true;
 	gametype.isRace = false;

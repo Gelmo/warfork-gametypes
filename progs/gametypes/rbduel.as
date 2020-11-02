@@ -937,6 +937,31 @@ void GT_ThinkRules()
     if ( match.getState() >= MATCH_STATE_POSTMATCH )
         return;
 
+    // check maxHealth rule and max armor rule
+    for ( int i = 0; i < maxClients; i++ )
+    {
+        Entity @ent = @G_GetClient( i ).getEnt();
+        if ( ent.client.state() >= CS_SPAWNED && ent.team != TEAM_SPECTATOR )
+        {
+            if ( ent.health > ent.maxHealth ) {
+                ent.health -= ( frameTime * 0.001f );
+				// fix possible rounding errors
+				if( ent.health < ent.maxHealth ) {
+					ent.health = ent.maxHealth;
+				}
+			}
+
+            //if ( ent.client.armor > maxArmor )
+            //{
+            //    float newArmor = ent.client.armor - ( frameTime * 0.001f );
+            //    if ( newArmor < maxArmor )
+            //        ent.client.armor = maxArmor;
+            //    else
+            //        ent.client.armor = newArmor;
+            //}
+        }
+    }
+
     caRound.think();
 }
 

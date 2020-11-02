@@ -68,6 +68,13 @@ void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflictor) {
 		return;
 	}
 
+	if((G_PointContents(target.origin) & CONTENTS_NODROP) == 0) {
+		if(target.client.weapon > WEAP_GUNBLADE) {
+			GENERIC_DropCurrentWeapon(target.client, true);
+		}
+		target.dropItem(AMMO_PACK);
+	}
+
 	if(match.getState() != MATCH_STATE_PLAYTIME) {
 		return;
 	}

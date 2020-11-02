@@ -408,7 +408,7 @@ class cCARound
 
             if ( this.countDown > 0 )
             {
-                // we can't use the authomatic countdown announces because their are based on the
+                // we can't use the automatic countdown announces because their are based on the
                 // matchstate timelimit, and prerounds don't use it. So, fire the announces "by hand".
                 int remainingSeconds = int( ( this.roundStateEndTime - levelTime ) * 0.001f ) + 1;
                 if ( remainingSeconds < 0 )

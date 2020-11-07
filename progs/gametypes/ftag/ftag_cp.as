@@ -61,7 +61,7 @@ class cFrozenPlayer {
 		this.model.linkEntity();
 
 		@this.sprite = @G_SpawnEntity("capture_indicator_sprite");
-		this.sprite.type = ET_SPRITE;
+		this.sprite.type = ET_RADAR;
 		this.sprite.solid = SOLID_NOT;
 		this.sprite.origin = vec;
 		this.sprite.team = player.team;

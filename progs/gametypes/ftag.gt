@@ -1,4 +1,5 @@
 /shared/constants.as;
+/shared/utils.as;
 /shared/files.as;
 
 generic/quickmenu.as;
@@ -12,3 +13,9 @@ ftag/ftag.as;
 ftag/ftag_cp.as;
 
 legacy/quake1.as;
+
+legacy/quake1_items.as;
+legacy/quake2_items.as;
+legacy/quake3_items.as;
+
+legacy_items.as;

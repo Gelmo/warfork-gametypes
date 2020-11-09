@@ -2,7 +2,7 @@ cFrozenPlayer @frozenHead = null;
 
 int COLOR_RGBA( int r, int g, int b, int a )
 {
-	return ( r << 0 ) | ( g << 8 ) | ( b << 16 ) | ( a << 24 );
+	return (( r & 255 ) << 0 ) | (( g & 255 ) << 8 ) | (( b & 255 ) << 16 ) | (( a & 255 ) << 24 );
 }
 
 class cFrozenPlayer {

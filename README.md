@@ -37,8 +37,13 @@ Custom Gametypes for Warfork
 
 ## Ftag:
 - Push frozen players? - Not possible in 2.1, maybe when ascgame is merged. "They’re non solid because people were teleporting into frozen ppl and getting stuck"
-- Remove defrost hazard multiplier for arena? - Disabled in 0.9.4.1 for arena, testing
-- Respawn both teams each round for arena?
-- Show frozen teammates through wall
+- Remove defrost hazard multiplier for arena? - Disabled since 0.9.4.1 for arena, testing
 - Fix defrost status indicator
 - Implement Awards
+- Currently, when a player falls through a pit, they don't respawn until their team loses a point. In QL, falling in a pit/lava respawns you (discouraging you from hurting opponents near a pit). Or just make them respawn when either team wins a point?
+
+Things that need to be tested more in Ftag Arena with many skilled players:
+- Armor and Health pickups on map (currently disabled in Arena)
+- Powerup pickups on map (currently disabled in Arena)
+- Respawning everyone (including health/armor refresh) when a team earns a point, like in CA
+- Last update added weap/ammo pickups, and weap/ammo drops on death, which resolved the low-ammo issue. If it ends up being better to respawn everyone each point, it may be suitable to revert this and remove weap/ammo pickups (but retain weap/ammo drops)

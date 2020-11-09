@@ -1121,7 +1121,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "iSlide";
-    gametype.version = "1.04";
+    gametype.version = "1.05";
     gametype.author = "LexSerest (replace Clan Arena)";
     // Forked by Gelmo
 

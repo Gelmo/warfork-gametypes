@@ -292,7 +292,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "Slide FFA";
-    gametype.version = "1.02";
+    gametype.version = "1.05";
     gametype.author = "Warsow Development Team";
     // Forked by Gelmo
 

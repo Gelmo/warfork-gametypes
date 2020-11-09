@@ -59,7 +59,33 @@ void DM_playerKilled( Entity @target, Entity @attacker, Entity @inflictor )
 
 bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
 {
-    if ( cmdString == "cvarinfo" )
+    if ( cmdString == "drop" )
+    {
+        String token;
+
+        for ( int i = 0; i < argc; i++ )
+        {
+            token = argsString.getToken( i );
+            if ( token.len() == 0 )
+                break;
+
+            if ( token == "weapon" || token == "fullweapon" )
+            {
+                GENERIC_DropCurrentWeapon( client, true );
+            }
+            else if ( token == "strong" )
+            {
+                GENERIC_DropCurrentAmmoStrong( client );
+            }
+            else
+            {
+                GENERIC_CommandDropItem( client, token );
+            }
+        }
+
+        return true;
+    }
+    else if ( cmdString == "cvarinfo" )
     {
         GENERIC_CheatVarResponse( client, cmdString, argsString, argc );
         return true;
@@ -274,8 +300,8 @@ void GT_MatchStateStarted()
     switch ( match.getState() )
     {
     case MATCH_STATE_WARMUP:
-        gametype.pickableItemsMask = ( IT_AMMO );
-        gametype.dropableItemsMask = ( IT_AMMO );
+        gametype.pickableItemsMask = gametype.spawnableItemsMask;
+        gametype.dropableItemsMask = gametype.spawnableItemsMask;
         GENERIC_SetUpWarmup();
 		SpawnIndicators::Create( "info_player_deathmatch", TEAM_PLAYERS );
         break;
@@ -288,8 +314,8 @@ void GT_MatchStateStarted()
         break;
 
     case MATCH_STATE_PLAYTIME:
-        gametype.pickableItemsMask = ( IT_AMMO );
-        gametype.dropableItemsMask = ( IT_AMMO );
+        gametype.pickableItemsMask = gametype.spawnableItemsMask;
+        gametype.dropableItemsMask = gametype.spawnableItemsMask;
         GENERIC_SetUpMatch();
         break;
 
@@ -336,18 +362,18 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                  + "// This config will be executed each time the gametype is started\n"
                  + "\n\n// map rotation\n"
-                 + "set g_maplist \"wfca1 wfca2\" // list of maps in automatic rotation\n"
-                 + "set g_maprotation \"0\"   // 0 = same map, 1 = in order, 2 = random\n"
+                 + "set g_maplist \"wfca1 wfca2 wfdm1 wfdm2 wfdm3 wfdm4 wfdm5 wfdm6 wfdm7 wfdm8 wfdm9 wfdm10 wfdm11 wfdm12 wfdm13 wfdm14 wfdm15 wfdm16 wfdm17 wfdm18 wfdm19 wfdm20\" // list of maps in automatic rotation\n"
+                 + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
                  + "set g_scorelimit \"0\"\n"
-                 + "set g_timelimit \"10\"\n"
+                 + "set g_timelimit \"15\"\n"
                  + "set g_warmup_timelimit \"1\"\n"
                  + "set g_match_extendedtime \"0\"\n"
                  + "set g_allow_falldamage \"0\"\n"
                  + "set g_allow_selfdamage \"0\"\n"
                  + "set g_allow_teamdamage \"0\"\n"
                  + "set g_allow_stun \"0\"\n"
-                 + "set g_countdown_time \"3\"\n"
+                 + "set g_countdown_time \"5\"\n"
                  + "set g_maxtimeouts \"0\" // -1 = unlimited\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
@@ -359,10 +385,13 @@ void GT_InitGametype()
         G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
     }
 
-    gametype.spawnableItemsMask = 0;
-    gametype.respawnableItemsMask = 0;
-    gametype.dropableItemsMask = ( IT_AMMO );
-    gametype.pickableItemsMask = ( IT_AMMO );
+    gametype.spawnableItemsMask = ( IT_AMMO | IT_ARMOR | IT_HEALTH );
+    if ( gametype.isInstagib )
+        gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
+
+    gametype.respawnableItemsMask = gametype.spawnableItemsMask;
+    gametype.dropableItemsMask = gametype.spawnableItemsMask;
+    gametype.pickableItemsMask = gametype.spawnableItemsMask;
 
     gametype.isTeamBased = false;
     gametype.isRace = false;
@@ -371,11 +400,11 @@ void GT_InitGametype()
 
     gametype.ammoRespawn = 20;
     gametype.armorRespawn = 25;
-    gametype.weaponRespawn = 15;
+    gametype.weaponRespawn = 5;
     gametype.healthRespawn = 25;
     gametype.powerupRespawn = 90;
     gametype.megahealthRespawn = 20;
-    gametype.ultrahealthRespawn = 60;
+    gametype.ultrahealthRespawn = 40;
 
     gametype.readyAnnouncementEnabled = false;
     gametype.scoreAnnouncementEnabled = false;
@@ -404,6 +433,7 @@ void GT_InitGametype()
     G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Ping R" );
 
     // add commands
+    G_RegisterCommand( "drop" );
     G_RegisterCommand( "gametype" );
 
     G_Print( "Gametype '" + gametype.title + "' initialized\n" );

@@ -11,6 +11,7 @@ class cFrozenPlayer {
 	Entity @minimap;
 
 	bool frozen;
+	bool mateDefrosting;
 
 	cFrozenPlayer @next;
 	cFrozenPlayer @prev; // for faster removal
@@ -29,6 +30,7 @@ class cFrozenPlayer {
 
 		this.defrostTime = 0;
 		//this.lastTouch = 0;
+		this.mateDefrosting = false;
 
 		@this.client = player;
 		Vec3 vec = this.client.getEnt().origin;
@@ -101,6 +103,7 @@ class cFrozenPlayer {
 		}
 
 		this.frozen = false;
+		this.mateDefrosting = false;
 	}
 
 	void use(Entity @activator) {
@@ -108,6 +111,10 @@ class cFrozenPlayer {
 			return;
 		}
 
+		// if player and activator in same team
+		if(activator.client.team == this.client.team) {
+			this.mateDefrosting = true;
+		}
 		if(@activator == @this.client.getEnt()) {
 			// defrost slowly if they're in a sticky situation
 			this.defrostTime += frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE;
@@ -216,6 +223,16 @@ class cFrozenPlayer {
 		/*if(decay && this.defrostTime > 0 && this.lastTouch < levelTime - FTAG_DEFROST_DECAY_DELAY) {
 			this.defrostTime -= this.defrostTime < frameTime ? this.defrostTime : frameTime;
 		}*/
+
+		if ( this.defrostTime < 0 ) {
+			this.defrostTime = 0;
+		}
+
+		if ( this.mateDefrosting == false && this.defrostTime > 0 ) {
+			this.defrostTime -= frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE;
+		}
+
+		this.mateDefrosting = false;
 
 		this.model.getSize(mins, maxs);
 

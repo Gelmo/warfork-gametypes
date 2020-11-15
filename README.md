@@ -37,7 +37,7 @@ Custom Gametypes for Warfork
 
 ## Ftag:
 - Push frozen players? - Not possible in 2.1, maybe when ascgame is merged. "They’re non solid because people were teleporting into frozen ppl and getting stuck"
-- Remove defrost hazard multiplier for arena? - Disabled since 0.9.4.1 for arena, testing
+- Remove defrost hazard multiplier for arena? - Tested with FTAG_INVERSE_HAZARD_DEFROST_SCALE and FTAG_INVERSE_ATTACK_DEFROST_SCALE set to 1, but matches went on too long. Set back to 3
 - Fix defrost status indicator
 - Implement Awards
 - Currently, when a player falls through a pit, they don't respawn until their team loses a point. In QL, falling in a pit/lava respawns you (discouraging you from hurting opponents near a pit). Or just make them respawn when either team wins a point?

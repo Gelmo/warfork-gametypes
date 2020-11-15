@@ -1,7 +1,7 @@
 cFrozenPlayer @frozenHead = null;
 
 class cFrozenPlayer {
-	uint defrostTime;
+	int defrostTime;
 	//uint lastTouch;
 
 	Client @client;
@@ -232,7 +232,7 @@ class cFrozenPlayer {
         }
 
         if ( this.mateDefrosting == false && this.defrostTime > 0 ) {
-            this.defrostTime -= min( this.defrostTime, frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE );
+            this.defrostTime -= frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE;
         }
 
 		this.mateDefrosting = false;

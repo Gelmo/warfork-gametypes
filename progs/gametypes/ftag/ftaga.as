@@ -110,6 +110,7 @@ void FTAG_NewRound(Team @loser, int newState) {
 		G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_team0" + int(brandom(1, 2))), winner.team(), false, null);
 		G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_enemy0" + int(brandom(1, 2))), loser.team(), false, null);
 		gametype.shootingDisabled = true;
+		gametype.removeInactivePlayers = false;
 		gametype.pickableItemsMask = 0;
 		gametype.dropableItemsMask = 0;
 		ftaga_roundStateEndTime = levelTime + 1500;
@@ -412,6 +413,7 @@ void GT_ThinkRules() {
 				G_CenterPrintMsg( null, String( ftaga_countDown ) );
 				if (ftaga_countDown == 0) {
 					gametype.shootingDisabled = false; //!
+					gametype.removeInactivePlayers = true;
 					gametype.pickableItemsMask = gametype.spawnableItemsMask;
 					gametype.dropableItemsMask = gametype.spawnableItemsMask;
 					ftaga_roundStateEndTime = 0;
@@ -664,6 +666,7 @@ void GT_InitGametype() {
 	gametype.canForceModels = true;
 	gametype.canShowMinimap = true;
 	gametype.teamOnlyMinimap = true;
+	gametype.removeInactivePlayers = true;
 
 	gametype.mmCompatible = true;
 

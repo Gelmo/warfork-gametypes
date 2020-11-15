@@ -700,6 +700,7 @@ void GT_InitGametype() {
 	gametype.canForceModels = true;
 	gametype.canShowMinimap = true;
 	gametype.teamOnlyMinimap = true;
+	gametype.removeInactivePlayers = true;
 
 	gametype.mmCompatible = true;
 

@@ -7,6 +7,11 @@ const uint FTAG_DEFROST_ATTACK_DELAY = 2000;
 //const uint FTAG_DEFROST_DECAY_DELAY = 500;
 const float FTAG_DEFROST_RADIUS = 192.0f;
 
+uint ftaga_roundStateStartTime;
+uint ftaga_roundStateEndTime;
+int ftaga_countDown;
+int ftaga_state;
+
 int prcYesIcon;
 int[] defrosts(maxClients);
 uint[] lastShotTime(maxClients);
@@ -87,42 +92,66 @@ void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflictor) {
 	}
 }
 
-void FTAG_NewRound(Team @loser) {
-	for(int i = 0; i < maxClients; i++) {
-		Client @client = @G_GetClient(i);
-
-		if(@client == null) {
-			break;
-		}
-
-		if(client.team == loser.team()) {
-			client.respawn(false);
-
-			if(spawnNextRound[i]) {
-				spawnNextRound[i] = false;
-			}
-
-			continue;
-		}/* else if(!client.getEnt().isGhosting()) {
-			client.inventoryGiveItem(HEALTH_LARGE);
-		}*/
-
-		// respawn players who connected during the previous round
-		if(spawnNextRound[i]) {
-			client.respawn(false);
-
-			spawnNextRound[i] = false;
-		}
+void FTAG_NewRound(Team @loser, int newState) {
+	if ( newState > 3 ) {
+		return;
+    }
+	if ( ftaga_state > newState ) {
+		return;
 	}
 
-	Team @winner = G_GetTeam(loser.team() == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA);
-	winner.stats.addScore(1);
-	G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_team0" + int(brandom(1, 2))), winner.team(), false, null);
-	G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_enemy0" + int(brandom(1, 2))), loser.team(), false, null);
+	ftaga_state = newState;
 
-	G_Items_RespawnByType(IT_WEAPON, 0, 0);
+	// end round add score
+	if ( ftaga_state == 1) {
+		ftaga_state = 2;
+		Team @winner = G_GetTeam(loser.team() == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA);
+		winner.stats.addScore(1);
+		G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_team0" + int(brandom(1, 2))), winner.team(), false, null);
+		G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_enemy0" + int(brandom(1, 2))), loser.team(), false, null);
+		gametype.shootingDisabled = true;
+		gametype.pickableItemsMask = 0;
+		gametype.dropableItemsMask = 0;
+		ftaga_roundStateEndTime = levelTime + 1500;
+		return;
+	} else if( ftaga_state == 2 ) {
+		return;
+	} else if( ftaga_state == 3 ) {
+		// delay before new round
+		ftaga_state = 0;
+		Entity @ent;
+		Team @team;
+		for ( int i = TEAM_PLAYERS; i < GS_MAX_TEAMS; i++ )
+		{
+			@team = @G_GetTeam( i );
+			// respawn all clients inside the playing teams
+			for ( int j = 0; @team.ent( j ) != null; j++ )
+			{
+				@ent = @team.ent( j );
+				ent.client.respawn( false );
+			}
+		}
+		for(int i = 0; i < maxClients; i++) {
+			Client @client = @G_GetClient(i);
+			if(@client == null) {
+				break;
+			}
+			// respawn players who connected during the previous round
+			if(spawnNextRound[i]) {
+				client.respawn(false);
+				spawnNextRound[i] = false;
+			}
+		}
+		gametype.pickableItemsMask = gametype.spawnableItemsMask;
+		gametype.dropableItemsMask = gametype.spawnableItemsMask;
+		G_Items_RespawnByType(IT_WEAPON, 0, 0);
 
-	FTAG_DefrostTeam(loser.team());
+		FTAG_DefrostTeam(loser.team());
+		ftaga_countDown = 5; //delay before new round start
+		ftaga_roundStateEndTime = levelTime + 7000;
+		gametype.shootingDisabled = false;
+		return;
+	}
 }
 
 void FTAG_ResetDefrostCounters() {
@@ -361,6 +390,37 @@ void GT_ThinkRules() {
 		return;
 	}
 
+	if ( ftaga_roundStateEndTime != 0 ) {
+		if ( ftaga_roundStateEndTime < levelTime ) {
+			FTAG_NewRound (team, 3);
+            return;
+        }
+		if ( ftaga_countDown > 0 ) {
+			// we can't use the automatic countdown announces because their are based on the
+			// matchstate timelimit, and prerounds don't use it. So, fire the announces "by hand".
+			int remainingSeconds = int( ( ftaga_roundStateEndTime - levelTime ) * 0.001f );
+			//G_PrintMsg(null, String ( ftaga_countDown ) );
+			if ( remainingSeconds < 0 )
+				remainingSeconds = 0;
+			if ( remainingSeconds < ftaga_countDown ) {
+				ftaga_countDown = remainingSeconds;
+				if ( ftaga_countDown == 4 ) {
+					int soundIndex = G_SoundIndex( "sounds/announcer/countdown/ready0" + (1 + (rand() & 1)) );
+					G_AnnouncerSound( null, soundIndex, GS_MAX_TEAMS, false, null );
+				} else if( ftaga_countDown <= 3 ) {
+					int soundIndex = G_SoundIndex( "sounds/announcer/countdown/" + ftaga_countDown + "_0" + (1 + (rand() & 1)) );
+					G_AnnouncerSound( null, soundIndex, GS_MAX_TEAMS, false, null );
+				}
+				G_CenterPrintMsg( null, String( ftaga_countDown ) );
+				if (ftaga_countDown == 0) {
+					gametype.shootingDisabled = false; //!
+					ftaga_roundStateEndTime = 0;
+					ftaga_state = 0;
+				}
+			}
+		}
+	}
+
 	GENERIC_Think();
 
 	for(int i = 0; i < maxClients; i++) {
@@ -471,7 +531,7 @@ void GT_ThinkRules() {
 			}
 
 			if(count == 0) {
-				FTAG_NewRound(team);
+				FTAG_NewRound(team, 1);
 				break;
 			}
 		}
@@ -580,7 +640,7 @@ void GT_InitGametype() {
 	}
 	gametype.respawnableItemsMask = gametype.spawnableItemsMask;
 	gametype.dropableItemsMask = gametype.spawnableItemsMask;
-	gametype.pickableItemsMask = ( gametype.spawnableItemsMask | gametype.dropableItemsMask );
+	gametype.pickableItemsMask = gametype.spawnableItemsMask;
 
 	gametype.isTeamBased = true;
 	gametype.isRace = false;

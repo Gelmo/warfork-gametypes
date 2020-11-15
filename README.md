@@ -45,5 +45,4 @@ Custom Gametypes for Warfork
 Things that need to be tested more in Ftag Arena with many skilled players:
 - Armor and Health pickups on map (currently disabled in Arena)
 - Powerup pickups on map (currently disabled in Arena)
-- Respawning everyone (including health/armor refresh) when a team earns a point, like in CA
 - Last update added weap/ammo pickups, and weap/ammo drops on death, which resolved the low-ammo issue. If it ends up being better to respawn everyone each point, it may be suitable to revert this and remove weap/ammo pickups (but retain weap/ammo drops)

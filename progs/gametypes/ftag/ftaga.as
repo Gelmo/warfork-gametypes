@@ -143,14 +143,11 @@ void FTAG_NewRound(Team @loser, int newState) {
 				spawnNextRound[i] = false;
 			}
 		}
-		gametype.pickableItemsMask = gametype.spawnableItemsMask;
-		gametype.dropableItemsMask = gametype.spawnableItemsMask;
 		G_Items_RespawnByType(IT_WEAPON, 0, 0);
 
 		FTAG_DefrostTeam(loser.team());
 		ftaga_countDown = 5; //delay before new round start
 		ftaga_roundStateEndTime = levelTime + 7000;
-		gametype.shootingDisabled = false;
 		return;
 	}
 }
@@ -415,6 +412,8 @@ void GT_ThinkRules() {
 				G_CenterPrintMsg( null, String( ftaga_countDown ) );
 				if (ftaga_countDown == 0) {
 					gametype.shootingDisabled = false; //!
+					gametype.pickableItemsMask = gametype.spawnableItemsMask;
+					gametype.dropableItemsMask = gametype.spawnableItemsMask;
 					ftaga_roundStateEndTime = 0;
 					ftaga_state = 0;
 				}

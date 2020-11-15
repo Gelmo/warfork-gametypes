@@ -227,12 +227,13 @@ class cFrozenPlayer {
 			this.defrostTime -= this.defrostTime < frameTime ? this.defrostTime : frameTime;
 		}*/
 
-		if ( this.defrostTime < 0 ) {
-			this.defrostTime = 0;
-		}
-
-		if ( this.mateDefrosting == false && this.defrostTime > 0 ) {
-			this.defrostTime -= frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE;
+		if ( this.defrostTime > 0 ) {
+			if ( this.mateDefrosting == false ) {
+				this.defrostTime -= frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE;
+				if ( this.defrostTime < 0 ) {
+					this.defrostTime = 0;
+				}
+			}
 		}
 
 		this.mateDefrosting = false;

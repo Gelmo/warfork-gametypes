@@ -412,7 +412,10 @@ void GT_ThinkRules() {
 				}
 				G_CenterPrintMsg( null, String( ftaga_countDown ) );
 				if (ftaga_countDown == 0) {
-					gametype.shootingDisabled = false; //!
+					int soundIndex = G_SoundIndex( "sounds/announcer/countdown/fight0" + (1 + (rand() & 1)) );
+            		G_AnnouncerSound( null, soundIndex, GS_MAX_TEAMS, false, null );
+            		G_CenterPrintMsg( null, 'Fight!');
+					gametype.shootingDisabled = false;
 					gametype.removeInactivePlayers = true;
 					gametype.pickableItemsMask = gametype.spawnableItemsMask;
 					gametype.dropableItemsMask = gametype.spawnableItemsMask;

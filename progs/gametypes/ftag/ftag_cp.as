@@ -1,7 +1,7 @@
 cFrozenPlayer @frozenHead = null;
 
 class cFrozenPlayer {
-	int defrostTime;
+	uint defrostTime;
 	//uint lastTouch;
 
 	Client @client;

@@ -114,9 +114,9 @@ class cFrozenPlayer {
 		// if player and activator in same team
 		if(activator.client.team == this.client.team) {
 			this.mateDefrosting = true;
-			G_CenterPrintMsg(this.client.ent, "Defrosting!");
-			// G_CenterPrintMsg(this.client.ent, "Being defrosted by " + activator.client.name + "!");
-			// G_CenterPrintMsg(activator.client.ent, "Defrosting " + this.client.name + "!");
+			G_CenterPrintMsg(this.client.getEnt(), "Defrosting!");
+			// G_CenterPrintMsg(this.client.getEnt(), "Being defrosted by " + activator.client.name + "!");
+			// G_CenterPrintMsg(activator.client.getEnt(), "Defrosting " + this.client.name + "!");
 		}
 		if(@activator == @this.client.getEnt()) {
 			// defrost slowly if they're in a sticky situation

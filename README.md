@@ -37,7 +37,6 @@ Custom Gametypes for Warfork
 
 ## Ftag:
 - Push frozen players? - Not possible in 2.1, maybe when ascgame is merged. "They’re non solid because people were teleporting into frozen ppl and getting stuck"
-- Fix defrost status indicator
 - Implement Awards
 
 Things that need to be tested more in Ftag Arena with many skilled players:

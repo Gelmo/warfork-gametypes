@@ -144,7 +144,9 @@ void FTAG_NewRound(Team @loser, int newState) {
 				spawnNextRound[i] = false;
 			}
 		}
-		G_Items_RespawnByType(IT_WEAPON, 0, 0);
+		G_RemoveDeadBodies();
+        G_RemoveAllProjectiles();
+		G_Items_RespawnByType(0, 0, 0);
 
 		FTAG_DefrostTeam(loser.team());
 		ftaga_countDown = 5; //delay before new round start

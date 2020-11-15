@@ -676,7 +676,7 @@ void GT_InitGametype() {
 	}
 	gametype.respawnableItemsMask = gametype.spawnableItemsMask;
 	gametype.dropableItemsMask = gametype.spawnableItemsMask;
-	gametype.pickableItemsMask = ( gametype.spawnableItemsMask | gametype.dropableItemsMask );
+	gametype.pickableItemsMask = gametype.spawnableItemsMask;
 
 	gametype.isTeamBased = true;
 	gametype.isRace = false;

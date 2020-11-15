@@ -115,6 +115,7 @@ void FTAG_NewRound(Team @loser, int newState) {
 		ftaga_roundStateEndTime = levelTime + 1500;
 		return;
 	} else if( ftaga_state == 2 ) {
+		// short buffer period
 		return;
 	} else if( ftaga_state == 3 ) {
 		// delay before new round

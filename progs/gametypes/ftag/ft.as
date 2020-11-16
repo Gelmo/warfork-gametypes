@@ -7,12 +7,9 @@ const uint FTAG_DEFROST_ATTACK_DELAY = 2000;
 //const uint FTAG_DEFROST_DECAY_DELAY = 500;
 const float FTAG_DEFROST_RADIUS = 144.0f;
 
-uint ftaga_roundStateStartTime;
-uint ftaga_roundStateEndTime;
-int ftaga_countDown;
-int ftaga_state;
-
 int prcYesIcon;
+int prcShockIcon;
+int prcShellIcon;
 int[] defrosts(maxClients);
 uint[] lastShotTime(maxClients);
 int[] playerSTAT_PROGRESS_SELFdelayed(maxClients);
@@ -21,6 +18,8 @@ bool[] spawnNextRound(maxClients);
 //String[] defrostMessage(maxClients);
 bool doRemoveRagdolls = false;
 
+Cvar ftagAllowPowerups("ftag_allowPowerups", "1", CVAR_ARCHIVE);
+Cvar ftagAllowPowerupDrop("ftag_powerupDrop", "1", CVAR_ARCHIVE);
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
@@ -78,6 +77,18 @@ void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflictor) {
 			GENERIC_DropCurrentWeapon(target.client, true);
 		}
 		target.dropItem(AMMO_PACK);
+
+		if(ftagAllowPowerupDrop.boolean) {
+			if(target.client.inventoryCount(POWERUP_QUAD) > 0) {
+				target.dropItem(POWERUP_QUAD);
+				target.client.inventorySetCount(POWERUP_QUAD, 0);
+			}
+
+			if(target.client.inventoryCount(POWERUP_SHELL) > 0) {
+				target.dropItem(POWERUP_SHELL);
+				target.client.inventorySetCount(POWERUP_SHELL, 0);
+			}
+		}
 	}
 
 	if(match.getState() != MATCH_STATE_PLAYTIME) {
@@ -92,67 +103,42 @@ void FTAG_playerKilled(Entity @target, Entity @attacker, Entity @inflictor) {
 	}
 }
 
-void FTAG_NewRound(Team @loser, int newState) {
-	if ( newState > 3 ) {
-		return;
-    }
-	if ( ftaga_state > newState ) {
-		return;
-	}
+void FTAG_NewRound(Team @loser) {
+	for(int i = 0; i < maxClients; i++) {
+		Client @client = @G_GetClient(i);
 
-	ftaga_state = newState;
-
-	// end round add score
-	if ( ftaga_state == 1) {
-		ftaga_state = 2;
-		Team @winner = G_GetTeam(loser.team() == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA);
-		winner.stats.addScore(1);
-		G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_team0" + int(brandom(1, 2))), winner.team(), false, null);
-		G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_enemy0" + int(brandom(1, 2))), loser.team(), false, null);
-		gametype.shootingDisabled = true;
-		gametype.removeInactivePlayers = false;
-		gametype.pickableItemsMask = 0;
-		gametype.dropableItemsMask = 0;
-		ftaga_roundStateEndTime = levelTime + 1500;
-		return;
-	} else if( ftaga_state == 2 ) {
-		// short buffer period
-		return;
-	} else if( ftaga_state == 3 ) {
-		// delay before new round
-		ftaga_state = 0;
-		Entity @ent;
-		Team @team;
-		for ( int i = TEAM_PLAYERS; i < GS_MAX_TEAMS; i++ )
-		{
-			@team = @G_GetTeam( i );
-			// respawn all clients inside the playing teams
-			for ( int j = 0; @team.ent( j ) != null; j++ )
-			{
-				@ent = @team.ent( j );
-				ent.client.respawn( false );
-			}
+		if(@client == null) {
+			break;
 		}
-		for(int i = 0; i < maxClients; i++) {
-			Client @client = @G_GetClient(i);
-			if(@client == null) {
-				break;
-			}
-			// respawn players who connected during the previous round
+
+		if(client.team == loser.team()) {
+			client.respawn(false);
+
 			if(spawnNextRound[i]) {
-				client.respawn(false);
 				spawnNextRound[i] = false;
 			}
-		}
-		G_RemoveDeadBodies();
-        G_RemoveAllProjectiles();
-		G_Items_RespawnByType(0, 0, 0);
 
-		FTAG_DefrostTeam(loser.team());
-		ftaga_countDown = 5; //delay before new round start
-		ftaga_roundStateEndTime = levelTime + 7000;
-		return;
+			continue;
+		}/* else if(!client.getEnt().isGhosting()) {
+			client.inventoryGiveItem(HEALTH_LARGE);
+		}*/
+
+		// respawn players who connected during the previous round
+		if(spawnNextRound[i]) {
+			client.respawn(false);
+
+			spawnNextRound[i] = false;
+		}
 	}
+
+	Team @winner = G_GetTeam(loser.team() == TEAM_ALPHA ? TEAM_BETA : TEAM_ALPHA);
+	winner.stats.addScore(1);
+	G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_team0" + int(brandom(1, 2))), winner.team(), false, null);
+	G_AnnouncerSound(null, G_SoundIndex("sounds/announcer/ctf/score_enemy0" + int(brandom(1, 2))), loser.team(), false, null);
+
+	G_Items_RespawnByType(IT_WEAPON, 0, 0);
+
+	FTAG_DefrostTeam(loser.team());
 }
 
 void FTAG_ResetDefrostCounters() {
@@ -204,12 +190,80 @@ bool GT_Command(Client @client, const String &cmdString, const String &argsStrin
 		return true;
 	} else if(cmdString == "callvotevalidate") {
 		String votename = argsString.getToken(0);
+		if(votename == "ftag_powerups") {
+			String voteArg = argsString.getToken(1);
+			if(voteArg.len() < 1) {
+				client.printMessage("Callvote " + votename + " requires at least one argument\n");
+				return false;
+			}
+
+			if(voteArg != "0" && voteArg != "1") {
+				client.printMessage("Callvote " + votename + " expects a 1 or a 0 as argument\n");
+				return false;
+			}
+
+			int value = voteArg.toInt();
+
+			if(value == 0 && !ftagAllowPowerups.boolean) {
+				client.printMessage("Powerups are already disabled\n");
+				return false;
+			}
+
+			if(value == 1 && ftagAllowPowerups.boolean) {
+				client.printMessage("Powerups are already enabled\n");
+				return false;
+			}
+
+			return true;
+		}
+
+		if(votename == "ftag_powerup_drop") {
+			String voteArg = argsString.getToken(1);
+			if(voteArg.len() < 1) {
+				client.printMessage("Callvote " + votename + " requires at least one argument\n");
+				return false;
+			}
+
+			if(voteArg != "0" && voteArg != "1") {
+				client.printMessage("Callvote " + votename + " expects a 1 or a 0 as argument\n");
+				return false;
+			}
+
+			int value = voteArg.toInt();
+
+			if(value == 0 && !ftagAllowPowerupDrop.boolean) {
+				client.printMessage("Powerup drop is already disabled\n");
+				return false;
+			}
+
+			if(value == 1 && ftagAllowPowerupDrop.boolean) {
+				client.printMessage("Powerup drop is already enabled\n");
+				return false;
+			}
+
+			return true;
+		}
 
 		client.printMessage("Unknown callvote " + votename + "\n");
 		return false;
 
 	} else if(cmdString == "callvotepassed") {
 		String votename = argsString.getToken(0);
+		if(votename == "ftag_powerups") {
+			ftagAllowPowerups.set(argsString.getToken(1).toInt() > 0 ? 1 : 0);
+
+			// force restart to update
+			match.launchState(MATCH_STATE_POSTMATCH);
+
+			// if i do this, powerups spawn but are unpickable
+			/*if(ftagAllowPowerups.boolean) {
+				gametype.spawnableItemsMask |= IT_POWERUP;
+			} else {
+				gametype.spawnableItemsMask &= ~IT_POWERUP;
+			}*/
+		} else if(votename == "ftag_powerup_drop") {
+			ftagAllowPowerupDrop.set(argsString.getToken(1).toInt() > 0 ? 1 : 0);
+		}
 		return true;
 	}
 	return false;
@@ -255,10 +309,19 @@ String @GT_ScoreboardMessage(uint maxlen) {
 					+ ent.client.stats.score + " " + defrosts[ent.client.playerNum] + " " +
 					+ ent.client.ping + " " + readyIcon + " ";
 			} else {
-				// "Name Clan Score Frags Dfrst Ping R"
+				int carrierIcon;
+				if(ent.client.inventoryCount(POWERUP_QUAD) > 0) {
+					carrierIcon = prcShockIcon;
+				} else if(ent.client.inventoryCount(POWERUP_SHELL) > 0) {
+					carrierIcon = prcShellIcon;
+				} else {
+					carrierIcon = 0;
+				}
+
+				// "Name Clan Score Frags Dfrst Ping C R"
 				entry = "&p " + playerID + " " + ent.client.clanName + " "
 					+ ent.client.stats.score + " " + ent.client.stats.frags + " " + defrosts[ent.client.playerNum] + " "
-					+ ent.client.ping + " " + readyIcon + " ";
+					+ ent.client.ping + " " + carrierIcon + " " + readyIcon + " ";
 			}
 
 			if(scoreboardMessage.len() + entry.len() < maxlen) {
@@ -391,43 +454,6 @@ void GT_ThinkRules() {
 		return;
 	}
 
-	if ( ftaga_roundStateEndTime != 0 ) {
-		if ( ftaga_roundStateEndTime < levelTime ) {
-			FTAG_NewRound (team, 3);
-            return;
-        }
-		if ( ftaga_countDown > 0 ) {
-			// we can't use the automatic countdown announces because their are based on the
-			// matchstate timelimit, and prerounds don't use it. So, fire the announces "by hand".
-			int remainingSeconds = int( ( ftaga_roundStateEndTime - levelTime ) * 0.001f );
-			//G_PrintMsg(null, String ( ftaga_countDown ) );
-			if ( remainingSeconds < 0 )
-				remainingSeconds = 0;
-			if ( remainingSeconds < ftaga_countDown ) {
-				ftaga_countDown = remainingSeconds;
-				if ( ftaga_countDown == 4 ) {
-					int soundIndex = G_SoundIndex( "sounds/announcer/countdown/ready0" + (1 + (rand() & 1)) );
-					G_AnnouncerSound( null, soundIndex, GS_MAX_TEAMS, false, null );
-				} else if( ftaga_countDown <= 3 ) {
-					int soundIndex = G_SoundIndex( "sounds/announcer/countdown/" + ftaga_countDown + "_0" + (1 + (rand() & 1)) );
-					G_AnnouncerSound( null, soundIndex, GS_MAX_TEAMS, false, null );
-				}
-				G_CenterPrintMsg( null, String( ftaga_countDown ) );
-				if (ftaga_countDown == 0) {
-					int soundIndex = G_SoundIndex( "sounds/announcer/countdown/fight0" + (1 + (rand() & 1)) );
-            		G_AnnouncerSound( null, soundIndex, GS_MAX_TEAMS, false, null );
-            		G_CenterPrintMsg( null, 'Fight!');
-					gametype.shootingDisabled = false;
-					gametype.removeInactivePlayers = true;
-					gametype.pickableItemsMask = gametype.spawnableItemsMask;
-					gametype.dropableItemsMask = gametype.spawnableItemsMask;
-					ftaga_roundStateEndTime = 0;
-					ftaga_state = 0;
-				}
-			}
-		}
-	}
-
 	GENERIC_Think();
 
 	for(int i = 0; i < maxClients; i++) {
@@ -538,7 +564,7 @@ void GT_ThinkRules() {
 			}
 
 			if(count == 0) {
-				FTAG_NewRound(team, 1);
+				FTAG_NewRound(team);
 				break;
 			}
 		}
@@ -636,12 +662,15 @@ void GT_InitGametype() {
 	// spawning entities from it is forbidden. ifyou want to make any entity
 	// spawning at initialization do it in GT_SpawnGametype, which is called
 	// right after the map entities spawning.
-	gametype.title = "Freeze Tag Arena";
-	gametype.version = "0.9.5.2";
+	gametype.title = "Freeze Tag";
+	gametype.version = "0.9.5.3";
 	gametype.author = "Mike^4JS";
 	// Forked by Gelmo
 
-	gametype.spawnableItemsMask = ( IT_WEAPON | IT_AMMO );
+	gametype.spawnableItemsMask = ( IT_WEAPON | IT_AMMO | IT_ARMOR | IT_POWERUP | IT_HEALTH );
+	if(!ftagAllowPowerups.boolean) {
+		gametype.spawnableItemsMask &= ~IT_POWERUP;
+	}
 	if(gametype.isInstagib) {
 		gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
 	}
@@ -690,16 +719,22 @@ void GT_InitGametype() {
 		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18");
 		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Dfrst Ping R");
 	} else {
-		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %r l1" );
-		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Dfrst Ping R" );
+		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 " + "%p 18 " + "%p 18");
+		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Dfrst Ping " + "C " + " R");
 	}
 
 	// precache images that can be used by the scoreboard
 	prcYesIcon = G_ImageIndex("gfx/hud/icons/vsay/yes");
+	prcShockIcon = G_ImageIndex("gfx/hud/icons/powerup/quad");
+	prcShellIcon = G_ImageIndex("gfx/hud/icons/powerup/warshell");
 
 	// add commands
 	G_RegisterCommand("drop");
 	G_RegisterCommand("gametype");
+
+	// add callvotes
+	G_RegisterCallvote("ftag_powerups", "1 or 0", "bool", "Enables or disables powerups in Freeze Tag.");
+	G_RegisterCallvote("ftag_powerup_drop", "1 or 0", "bool", "Enables or disables powerup dropping in Freeze Tag.");
 
 	if(!G_FileExists("configs/server/gametypes/" + gametype.name + ".cfg")) {
 		String config;
@@ -707,10 +742,12 @@ void GT_InitGametype() {
 		config = "// '" + gametype.title + "' gametype configuration file\n"
 			+ "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
+			+ "set ftag_allowPowerups \"1\"\n"
+			+ "set ftag_powerupDrop \"1\"\n"
 			+ "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
             + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
 			+ "\n// map rotation\n"
-			+ "set g_maplist \"wfca1 wfca2\" // list of maps in automatic rotation\n"
+			+ "set g_maplist \"wfdm7 wfdm8 wfdm13 wfdm16 wfdm18 wfctf1 wfctf2 wfctf3 wfctf4\" // list of maps in automatic rotation\n"
 			+ "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
 			+ "\n// game settings\n"
 			+ "set g_scorelimit \"11\"\n"
@@ -718,10 +755,10 @@ void GT_InitGametype() {
 			+ "set g_warmup_enabled \"1\"\n"
 			+ "set g_warmup_timelimit \"1.5\"\n"
 			+ "set g_match_extendedtime \"0\"\n"
-			+ "set g_allow_falldamage \"0\"\n"
-			+ "set g_allow_selfdamage \"0\"\n"
-			+ "set g_allow_teamdamage \"0\"\n"
-			+ "set g_allow_stun \"0\"\n"
+			+ "set g_allow_falldamage \"1\"\n"
+			+ "set g_allow_selfdamage \"1\"\n"
+			+ "set g_allow_teamdamage \"1\"\n"
+			+ "set g_allow_stun \"1\"\n"
 			+ "set g_teams_maxplayers \"0\"\n"
 			+ "set g_teams_allow_uneven \"0\"\n"
 			+ "set g_countdown_time \"5\"\n"

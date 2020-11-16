@@ -9,7 +9,7 @@ generic/items.as;
 generic/spawnpoints.as;
 generic/awards.as;
 
-ftag/ftaga.as;
+ftag/ft.as;
 ftag/ftag_cp.as;
 
 legacy/quake1.as;

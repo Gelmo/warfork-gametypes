@@ -232,7 +232,7 @@ class cFrozenPlayer {
         }
 
         if ( this.mateDefrosting == false && this.defrostTime > 0 ) {
-            this.defrostTime -= frameTime / FTAG_INVERSE_HAZARD_DEFROST_SCALE;
+            this.defrostTime -= frameTime / FTAG_DEFROST_DECAY_SCALE;
         }
 
 		this.mateDefrosting = false;

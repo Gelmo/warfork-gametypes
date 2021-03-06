@@ -240,8 +240,8 @@ class cFrozenPlayer {
 		this.model.getSize(mins, maxs);
 
 		int point = G_PointContents(this.model.origin + Vec3(0, 0, mins.z));
-		if((point & CONTENTS_LAVA) != 0 || (point & CONTENTS_SLIME) != 0 || (point & CONTENTS_NODROP) != 0) {
-			this.use(@this.client.getEnt()); // presumably they are in a pit/slime/lava
+		if((point & CONTENTS_LAVA) != 0 || (point & CONTENTS_SLIME) != 0 || (point & CONTENTS_WATER) != 0 || (point & CONTENTS_NODROP) != 0) {
+			this.use(@this.client.getEnt()); // presumably they are in a pit/slime/lava/water
 		}
 
 		if(@this.next != null) {

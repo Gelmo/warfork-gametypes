@@ -358,30 +358,35 @@ void GT_ThinkRules() {
 
 	GENERIC_Think();
 
-	// print count of players alive
-	Team @team;
-	int[] alive(GS_MAX_TEAMS);
-	alive[TEAM_SPECTATOR] = 0;
-	alive[TEAM_PLAYERS] = 0;
-	alive[TEAM_ALPHA] = 0;
-	alive[TEAM_BETA] = 0;
-	for(int t = TEAM_ALPHA; t < GS_MAX_TEAMS; t++) {
-		@team = @G_GetTeam(t);
-		for(int i = 0; @team.ent(i) != null; i++) {
-			if(!team.ent(i).isGhosting()) {
-				alive[t]++;
-			}
-		}
-	}
+	// print count of players alive and show class icon in the HUD
 
-	G_ConfigString(CS_GENERAL, "- " + alive[TEAM_ALPHA] + " -");
-	G_ConfigString(CS_GENERAL + 1, "- " + alive[TEAM_BETA] + " -");
+    Team @team;
+    int[] alive( GS_MAX_TEAMS );
+
+    alive[TEAM_SPECTATOR] = 0;
+    alive[TEAM_PLAYERS] = 0;
+    alive[TEAM_ALPHA] = 0;
+    alive[TEAM_BETA] = 0;
+
+    for ( int t = TEAM_ALPHA; t < GS_MAX_TEAMS; t++ )
+    {
+        @team = @G_GetTeam( t );
+        for ( int i = 0; @team.ent( i ) != null; i++ )
+        {
+            if ( !team.ent( i ).isGhosting() )
+                alive[t]++;
+        }
+    }
+
+    G_ConfigString( CS_GENERAL, "" + alive[TEAM_ALPHA] );
+    G_ConfigString( CS_GENERAL + 1, "" + alive[TEAM_BETA] );
 
 	for(int i = 0; i < maxClients; i++) {
 		Client @client = @G_GetClient(i);
 		if(match.getState() != MATCH_STATE_PLAYTIME) {
 			client.setHUDStat(STAT_MESSAGE_ALPHA, 0);
 			client.setHUDStat(STAT_MESSAGE_BETA, 0);
+			client.setHUDStat(STAT_IMAGE_BETA, 0);
 		} else {
 			client.setHUDStat(STAT_MESSAGE_ALPHA, CS_GENERAL);
 			client.setHUDStat(STAT_MESSAGE_BETA, CS_GENERAL + 1);

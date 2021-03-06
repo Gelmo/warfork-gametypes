@@ -40,8 +40,8 @@ class cFrozenPlayer {
 
 		@this.model = @G_SpawnEntity("player_frozen");
 		this.model.type = ET_PLAYER;
-		this.model.moveType = MOVETYPE_TOSS;
-		this.model.mass = 250; // no longer arbritary
+		this.model.moveType = MOVETYPE_TOSSSLIDE;
+		this.model.mass = 200; // no longer arbritary
 		this.model.takeDamage = 1;
 		this.model.origin = vec;
 		this.model.velocity = this.client.getEnt().velocity;
@@ -49,7 +49,7 @@ class cFrozenPlayer {
 		this.model.angles = player.getEnt().angles;
 		this.model.team = player.team;
 		this.model.modelindex = this.client.getEnt().modelindex;
-		this.model.solid = SOLID_NOT;
+		this.model.solid = SOLID_YES;
 		this.model.skinNum = this.client.getEnt().skinNum;
 		this.model.svflags = (player.getEnt().svflags & ~uint(SVF_NOCLIENT)) | uint(SVF_BROADCAST);
 		this.model.effects = EF_ROTATE_AND_BOB | EF_GODMODE;

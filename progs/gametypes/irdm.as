@@ -511,7 +511,7 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                + "// This config will be executed each time the gametype is started\n"
                + "\n\n// map rotation\n"
-               + "set g_instagib \"1\"\n"
+               + "set g_instagib \"0\"\n"
                + "set g_instajump \"1\"\n"
                + "set g_instashield \"0\"\n"
                + "set g_maplist \"wfca1 bipbeta2-1\"\n"
@@ -539,14 +539,6 @@ void GT_InitGametype()
         G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
     }
 
-    if ( !gametype.isInstagib )
-    {
-        G_Print( S_COLOR_RED + "ERROR: Instagib is disabled!"
-                 + " This gametype works only with instagib enabled.\n"
-                 + " Failed to initialize the gametype!\n" );
-        return;
-    }
-
     gametype.spawnableItemsMask = 0;
     gametype.respawnableItemsMask = 0;
     gametype.dropableItemsMask = 0;
@@ -564,7 +556,7 @@ void GT_InitGametype()
     gametype.countdownEnabled = false;
     gametype.mathAbortDisabled = false;
     gametype.shootingDisabled = false;
-    gametype.infiniteAmmo = false;
+    gametype.infiniteAmmo = true;
     gametype.canForceModels = true;
     gametype.canShowMinimap = false;
     gametype.teamOnlyMinimap = false;

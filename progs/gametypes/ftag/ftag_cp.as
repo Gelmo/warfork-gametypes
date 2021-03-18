@@ -41,10 +41,10 @@ class cFrozenPlayer {
 		@this.model = @G_SpawnEntity("player_frozen");
 		this.model.type = ET_PLAYER;
 		this.model.moveType = MOVETYPE_TOSSSLIDE;
-		this.model.mass = 200; // no longer arbritary
+		this.model.mass = 250; // no longer arbritary
 		this.model.takeDamage = 1;
 		this.model.origin = vec;
-		this.model.velocity = this.client.getEnt().velocity;
+		this.model.velocity = 0;
 		this.model.setSize(mins, maxs);
 		this.model.angles = player.getEnt().angles;
 		this.model.team = player.team;

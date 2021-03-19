@@ -135,6 +135,13 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
 {
     if ( score_event == "dmg" )
     {
+        Entity @attacker = null;
+        float vampamount = 2;
+        @attacker = @client.getEnt();
+        if ( attacker.health < 399 )
+        {
+            attacker.health += vampamount;
+        }
     }
     else if ( score_event == "kill" )
     {
@@ -183,7 +190,7 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
         ent.client.selectWeapon( -1 );
 
     // add a teleportation effect
-    ent.health = "300";
+    ent.health = "250";
     ent.respawnEffect();
 	
 }

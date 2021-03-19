@@ -23,7 +23,6 @@ Custom Gametypes for Warfork
   - SlideFFA (rocket and grenade instagib (with splash damage) but FFA style, typically played on slick maps)
 
 ### Not Packaged:
-- FBomb (Fixed bomb until 2.2 is released)
 - UBomb (Unholy Bomb Arena, FBomb with holy trinity loadout, inifinite ammo, and no self/team dmg)
 - Ignore wipeout; this is an old version, upstream is called Exhaustion
 - Ignore the hny/hoony modes currently; WIP and need significant work

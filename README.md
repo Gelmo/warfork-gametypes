@@ -8,8 +8,8 @@ Custom Gametypes for Warfork
 - gt_aa - Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
 - gt_rbduel - Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
 - gt_thunder - Thunder Pack
-  - Thunder (LG-only, infinite ammo, FFA style, players have 300 health)
-  - Thunder DA (Duel arena with LG-only)
+  - Thunder (LG-only, infinite ammo, FFA style, players start with 250 health, player gains 2 health when dealing damage (max health is 400))
+  - Thunder DA (Duel arena with LG-only, infinite ammo, players start with 250 health, player gains 2 health when dealing damage (max health is 400))
 - gt_ffap - FFA Pack
   - Unholy Arena (RL/LG/EB-only, infinite ammo, FFA style without self dmg)
   - Unholy FFA (RL/LG/EB-only, infinite ammo, FFA style with self dmg)

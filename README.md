@@ -35,7 +35,7 @@ Custom Gametypes for Warfork
 - Use RBDuel as base, but need to add spawn selection and tennis-style scoring
 
 ## Ftag:
-- Push frozen players? - Not possible in 2.1, maybe when ascgame is merged. "They’re non solid because people were teleporting into frozen ppl and getting stuck"
+- Make frozen players slow down when sliding (fake friction)
 - Implement Awards
 - Add AI Goals for bot support
 

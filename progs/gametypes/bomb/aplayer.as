@@ -40,14 +40,25 @@ enum eSecondaries
 const uint PRIMARY_NONE = 0; // used for pending test
 const uint PRIMARY_MIN = 1;
 const uint PRIMARY_EBRL = PRIMARY_MIN;
+const uint PRIMARY_RLLG = 2;
+const uint PRIMARY_EBLG = 3;
 
 const uint SECONDARY_NONE = 0; // used for pending test
-const uint SECONDARY_MIN = WEAP_LASERGUN;
-const uint SECONDARY_LG = WEAP_LASERGUN;
+const uint SECONDARY_MIN = WEAP_PLASMAGUN;
+const uint SECONDARY_PG = WEAP_PLASMAGUN;
+const uint SECONDARY_RG = WEAP_RIOTGUN;
+const uint SECONDARY_MG = WEAP_MACHINEGUN;
+const uint SECONDARY_GL = WEAP_GRENADELAUNCHER;
+const uint SECONDARY_GB = WEAP_GUNBLADE;
 
-const int AMMO_EB = 99;
-const int AMMO_RL = 99;
-const int AMMO_LG = 99;
+const int AMMO_EB = 20;
+const int AMMO_RL = 40;
+const int AMMO_LG = 200;
+const int AMMO_PG = 180;
+const int AMMO_RG = 20;
+const int AMMO_MG = 200;
+const int AMMO_GL = 15;
+const int AMMO_GB = 1; // might as well spawn with it fully charged
 
 const float PLAYER_ARMOR = 100.0f;
 
@@ -130,6 +141,7 @@ class cPlayer
 			this.pendingSecondary = SECONDARY_NONE;
 		}
 
+		this.client.inventorySetCount( WEAP_GUNBLADE, 1 );
 		this.client.armor = PLAYER_ARMOR;
 
 		// XXX: old bomb would set the player's model depending on their
@@ -150,6 +162,30 @@ class cPlayer
 
 				break;
 
+			case PRIMARY_RLLG:
+				this.client.inventoryGiveItem( WEAP_ROCKETLAUNCHER );
+				this.client.inventoryGiveItem( WEAP_LASERGUN );
+
+				this.client.inventorySetCount( AMMO_ROCKETS, AMMO_RL );
+				this.client.inventorySetCount( AMMO_LASERS, AMMO_LG );
+
+				this.client.inventorySetCount( AMMO_WEAK_ROCKETS, 0 );
+				this.client.inventorySetCount( AMMO_WEAK_LASERS, 0 );
+
+				break;
+
+			case PRIMARY_EBLG:
+				this.client.inventoryGiveItem( WEAP_ELECTROBOLT );
+				this.client.inventoryGiveItem( WEAP_LASERGUN );
+
+				this.client.inventorySetCount( AMMO_BOLTS, AMMO_EB );
+				this.client.inventorySetCount( AMMO_LASERS, AMMO_LG );
+
+				this.client.inventorySetCount( AMMO_WEAK_BOLTS, 0 );
+				this.client.inventorySetCount( AMMO_WEAK_LASERS, 0 );
+
+				break;
+
 			default:
 				assert( false, "player.as giveInventory: bad primary weapon" );
 
@@ -158,12 +194,44 @@ class cPlayer
 
 		switch ( int( this.weapSecondary ) )
 		{
-			case SECONDARY_LG:
-				this.client.inventoryGiveItem( WEAP_LASERGUN );
+			case SECONDARY_PG:
+				this.client.inventoryGiveItem( WEAP_PLASMAGUN );
 
-				this.client.inventorySetCount( AMMO_LASERS, AMMO_LG );
+				this.client.inventorySetCount( AMMO_PLASMA, AMMO_PG );
 
-				this.client.inventorySetCount( AMMO_WEAK_LASERS, 0 );
+				this.client.inventorySetCount( AMMO_WEAK_PLASMA, 0 );
+
+				break;
+
+			case SECONDARY_RG:
+				this.client.inventoryGiveItem( WEAP_RIOTGUN );
+
+				this.client.inventorySetCount( AMMO_SHELLS, AMMO_RG );
+
+				this.client.inventorySetCount( AMMO_WEAK_SHELLS, 0 );
+
+				break;
+
+			case SECONDARY_MG:
+				this.client.inventoryGiveItem( WEAP_MACHINEGUN );
+
+				this.client.inventorySetCount( AMMO_BULLETS, AMMO_MG );
+
+				//this.client.inventorySetCount( AMMO_WEAK_BULLETS, 0 );
+
+				break;
+
+			case SECONDARY_GL:
+				this.client.inventoryGiveItem( WEAP_GRENADELAUNCHER );
+
+				this.client.inventorySetCount( AMMO_GRENADES, AMMO_GL );
+
+				this.client.inventorySetCount( AMMO_WEAK_GRENADES, 0 );
+
+				break;
+
+			case SECONDARY_GB:
+				this.client.inventorySetCount( AMMO_GUNBLADE, AMMO_GB );
 
 				break;
 
@@ -188,6 +256,18 @@ class cPlayer
 				
 				break;
 
+			case PRIMARY_RLLG:
+				label += getWeaponIcon( WEAP_ROCKETLAUNCHER )
+					+ " " + getWeaponIcon( WEAP_LASERGUN );
+				
+				break;
+
+			case PRIMARY_EBLG:
+				label += getWeaponIcon( WEAP_ELECTROBOLT )
+					+ " " + getWeaponIcon( WEAP_LASERGUN );
+				
+				break;
+
 			default:
 				assert( false, "player.as getInventoryLabel: switch hit default case" );
 
@@ -209,7 +289,9 @@ class cPlayer
 		}
 
 		String command = "mecu \"Primary weapons\""
-			+ " \"EB + RL\" \"weapselect eb; gametypemenu2\"";
+			+ " \"EB + RL\" \"weapselect eb; gametypemenu2\""
+			+ " \"RL + LG\" \"weapselect rl; gametypemenu2\""
+			+ " \"EB + LG\" \"weapselect lg; gametypemenu2\"";
 
 		if ( cvarEnableCarriers.boolean )
 		{
@@ -241,7 +323,11 @@ class cPlayer
 		// TODO: add brackets around current selection?
 
 		this.client.execGameCommand( "mecu \"Secondary weapons\""
-			+ " \"Lasergun\" \"weapselect lg\""
+			+ " \"Plasmagun\" \"weapselect pg\""
+			+ " \"Riotgun\" \"weapselect rg\""
+			+ " \"Machinegun\" \"weapselect mg\""
+			+ " \"Grenade Launcher\" \"weapselect gl\""
+			+ " \"Strong Gunblade\" \"weapselect gb\""
 		);
 	}
 
@@ -282,9 +368,33 @@ class cPlayer
 			{
 				this.selectPrimaryWeapon( PRIMARY_EBRL );
 			}
+			else if ( token == "RL" )
+			{
+				this.selectPrimaryWeapon( PRIMARY_RLLG );
+			}
 			else if ( token == "LG" )
 			{
-				this.selectSecondaryWeapon( SECONDARY_LG );
+				this.selectPrimaryWeapon( PRIMARY_EBLG );
+			}
+			else if ( token == "PG" )
+			{
+				this.selectSecondaryWeapon( SECONDARY_PG );
+			}
+			else if ( token == "RG" )
+			{
+				this.selectSecondaryWeapon( SECONDARY_RG );
+			}
+			else if ( token == "MG" )
+			{
+				this.selectSecondaryWeapon( SECONDARY_MG );
+			}
+			else if ( token == "GL" )
+			{
+				this.selectSecondaryWeapon( SECONDARY_GL );
+			}
+			else if ( token == "GB" )
+			{
+				this.selectSecondaryWeapon( SECONDARY_GB );
 			}
 			else
 			{

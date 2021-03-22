@@ -818,7 +818,7 @@ void GT_SpawnGametype()
 // right after the map entities spawning.
 void GT_InitGametype()
 {
-	gametype.title = "Unholy Bomb Arena";
+	gametype.title = "Bomb Arena";
 	gametype.version = "1.0.0";
 	gametype.author = "Warsow Development Team";
 	// Forked by Gelmo
@@ -846,7 +846,7 @@ void GT_InitGametype()
 	gametype.countdownEnabled = false;
 	gametype.mathAbortDisabled = false;
 	gametype.shootingDisabled = false;
-	gametype.infiniteAmmo = true;
+	gametype.infiniteAmmo = false;
 	gametype.canForceModels = true;
 	gametype.canShowMinimap = true;
 	gametype.teamOnlyMinimap = true;
@@ -928,7 +928,7 @@ void GT_InitGametype()
 		G_CmdExecute("exec configs/server/gametypes/" + gametype.name + ".cfg silent");
 	}*/
 
-	G_CmdExecute( "exec configs/server/gametypes/ubomb.cfg silent" ); // TODO XXX FIXME
+	G_CmdExecute( "exec configs/server/gametypes/abomb.cfg silent" ); // TODO XXX FIXME
 
 	G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

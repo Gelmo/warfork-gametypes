@@ -60,7 +60,7 @@ const int AMMO_MG = 200;
 const int AMMO_GL = 15;
 const int AMMO_GB = 1; // might as well spawn with it fully charged
 
-const float PLAYER_ARMOR = 100.0f;
+const float PLAYER_ARMOR = 250.0f;
 
 cPlayer@[] players( maxClients ); // array of handles
 bool playersInitialized = false;

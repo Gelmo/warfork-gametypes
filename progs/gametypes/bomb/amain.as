@@ -644,6 +644,7 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 	player.giveInventory();
 	
 	ent.svflags |= SVF_FORCETEAM;
+	ent.health = "150";
 	ent.respawnEffect();
 }
 

@@ -241,36 +241,6 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
 		return true;
 	}
 
-	if ( cmdString == "gametypemenu" )
-	{
-		playerFromClient( @client ).showPrimarySelection();
-
-		return true;
-	}
-
-	if ( cmdString == "gametypemenu2" )
-	{
-		playerFromClient( @client ).showSecondarySelection();
-
-		return true;
-	}
-
-	if ( cmdString == "weapselect" )
-	{
-		cPlayer @player = @playerFromClient( @client );
-		
-		player.selectWeapon( argsString );
-
-		// TODO: block them from shooting for 0.5s or something instead
-
-		if ( /*match.getState() == MATCH_STATE_WARMUP ||*/ roundState == ROUNDSTATE_PRE )
-		{
-			player.giveInventory();
-		}
-
-		return true;
-	}
-
 	if ( cmdString == "gametype" )
 	{
 		String response = "";
@@ -405,7 +375,6 @@ String @GT_ScoreboardMessage( uint maxlen )
 					+ " " + client.clanName
 					+ " " + client.stats.score
 					+ " " + client.stats.frags
-					+ " " + player.getInventoryLabel() // W1 W2 W3
 					+ " " + client.ping
 					+ " " + statusIcon
 					+ " "; // don't delete me!
@@ -601,11 +570,6 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 		if ( bombState == BOMBSTATE_CARRIED && @ent == @bombCarrier )
 		{
 			bombDrop( BOMBDROP_TEAM );
-		}
-
-		if ( !gametype.isInstagib )
-		{
-			player.showPrimarySelection();
 		}
 
 		if ( matchState == MATCH_STATE_PLAYTIME )
@@ -871,8 +835,8 @@ void GT_InitGametype()
 	}
 	else
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 42 %i 42 %p l1 %p l1 %p l1 %l 36 %p l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags " + S_COLOR_WHITE + " " + S_COLOR_WHITE + " " + S_COLOR_WHITE + " Ping S" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 42 %i 42 %l 36 %p l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Ping S" );
 	}
 
 	// add commands
@@ -880,15 +844,6 @@ void GT_InitGametype()
 	G_RegisterCommand( "carrier" );
 
 	G_RegisterCommand( "gametype" );
-
-	// makes no sense to have these in insta
-	// merge with the above if to save an if?
-	if ( !gametype.isInstagib )
-	{
-		G_RegisterCommand( "gametypemenu" );
-		G_RegisterCommand( "gametypemenu2" );
-		G_RegisterCommand( "weapselect" );
-	}
 
 	// add callvotes
 	// XXX: vic says no to callvotes

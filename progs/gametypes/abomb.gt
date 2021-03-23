@@ -10,8 +10,8 @@ generic/awards.as;
 
 bomb/amain.as;
 bomb/aplayer.as;
+bomb/asite.as;
 bomb/bomb.as;
-bomb/site.as;
 bomb/round.as;
 bomb/media.as;
 bomb/bots.as;

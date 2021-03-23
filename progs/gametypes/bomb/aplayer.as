@@ -17,6 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets", 0 );
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
+
 const float PLAYER_ARMOR = 250.0f;
 
 cPlayer@[] players( maxClients ); // array of handles
@@ -68,11 +71,44 @@ class cPlayer
 
 			return;
 		}
+		else
+		{
+			String token, weakammotoken, ammotoken;
+    		String itemList = g_noclass_inventory.string;
+    		String ammoCounts = g_class_strong_ammo.string;
 
-		this.client.inventorySetCount( WEAP_GUNBLADE, 1 );
-		this.client.armor = PLAYER_ARMOR;
+			for ( int i = 0; ;i++ )
+            {
+                token = itemList.getToken( i );
+                if ( token.len() == 0 )
+                    break; // done
 
-		this.client.selectWeapon( -1 );
+                Item @item = @G_GetItemByName( token );
+                if ( @item == null )
+                    continue;
+
+                this.client.inventoryGiveItem( item.tag );
+
+                // if it's ammo, set the ammo count as defined in the cvar
+                if ( ( item.type & IT_AMMO ) != 0 )
+                {
+                    token = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
+
+                    if ( token.len() > 0 )
+                    {
+                        this.client.inventorySetCount( item.tag, token.toInt() );
+                    }
+                }
+            }
+
+    		this.client.armor = PLAYER_ARMOR;
+
+            this.client.selectWeapon( WEAP_ROCKETLAUNCHER );
+    	}
+
+		// auto-select best weapon in the inventory
+        if( this.client.pendingWeapon == WEAP_NONE )
+    		this.client.selectWeapon( -1 );
 	}
 
 }

@@ -89,7 +89,7 @@ Vec3 BOMB_MAXS(  16,  16, 48 ); // same size as player i guess
 cBombSite @BOMB_BOTS_SITE = null;
 
 // cvars
-Cvar cvarRoundTime(       "g_bomb_roundtime",       "75", CVAR_ARCHIVE );
+Cvar cvarRoundTime(       "g_bomb_roundtime",       "60", CVAR_ARCHIVE );
 Cvar cvarExplodeTime(     "g_bomb_bombtimer",       "50", CVAR_ARCHIVE );
 Cvar cvarArmTime(         "g_bomb_armtime",         "4",  CVAR_ARCHIVE );
 Cvar cvarDefuseTime(      "g_bomb_defusetime",      "7",  CVAR_ARCHIVE );

@@ -87,7 +87,7 @@ class cBombSite
 		this.sprite.type = ET_RADAR;
 		this.sprite.solid = SOLID_NOT;
 		this.sprite.origin = origin;
-		this.sprite.modelindex = G_ImageIndex( "gfx/simpleitems/capture_indicators/capture_" + this.letter );
+		this.sprite.modelindex = G_ImageIndex( "gfx/bomb/radar_" + this.letter );
 		this.sprite.svflags = ( this.sprite.svflags & ~SVF_NOCLIENT ) | SVF_BROADCAST;
 		this.sprite.frame = BOMB_ARM_DEFUSE_RADIUS;
 		this.sprite.linkEntity();
@@ -96,8 +96,8 @@ class cBombSite
 		this.minimap.type = ET_MINIMAP_ICON;
 		this.minimap.solid = SOLID_NOT;
 		this.minimap.origin = origin;
-		this.minimap.modelindex = G_ImageIndex( "gfx/simpleitems/capture_indicators/capture_" + this.letter + "_letter" );
-		this.minimap.frame = 48; // size in case of a ET_MINIMAP_ICON
+		this.minimap.modelindex = G_ImageIndex( "gfx/bomb/minimap_" + this.letter );
+		this.minimap.frame = 32; // size in case of a ET_MINIMAP_ICON
 		this.minimap.svflags = ( this.minimap.svflags & ~SVF_NOCLIENT ) | SVF_BROADCAST;
 		this.minimap.linkEntity();
 

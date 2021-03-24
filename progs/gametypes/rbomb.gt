@@ -8,7 +8,7 @@ generic/bots.as;
 generic/items.as;
 generic/awards.as;
 
-bomb/main.as;
+bomb/rmain.as;
 bomb/player.as;
 bomb/bomb.as;
 bomb/site.as;

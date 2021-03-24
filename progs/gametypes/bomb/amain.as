@@ -104,6 +104,40 @@ const String[] SITE_LETTERS = { 'A', 'B' };
 
 const int COUNTDOWN_MAX = 6; // was 4, but this gives people more time to change weapons
 
+Entity @defenseSpawn = null;
+Entity @offenseSpawn = null;
+
+void setupSpawnPoints()
+{
+    Entity @spot1;
+    Entity @spot2;
+    Entity @spawn;
+    float dist, bestDistance;
+
+    // pick a random spawn first
+    @spot1 = @GENERIC_SelectBestRandomSpawnPoint( null, "misc_capture_area_indicator" );
+
+    // pick the furthest spawn second
+    array<Entity @> @spawns = G_FindByClassname( "info_player_deathmatch" );
+    @spawn = null;
+    bestDistance = 0;
+    @spot2 = null;
+
+    for( uint i = 0; i < spawns.size(); i++ )
+    {
+        @spawn = spawns[i];
+        dist = spot1.origin.distance( spawn.origin );
+        if ( dist > bestDistance || @spot2 == null )
+        {
+            bestDistance = dist;
+            @spot2 = @spawn;
+        }
+    }
+
+    @defenseSpawn = @spot1;
+    @offenseSpawn = @spot2;
+}
+
 // this should really kill the program
 // but i'm mostly using it as an indicator that it's about to die anyway
 void assert( const bool test, const String msg )
@@ -296,10 +330,10 @@ Entity @GT_SelectSpawnPoint( Entity @self )
 {
 	if ( self.team == attackingTeam )
 	{
-		return GENERIC_SelectBestRandomSpawnPoint( @self, "team_CTF_betaspawn" );
+		return @offenseSpawn;
 	}
 
-	return GENERIC_SelectBestRandomSpawnPoint( @self, "team_CTF_alphaspawn" );
+	return @defenseSpawn;
 }
 
 String @GT_ScoreboardMessage( uint maxlen )
@@ -736,7 +770,9 @@ void GT_MatchStateStarted()
 
 			break;
 
-		case MATCH_STATE_COUNTDOWN:		
+		case MATCH_STATE_COUNTDOWN:
+			setupSpawnPoints();
+
 			// XXX: old bomb had its own function to do pretty much
 			//      exactly the same thing
 			//      the only difference i can see is that bomb's

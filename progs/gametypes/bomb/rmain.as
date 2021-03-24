@@ -818,9 +818,10 @@ void GT_SpawnGametype()
 // right after the map entities spawning.
 void GT_InitGametype()
 {
-	gametype.title = "Bomb and Defuse";
+	gametype.title = "Retakes";
 	gametype.version = "1.0";
 	gametype.author = "Warsow Development Team";
+	// Forked by Gelmo
 
 	gametype.spawnableItemsMask = 0;
 	gametype.respawnableItemsMask = 0;

@@ -107,7 +107,8 @@ class cBombSite
 		}
 		else
 		{
-			G_Print( "Bomb site " + this.letter + " has no targets. Consider adding them for more control over the bomb's explosion.\n" );
+			// Unfortunately this is expected on current CA maps. Commenting this out until we have CA maps made/modded for Bomb - Gelmo
+			// G_Print( "Bomb site " + this.letter + " has no targets. Consider adding them for more control over the bomb's explosion.\n" );
 
 			this.useExplosionPoints = true;
 			this.computeExplosionPoints();

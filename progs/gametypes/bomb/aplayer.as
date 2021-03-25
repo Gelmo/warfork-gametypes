@@ -111,6 +111,30 @@ class cPlayer
     		this.client.selectWeapon( -1 );
 	}
 
+	void showPrimarySelection()
+	{
+		if ( this.client.team == TEAM_SPECTATOR || @this.client.getBot() != null )
+		{
+			return;
+		}
+
+		if ( cvarEnableCarriers.boolean )
+		{
+			if ( this.isCarrier )
+			{
+				command += " \"Carrier opt-out\" \"carrier\"";
+			}
+			else
+			{
+				command += " \"Carrier opt-in\" \"carrier\"";
+			}
+		}
+
+		// TODO: add brackets around current selection?
+
+		this.client.execGameCommand( command );
+	}
+
 }
 
 // since i am using an array of handles this must

@@ -275,6 +275,13 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
 		return true;
 	}
 
+	if ( cmdString == "gametypemenu" )
+	{
+		playerFromClient( @client ).showPrimarySelection();
+
+		return true;
+	}
+
 	if ( cmdString == "gametype" )
 	{
 		String response = "";
@@ -606,6 +613,8 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 			bombDrop( BOMBDROP_TEAM );
 		}
 
+		player.showPrimarySelection();
+
 		if ( matchState == MATCH_STATE_PLAYTIME )
 		{
 			if ( roundState == ROUNDSTATE_ROUND )
@@ -880,6 +889,8 @@ void GT_InitGametype()
 	G_RegisterCommand( "carrier" );
 
 	G_RegisterCommand( "gametype" );
+
+	G_RegisterCommand( "gametypemenu" );
 
 	// add callvotes
 	// XXX: vic says no to callvotes

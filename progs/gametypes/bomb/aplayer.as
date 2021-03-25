@@ -118,6 +118,8 @@ class cPlayer
 			return;
 		}
 
+		String command = "mecu \"Want to carry bomb?\"";
+
 		if ( cvarEnableCarriers.boolean )
 		{
 			if ( this.isCarrier )

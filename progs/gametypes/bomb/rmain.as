@@ -93,7 +93,6 @@ Cvar cvarRoundTime(       "g_bomb_roundtime",       "60", CVAR_ARCHIVE );
 Cvar cvarExplodeTime(     "g_bomb_bombtimer",       "45", CVAR_ARCHIVE );
 Cvar cvarArmTime(         "g_bomb_armtime",         "4",  CVAR_ARCHIVE );
 Cvar cvarDefuseTime(      "g_bomb_defusetime",      "7",  CVAR_ARCHIVE );
-Cvar cvarEnableCarriers(  "g_bomb_carriers",        "1",  CVAR_ARCHIVE );
 Cvar cvarSpawnProtection( "g_bomb_spawnprotection", "3",  CVAR_ARCHIVE );
 
 // read from this later
@@ -190,51 +189,6 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
 				{
 					bombDrop( BOMBDROP_NORMAL );
 				}
-			}
-		}
-
-		return true;
-	}
-
-	if ( cmdString == "carrier" )
-	{
-		if ( !cvarEnableCarriers.boolean )
-		{
-			G_PrintMsg( @client.getEnt(), "Bomb carriers are disabled.\n" );
-
-			return true;
-		}
-
-		cPlayer @player = @playerFromClient( @client );
-
-		String token = argsString.getToken( 0 );
-
-		if ( token.len() != 0 )
-		{
-			if ( token.toInt() == 1 )
-			{
-				player.isCarrier = true;
-
-				G_PrintMsg( @client.getEnt(), "You are now a bomb carrier!\n" );
-			}
-			else
-			{
-				player.isCarrier = false;
-
-				G_PrintMsg( @client.getEnt(), "You are no longer a bomb carrier.\n" );
-			}
-		}
-		else
-		{
-			player.isCarrier = !player.isCarrier;
-
-			if ( player.isCarrier )
-			{
-				G_PrintMsg( @client.getEnt(), "You are now a bomb carrier!\n" );
-			}
-			else
-			{
-				G_PrintMsg( @client.getEnt(), "You are no longer a bomb carrier.\n" );
 			}
 		}
 
@@ -876,7 +830,6 @@ void GT_InitGametype()
 
 	// add commands
 	G_RegisterCommand( "drop" );
-	G_RegisterCommand( "carrier" );
 
 	G_RegisterCommand( "gametype" );
 

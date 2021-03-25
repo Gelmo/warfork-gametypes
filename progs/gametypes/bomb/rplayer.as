@@ -292,18 +292,6 @@ class cPlayer
 			+ " \"RL + LG\" \"weapselect rl; gametypemenu2\""
 			+ " \"EB + LG\" \"weapselect lg; gametypemenu2\"";
 
-		if ( cvarEnableCarriers.boolean )
-		{
-			if ( this.isCarrier )
-			{
-				command += " \"Carrier opt-out\" \"carrier\"";
-			}
-			else
-			{
-				command += " \"Carrier opt-in\" \"carrier\"";
-			}
-		}
-
 		// TODO: add brackets around current selection?
 
 		this.client.execGameCommand( command );

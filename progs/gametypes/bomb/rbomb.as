@@ -776,43 +776,6 @@ void bombGiveToRandom()
 {
 	Team @team = @G_GetTeam( attackingTeam );
 
-	if ( cvarEnableCarriers.boolean )
-	{
-		uint carrierCount = getCarrierCount( attackingTeam );
-
-		if ( carrierCount != 0 )
-		{
-			// -1 so it starts from 0
-			int playerNum = int( random() * ( carrierCount - 1 ) );
-
-			for ( int i = 0, carrier = 0; @team.ent( i ) != null; i++ )
-			{
-				Entity @ent = @team.ent( i );
-				Client @client = @ent.client;
-
-				cPlayer @player = @playerFromClient( @client );
-
-				if ( player.isCarrier )
-				{
-					if ( carrier == playerNum )
-					{
-						bombSetCarrier( @ent );
-
-						G_CenterPrintFormatMsg( null, "%s has the bomb!", client.name );
-
-						break;
-					}
-
-					carrier++;
-				}
-			}
-
-			return;
-		}
-
-		// if carrierCount == 0 then fallthrough as if they were disabled
-	}
-
 	int playerNum = int( random() * team.numPlayers );
 
 	for ( int i = 0; @team.ent( i ) != null; i++ )

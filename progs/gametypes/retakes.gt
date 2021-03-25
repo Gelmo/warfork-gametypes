@@ -9,7 +9,7 @@ generic/items.as;
 generic/awards.as;
 
 bomb/rmain.as;
-bomb/player.as;
+bomb/rplayer.as;
 bomb/rbomb.as;
 bomb/site.as;
 bomb/rround.as;

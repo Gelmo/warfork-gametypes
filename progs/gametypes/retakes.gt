@@ -10,9 +10,9 @@ generic/awards.as;
 
 bomb/rmain.as;
 bomb/player.as;
-bomb/bomb.as;
+bomb/rbomb.as;
 bomb/site.as;
-bomb/round.as;
+bomb/rround.as;
 bomb/media.as;
 bomb/bots.as;
 

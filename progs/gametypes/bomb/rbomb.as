@@ -46,7 +46,6 @@ const uint BOMBDROP_NORMAL = 0; // dropped manually
 const uint BOMBDROP_KILLED = 1; // died
 const uint BOMBDROP_TEAM = 2; // changed teams
 
-const uint FAST_PLANT_TIME = 10;	// seconds for fastplant
 const uint LAST_CALL_TIME = 1;	// last call for defuse or arm
 
 //eBombStates bombState = BOMBSTATE_IDLE; FIXME enum
@@ -71,7 +70,6 @@ Entity @bombDropper;
 uint bombActionTime;
 
 Entity @bombCarrier = null;
-Entity @fastPlanter = null;
 Entity @lastCallPlanter = null;
 Vec3 bombCarrierLastPos; // so it drops in the right place when they change teams
 Vec3 bombCarrierLastVel;
@@ -99,15 +97,6 @@ Vec3 getMiddle( Entity @ent )
 	ent.getSize( mins, maxs );
 
 	return 0.5 * ( mins + maxs );
-}
-
-bool isFastPlant()
-{
-	uint maxTime = FAST_PLANT_TIME * 1000 + int( cvarExplodeTime.value * 1000 );
-	if( (levelTime - roundStartTime) < maxTime )
-		return true;
-
-	return false;
 }
 
 bool isLastCallArm()
@@ -330,10 +319,6 @@ void bombPlant( cBombSite @site )
 	bombCarrier.effects &= ~EF_CARRIER;
 	bombCarrier.modelindex2 = 0;
 
-	// check for fastplant time
-	if( isFastPlant() )
-		@fastPlanter = @bombCarrier;
-
 	// do this last unless you like null pointers
 	@bombCarrier = null;
 
@@ -370,10 +355,6 @@ void bombArm(array<Entity @> @nearby)
 	bombProgress = 0;
 	bombState = BOMBSTATE_ARMED;
 
-	// reset fast plant if arming took too long
-	if( @fastPlanter != null && ! isFastPlant() )
-		@fastPlanter = null;
-
 	AI::ReachedGoal( bombModel ); // let bots know their mission was completed
 }
 
@@ -392,8 +373,6 @@ void bombDefuse(array<Entity @> @nearby)
 	announce( ANNOUNCEMENT_DEFUSED );
 
 	bombState = BOMBSTATE_IDLE;
-
-	@fastPlanter = null;
 
 	// print defusing players, add score/awards
 	
@@ -439,11 +418,6 @@ void bombDefuse(array<Entity @> @nearby)
 
 void bombExplode()
 {
-	// ch : check misc plant awards before roundWonBy nullifies the pointers
-	if( @fastPlanter != null && @fastPlanter.client != null )
-		// fastPlanter.client.addMetaAward( "Fast Plant" );
-		fastPlanter.client.addAward( "Fast Plant" );
-
 	// do this first else the attackers can score 2 points when the explosion kills everyone
 	roundWonBy( attackingTeam );
 

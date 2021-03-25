@@ -408,7 +408,6 @@ void roundNewState( uint state )
 			gametype.shootingDisabled = true;
 
 			// ch : nullify these up
-			@fastPlanter = null;
 			@lastCallPlanter = null;
 
 			break;

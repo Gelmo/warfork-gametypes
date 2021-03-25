@@ -70,7 +70,6 @@ Entity @bombDropper;
 uint bombActionTime;
 
 Entity @bombCarrier = null;
-Entity @lastCallPlanter = null;
 Vec3 bombCarrierLastPos; // so it drops in the right place when they change teams
 Vec3 bombCarrierLastVel;
 
@@ -97,15 +96,6 @@ Vec3 getMiddle( Entity @ent )
 	ent.getSize( mins, maxs );
 
 	return 0.5 * ( mins + maxs );
-}
-
-bool isLastCallArm()
-{
-	uint minTime = ( int( cvarRoundTime.value ) - LAST_CALL_TIME ) * 1000;
-	if( levelTime > minTime )
-		return true;
-	else
-		return false;
 }
 
 bool isLastCallDefuse()

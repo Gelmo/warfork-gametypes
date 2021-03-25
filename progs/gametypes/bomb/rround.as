@@ -407,9 +407,6 @@ void roundNewState( uint state )
 
 			gametype.shootingDisabled = true;
 
-			// ch : nullify these up
-			@lastCallPlanter = null;
-
 			break;
 
 		case ROUNDSTATE_POST:

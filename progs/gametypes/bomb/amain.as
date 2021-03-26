@@ -779,9 +779,7 @@ void GT_MatchStateStarted()
 
 			break;
 
-		case MATCH_STATE_COUNTDOWN:
-			setupSpawnPoints();
-
+		case MATCH_STATE_COUNTDOWN:		
 			// XXX: old bomb had its own function to do pretty much
 			//      exactly the same thing
 			//      the only difference i can see is that bomb's

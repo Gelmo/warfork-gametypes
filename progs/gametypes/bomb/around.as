@@ -358,6 +358,7 @@ void roundNewState( uint state )
 			//  ballooning into a 200 line wall of stupid
 
 			resetKillCounters();
+			setupSpawnPoints();
 			respawnAllPlayers();
 			disableMovement();
 

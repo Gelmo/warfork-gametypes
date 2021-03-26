@@ -12,7 +12,7 @@ bomb/amain.as;
 bomb/aplayer.as;
 bomb/asite.as;
 bomb/bomb.as;
-bomb/round.as;
+bomb/around.as;
 bomb/media.as;
 bomb/bots.as;
 

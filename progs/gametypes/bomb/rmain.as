@@ -103,6 +103,34 @@ const String[] SITE_LETTERS = { 'A', 'B' };
 
 const int COUNTDOWN_MAX = 6; // was 4, but this gives people more time to change weapons
 
+Entity @defenseSpawn = null;
+Entity @offenseSpawn = null;
+
+void setupSpawnPoints()
+{
+	Entity @site1;
+	Entity @site2;
+
+	// pick the furthest spawn second
+	array<Entity @> @spawns = G_FindByClassname( "misc_capture_area_indicator" );
+	@site1 = null;
+	@site2 = null;
+
+	@site1 = spawns[0];
+	@site2 = spawns[1];
+
+	if ( random() > 0.5f )
+	{
+		@defenseSpawn = @site1;
+		@offenseSpawn = @site2;
+	}
+	else
+	{
+		@defenseSpawn = @site2;
+		@offenseSpawn = @site1;
+	}
+}
+
 // this should really kill the program
 // but i'm mostly using it as an indicator that it's about to die anyway
 void assert( const bool test, const String msg )
@@ -280,10 +308,10 @@ Entity @GT_SelectSpawnPoint( Entity @self )
 {
 	if ( self.team == attackingTeam )
 	{
-		return GENERIC_SelectBestRandomSpawnPoint( @self, "team_CTF_betaspawn" );
+		return @offenseSpawn;
 	}
 
-	return GENERIC_SelectBestRandomSpawnPoint( @self, "team_CTF_alphaspawn" );
+	return @defenseSpawn;
 }
 
 String @GT_ScoreboardMessage( uint maxlen )

@@ -108,16 +108,18 @@ Entity @offenseSpawn = null;
 
 void setupSpawnPoints()
 {
-	Entity @site1;
-	Entity @site2;
+	Entity @site1 = null;
+	Entity @site2 = null;
 
 	// pick the furthest spawn second
 	array<Entity @> @spawns = G_FindByClassname( "misc_capture_area_indicator" );
-	@site1 = null;
-	@site2 = null;
+	array<Entity @> @bombSiteEnts = G_FindByClassname( "bombsite" );
 
-	@site1 = spawns[0];
-	@site2 = spawns[1];
+	@site1 = G_SpawnEntity( "bombsite" );
+	site1.origin = spawns[0].origin;
+
+	@site2 = G_SpawnEntity( "bombsite" );
+	site2.origin = spawns[1].origin;
 
 	if ( random() > 0.5f )
 	{

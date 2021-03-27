@@ -312,8 +312,6 @@ void bombPlant( cBombSite @site )
 	// do this last unless you like null pointers
 	@bombCarrier = null;
 
-	announce( ANNOUNCEMENT_INPLACE );
-
 	bombProgress = 0;
 	bombActionTime = levelTime;
 	bombState = BOMBSTATE_PLANTING;
@@ -335,8 +333,6 @@ void bombArm(array<Entity @> @nearby)
 	bombSprite.svflags &= ~SVF_ONLYTEAM;
 	bombDecal.svflags &= ~SVF_ONLYTEAM;
 	bombMinimap.svflags &= ~SVF_ONLYTEAM;
-
-	announce( ANNOUNCEMENT_ARMED );
 
 	G_CenterPrintFormatMsg( null, "Bomb planted at %s!", bombSite.letter );
 

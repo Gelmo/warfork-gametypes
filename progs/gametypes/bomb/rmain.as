@@ -32,8 +32,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // TODO: organise this crap
 //       maybe move to constants.as
 
-const uint BOMB_MAX_PLANT_SPEED = 400; // can't plant above this speed
-
 const uint BOMB_DROP_RETAKE_DELAY = 1000; // time (ms) after dropping before you can retake it
 
 // jit cries if i use COLOR_RGBA so readability can go suck it

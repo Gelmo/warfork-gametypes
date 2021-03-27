@@ -732,11 +732,6 @@ bool bombCanPlant()
 	
 	Vec3 velocity = bombCarrier.velocity;
 
-	if ( velocity * velocity > BOMB_MAX_PLANT_SPEED * BOMB_MAX_PLANT_SPEED )
-	{
-		return false;
-	}
-
 	// check carrier is on the ground
 	// XXX: old bomb checked if they were < 32 units above ground
 	Trace trace;

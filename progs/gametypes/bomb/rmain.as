@@ -51,7 +51,7 @@ const float BOMB_ARM_DEFUSE_RADIUS = 100.0f; // it makes no sense for the two to
 const uint BOMB_SPRITE_RESIZE_TIME = 300; // time taken to expand/shrink sprite/decal
 
 const float BOMB_BEEP_FRACTION = 1.0f / 12.0f; // fraction of time left between beeps
-const uint BOMB_BEEP_MAX = 5000;               // max time (ms) between beeps
+const uint BOMB_BEEP_MAX = 10000;               // max time (ms) between beeps
 const uint BOMB_BEEP_MIN = 200;                // min time (ms) between beeps
 
 const uint BOMB_HURRYUP_TIME = 12000;

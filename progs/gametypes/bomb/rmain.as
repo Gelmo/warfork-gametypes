@@ -200,29 +200,6 @@ void BOMB_SetVoicecommQuickMenu( Client @client )
 
 bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
 {
-	if ( cmdString == "drop" )
-	{
-		for ( int i = 0; i < argc; i++ )
-		{
-			String token = argsString.getToken( i );
-
-			if ( token.len() == 0 )
-			{
-				break;
-			}
-
-			if ( token == "bomb" || token == "flag" )
-			{
-				if ( @client.getEnt() == @bombCarrier )
-				{
-					bombDrop( BOMBDROP_NORMAL );
-				}
-			}
-		}
-
-		return true;
-	}
-
 	if ( cmdString == "gametypemenu" )
 	{
 		playerFromClient( @client ).showPrimarySelection();
@@ -857,8 +834,6 @@ void GT_InitGametype()
 	}
 
 	// add commands
-	G_RegisterCommand( "drop" );
-
 	G_RegisterCommand( "gametype" );
 
 	// makes no sense to have these in insta

@@ -913,6 +913,8 @@ void GT_InitGametype()
 			+ "set g_bca_spawnprotection \"3\"\n"
 			+ "set g_bca_roundtime \"60\"\n"
 			+ "set g_bca_countdown \"4\"\n"
+			+ "set g_bcanoclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
+            + "set g_bcaclass_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
 			+ "\n// map rotation\n"
 			+ "set g_maplist \"cwM2 cwM3 cwM4 wfca1 wca3 cwL4\" // list of maps in automatic rotation\n"
 			+ "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"

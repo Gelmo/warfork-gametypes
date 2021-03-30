@@ -625,7 +625,7 @@ void enableMovement()
 
 void disableMovementFor( Client @client )
 {
-	client.pmoveMaxSpeed = 100;
+	client.pmoveMaxSpeed = 0;
 	client.pmoveDashSpeed = 0;
 	client.pmoveFeatures = client.pmoveFeatures & ~( PMFEAT_JUMP | PMFEAT_DASH | PMFEAT_WALLJUMP );
 }

@@ -801,7 +801,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
 	gametype.title = "Retakes";
-	gametype.version = "1.0";
+	gametype.version = "0.9.0";
 	gametype.author = "Warsow Development Team";
 	// Forked by Gelmo
 

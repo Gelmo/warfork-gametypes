@@ -877,11 +877,14 @@ void GT_InitGametype()
 
 	mediaInit();
 
-	if(!G_FileExists("configs/server/gametypes/" + gametype.name + ".cfg")) {
-		String config;
-		// the config file doesn't exist or it's empty, create it
-		config = "// '" + gametype.title + "' gametype configuration file\n"
-			+ "// This config will be executed each time the gametype is started\n"
+	// if the gametype doesn't have a config file, create it
+    if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )
+    {
+        String config;
+
+        // the config file doesn't exist or it's empty, create it
+        config = "// '" + gametype.title + "' gametype configuration file\n"
+            + "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
 			+ "set g_retakes_roundlimit \"10\"\n"
 			+ "set g_retakes_bombtimer \"45\"\n"
@@ -908,12 +911,12 @@ void GT_InitGametype()
 			+ "set g_maxtimeouts \"3\" // -1 = unlimited\n"
 			+ "\necho \"" + gametype.name + ".cfg executed\"\n";
 
-		G_WriteFile("configs/server/gametypes/" + gametype.name + ".cfg", config);
-		G_Print("Created default config file for '" + gametype.name + "'\n");
-		G_CmdExecute("exec configs/server/gametypes/" + gametype.name + ".cfg silent");
+		G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );
+        G_Print( "Created default config file for '" + gametype.name + "'\n" );
+        G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
 	}
 
-	G_CmdExecute( "exec configs/server/gametypes/bomb.cfg silent" ); // TODO XXX FIXME
+	G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
 
 	G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

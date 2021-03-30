@@ -90,9 +90,9 @@ cBombSite @BOMB_BOTS_SITE = null;
 
 // cvars
 Cvar cvarRoundTime(       "g_bca_roundtime",       "60", CVAR_ARCHIVE );
-Cvar cvarExplodeTime(     "g_bca_bombtimer",       "45", CVAR_ARCHIVE );
+Cvar cvarExplodeTime(     "g_bca_bombtimer",       "40", CVAR_ARCHIVE );
 Cvar cvarArmTime(         "g_bca_armtime",         "4",  CVAR_ARCHIVE );
-Cvar cvarDefuseTime(      "g_bca_defusetime",      "7",  CVAR_ARCHIVE );
+Cvar cvarDefuseTime(      "g_bca_defusetime",      "6",  CVAR_ARCHIVE );
 Cvar cvarEnableCarriers(  "g_bca_carriers",        "1",  CVAR_ARCHIVE );
 Cvar cvarSpawnProtection( "g_bca_spawnprotection", "3",  CVAR_ARCHIVE );
 
@@ -907,9 +907,9 @@ void GT_InitGametype()
             + "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
 			+ "set g_bca_roundlimit \"10\"\n"
-			+ "set g_bca_bombtimer \"45\"\n"
+			+ "set g_bca_bombtimer \"40\"\n"
 			+ "set g_bca_armtime \"4\"\n"
-			+ "set g_bca_defusetime \"7\"\n"
+			+ "set g_bca_defusetime \"6\"\n"
 			+ "set g_bca_spawnprotection \"3\"\n"
 			+ "set g_bca_roundtime \"60\"\n"
 			+ "set g_bca_countdown \"4\"\n"

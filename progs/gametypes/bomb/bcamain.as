@@ -826,8 +826,8 @@ void GT_SpawnGametype()
 // right after the map entities spawning.
 void GT_InitGametype()
 {
-	gametype.title = "Bomb Arena";
-	gametype.version = "1.0.0";
+	gametype.title = "Bomb Clan Arena";
+	gametype.version = "0.9.0";
 	gametype.author = "Warsow Development Team";
 	// Forked by Gelmo
 

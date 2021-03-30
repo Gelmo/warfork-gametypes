@@ -8,11 +8,11 @@ generic/bots.as;
 generic/items.as;
 generic/awards.as;
 
-bomb/amain.as;
-bomb/aplayer.as;
-bomb/asite.as;
+bomb/bcamain.as;
+bomb/bcaplayer.as;
+bomb/bcasite.as;
 bomb/bomb.as;
-bomb/around.as;
+bomb/bcaround.as;
 bomb/media.as;
 bomb/bots.as;
 

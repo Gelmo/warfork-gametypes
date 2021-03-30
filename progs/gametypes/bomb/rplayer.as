@@ -63,6 +63,7 @@ const int AMMO_GB = 1; // might as well spawn with it fully charged
 const float PLAYER_ARMOR = 100.0f;
 
 cPlayer@[] players( maxClients ); // array of handles
+bool playersInitialized = false;
 
 class cPlayer
 {
@@ -404,14 +405,18 @@ class cPlayer
 // already on the server
 void playersInit()
 {
-	for ( int i = 0; i < maxClients; i++ )
+	// do initial setup (that doesn't spawn any entities, but needs clients to be created) only once, not every round
+	if( !playersInitialized )
 	{
-		Client @client = @G_GetClient( i );
-
-		if ( client.state() >= CS_CONNECTING )
+		for ( int i = 0; i < maxClients; i++ )
 		{
-			cPlayer( @client );
+			Client @client = @G_GetClient( i );
+			if ( client.state() >= CS_CONNECTING )
+			{
+				cPlayer( @client );
+			}
 		}
+		playersInitialized = true;
 	}
 }
 

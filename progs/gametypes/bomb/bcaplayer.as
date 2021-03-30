@@ -20,7 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 Cvar g_noclass_inventory( "g_bcanoclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets", 0 );
 Cvar g_class_strong_ammo( "g_bcaclass_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
-const float PLAYER_ARMOR = 250.0f;
+const float PLAYER_ARMOR = 200.0f;
 
 cPlayer@[] players( maxClients ); // array of handles
 bool playersInitialized = false;

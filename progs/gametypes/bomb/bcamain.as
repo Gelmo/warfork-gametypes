@@ -897,23 +897,30 @@ void GT_InitGametype()
 
 	mediaInit();
 
-	/*if(!G_FileExists("configs/server/gametypes/" + gametype.name + ".cfg")) {
-		String config;
-		// the config file doesn't exist or it's empty, create it
-		config = "// '" + gametype.title + "' gametype configuration file\n"
-			+ "// This config will be executed each time the gametype is started\n"
+	// if the gametype doesn't have a config file, create it
+    if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )
+    {
+        String config;
+
+        // the config file doesn't exist or it's empty, create it
+        config = "// '" + gametype.title + "' gametype configuration file\n"
+            + "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
-			+ "set ftag_allowPowerups \"1\"\n"
-			+ "set ftag_powerupDrop \"1\"\n"
+			+ "set g_bca_roundlimit \"10\"\n"
+			+ "set g_bca_bombtimer \"45\"\n"
+			+ "set g_bca_armtime \"4\"\n"
+			+ "set g_bca_defusetime \"7\"\n"
+			+ "set g_bca_spawnprotection \"3\"\n"
+			+ "set g_bca_roundtime \"60\"\n"
+			+ "set g_bca_countdown \"4\"\n"
 			+ "\n// map rotation\n"
-			+ "set g_maplist \"wdm1 wdm2 wdm4 wdm5 wdm6 wdm7 wdm9 wdm10 wdm11 wdm12 wdm13 wdm14 wdm15 wdm16 wdm17\" // list of maps in automatic rotation\n"
+			+ "set g_maplist \"cwM2 cwM3 cwM4 wfca1 wca3 cwL4\" // list of maps in automatic rotation\n"
 			+ "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
 			+ "\n// game settings\n"
-			+ "set g_scorelimit \"15\"\n"
+			+ "set g_scorelimit \"11\"\n"
 			+ "set g_timelimit \"0\"\n"
-			+ "set g_warmup_enabled \"1\"\n"
-			+ "set g_warmup_timelimit \"1.5\"\n"
-			+ "set g_match_extendedtime \"0\"\n"
+			+ "set g_warmup_timelimit \"1\"\n"
+			+ "set g_match_extendedtime \"5\"\n"
 			+ "set g_allow_falldamage \"0\"\n"
 			+ "set g_allow_selfdamage \"0\"\n"
 			+ "set g_allow_teamdamage \"0\"\n"
@@ -924,12 +931,12 @@ void GT_InitGametype()
 			+ "set g_maxtimeouts \"3\" // -1 = unlimited\n"
 			+ "\necho \"" + gametype.name + ".cfg executed\"\n";
 
-		G_WriteFile("configs/server/gametypes/" + gametype.name + ".cfg", config);
-		G_Print("Created default config file for '" + gametype.name + "'\n");
-		G_CmdExecute("exec configs/server/gametypes/" + gametype.name + ".cfg silent");
-	}*/
+		G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );
+        G_Print( "Created default config file for '" + gametype.name + "'\n" );
+        G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
+	}
 
-	G_CmdExecute( "exec configs/server/gametypes/abomb.cfg silent" ); // TODO XXX FIXME
+	G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
 
 	G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

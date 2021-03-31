@@ -381,6 +381,8 @@ void roundNewState( uint state )
 			gametype.shootingDisabled = false;
 			gametype.removeInactivePlayers = true;
 
+			bombPlant( siteHead );
+
 			enableMovement();
 
 			Team @team = @G_GetTeam( defendingTeam );

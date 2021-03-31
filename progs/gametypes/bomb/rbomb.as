@@ -482,7 +482,7 @@ void bombThink()
 
 		case BOMBSTATE_PLANTED:
 		{
-			array<Entity @> @nearby = nearbyPlayers( bombModel.origin, attackingTeam );
+			array<Entity @> @nearby = nearbyArmBomb( bombModel.origin, attackingTeam );
 			bool progressing = nearby.size() > 0;
 
 			if ( progressing )
@@ -701,6 +701,29 @@ void bombAltThink()
 array<Entity @> @nearbyPlayers( Vec3 origin, int team )
 {
 	array<Entity @> @inradius = G_FindInRadius( origin, BOMB_ARM_DEFUSE_RADIUS );
+	array<Entity @> filtered( 0 );
+
+	uint count = 0;
+
+	for( uint i = 0; i < inradius.size(); i++ ) {
+		Entity @target = inradius[i];
+		if( @target.client == null ) {
+			continue;
+		}
+		if( target.team != team || target.isGhosting() || !entCanSee( target, origin ) ) {
+			continue;
+		}
+		
+		filtered.resize( count + 1 );
+		@filtered[count++] = target;
+	}
+
+	return filtered;
+}
+
+array<Entity @> @nearbyArmBomb( Vec3 origin, int team )
+{
+	array<Entity @> @inradius = G_FindInRadius( origin, BOMB_ARM_RADIUS );
 	array<Entity @> filtered( 0 );
 
 	uint count = 0;

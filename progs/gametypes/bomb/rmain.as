@@ -48,6 +48,8 @@ const Vec3 VEC_UP( 0, 0, 1 ); // this must have length 1! don't change this unle
 
 const float BOMB_ARM_DEFUSE_RADIUS = 100.0f; // it makes no sense for the two to be different
 
+const float BOMB_ARM_RADIUS = 1000.0f;
+
 const uint BOMB_SPRITE_RESIZE_TIME = 300; // time taken to expand/shrink sprite/decal
 
 const float BOMB_BEEP_FRACTION = 1.0f / 12.0f; // fraction of time left between beeps

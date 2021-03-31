@@ -90,7 +90,7 @@ cBombSite @BOMB_BOTS_SITE = null;
 
 // cvars
 Cvar cvarRoundTime(       "g_retakes_roundtime",       "60", CVAR_ARCHIVE );
-Cvar cvarExplodeTime(     "g_retakes_bombtimer",       "45", CVAR_ARCHIVE );
+Cvar cvarExplodeTime(     "g_retakes_bombtimer",       "40", CVAR_ARCHIVE );
 Cvar cvarArmTime(         "g_retakes_armtime",         "0",  CVAR_ARCHIVE );
 Cvar cvarDefuseTime(      "g_retakes_defusetime",      "7",  CVAR_ARCHIVE );
 Cvar cvarSpawnProtection( "g_retakes_spawnprotection", "3",  CVAR_ARCHIVE );
@@ -864,7 +864,7 @@ void GT_InitGametype()
             + "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
 			+ "set g_retakes_roundlimit \"10\"\n"
-			+ "set g_retakes_bombtimer \"45\"\n"
+			+ "set g_retakes_bombtimer \"40\"\n"
 			+ "set g_retakes_armtime \"0\"\n"
 			+ "set g_retakes_defusetime \"7\"\n"
 			+ "set g_retakes_spawnprotection \"3\"\n"

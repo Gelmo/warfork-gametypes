@@ -334,7 +334,7 @@ void bombArm(array<Entity @> @nearby)
 	bombDecal.svflags &= ~SVF_ONLYTEAM;
 	bombMinimap.svflags &= ~SVF_ONLYTEAM;
 
-	G_CenterPrintFormatMsg( null, "Bomb planted at %s!", bombSite.letter );
+	//G_CenterPrintFormatMsg( null, "Bomb planted at %s!", bombSite.letter );
 
 	setTeamProgress( attackingTeam, 0 );
 

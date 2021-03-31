@@ -173,8 +173,8 @@ void bombSetCarrier( Entity @ent )
 
 	Client @client = @bombCarrier.client;
 
-	client.addAward( S_COLOR_GREEN + "You've got the bomb!" );
-	G_AnnouncerSound( @client, sndBombTaken, attackingTeam, true, null );
+	//client.addAward( S_COLOR_GREEN + "You've got the bomb!" );
+	//G_AnnouncerSound( @client, sndBombTaken, attackingTeam, true, null );
 
 	bombState = BOMBSTATE_CARRIED;
 

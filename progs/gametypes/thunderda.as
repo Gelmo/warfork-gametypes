@@ -854,7 +854,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "Thunder Duel Arena";
-    gametype.version = "1.0.2";
+    gametype.version = "1.0.3";
     gametype.author = "Warsow Development Team";
     // Forked by Gelmo
 

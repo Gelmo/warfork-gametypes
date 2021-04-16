@@ -137,10 +137,13 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
     {
         Entity @attacker = null;
         float vampamount = 2;
-        @attacker = @client.getEnt();
-        if ( attacker.health < 399 )
+        if ( @client != null )
         {
-            attacker.health += vampamount;
+            @attacker = @client.getEnt();
+            if ( attacker.health < 399 )
+            {
+                attacker.health += vampamount;
+            }
         }
     }
     else if ( score_event == "kill" )

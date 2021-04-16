@@ -3,7 +3,7 @@ Custom Gametypes for Warfork
 
 ## Notable gametypes:
 ### Packaged:
-- gt_ftag - Freeze Tag and Freeze Tag Arena
+- gt_ftag - Classic Freeze Tag (`ft`) and Freeze Tag Clan Arena (`ftca`)
 - gt_ffaa - Free For All Arena (FFA CA, no teams, no rounds)
 - gt_aa - Ammo Arena (Best-of-3 Duel Arena, less starting ammo, ammo pickups, only 1 EB)
 - gt_rbduel - Round-Based Duel (Duel, round ends and everything resets when a player dies, first to win 3 rounds is the winner)
@@ -23,7 +23,8 @@ Custom Gametypes for Warfork
   - SlideFFA (rocket and grenade instagib (with splash damage) but FFA style, typically played on slick maps)
 
 ### Not Packaged:
-- UBomb (Unholy Bomb Arena, FBomb with holy trinity loadout, inifinite ammo, and no self/team dmg)
+- Bomb Clan Arena: Still WIP
+- Retakes: Still WIP
 - Ignore wipeout; this is an old version, upstream is called Exhaustion
 - Ignore the hny/hoony modes currently; WIP and need significant work
 
@@ -38,8 +39,3 @@ Custom Gametypes for Warfork
 - Make frozen players slow down when sliding (fake friction)
 - Implement Awards
 - Add AI Goals for bot support
-
-Things that need to be tested more in Ftag Arena with many skilled players:
-- Armor and Health pickups on map (currently disabled in Arena)
-- Powerup pickups on map (currently disabled in Arena)
-- Last update added weap/ammo pickups, and weap/ammo drops on death, which resolved the low-ammo issue. Now that we respawn everyone each point, it may be suitable to revert this and remove weap/ammo pickups (but retain weap/ammo drops)

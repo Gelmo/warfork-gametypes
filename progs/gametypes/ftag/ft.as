@@ -763,7 +763,7 @@ void GT_InitGametype() {
 			+ "set g_match_extendedtime \"0\"\n"
 			+ "set g_allow_falldamage \"1\"\n"
 			+ "set g_allow_selfdamage \"1\"\n"
-			+ "set g_allow_teamdamage \"1\"\n"
+			+ "set g_allow_teamdamage \"0\"\n"
 			+ "set g_allow_stun \"1\"\n"
 			+ "set g_teams_maxplayers \"0\"\n"
 			+ "set g_teams_allow_uneven \"0\"\n"

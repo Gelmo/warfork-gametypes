@@ -643,7 +643,7 @@ void GT_InitGametype() {
 	// spawning at initialization do it in GT_SpawnGametype, which is called
 	// right after the map entities spawning.
 	gametype.title = "Freeze Tag Clan Arena";
-	gametype.version = "0.9.5.5";
+	gametype.version = "0.9.5.6";
 	gametype.author = "Mike^4JS";
 	// Forked by Gelmo
 

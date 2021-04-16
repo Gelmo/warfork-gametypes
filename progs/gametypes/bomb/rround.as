@@ -241,7 +241,7 @@ void roundWonBy( int winner )
 	int loser = winner == attackingTeam ? defendingTeam : attackingTeam;
 
 	// ololo
-	G_CenterPrintMsg( null, S_COLOR_CYAN + ( winner == attackingTeam ? "OFF" : "DEF" ) + "ENSE WINS!");
+	G_CenterPrintMsg( null, S_COLOR_CYAN + ( winner == attackingTeam ? "DEF" : "OFF" ) + "ENSE WINS!");
 
 	int soundIndex = G_SoundIndex( "sounds/announcer/ctf/score_team0" + (1 + (rand() & 1)) );
 	G_AnnouncerSound( null, soundIndex, winner, true, null );
@@ -389,14 +389,14 @@ void roundNewState( uint state )
 
 			for ( int i = 0; @team.ent( i ) != null; i++ )
 			{
-				G_CenterPrintMsg( team.ent( i ), S_COLOR_ORANGE + "PROTECT THE BOMB SITES!" );
+				G_CenterPrintMsg( team.ent( i ), S_COLOR_ORANGE + "DEFUSE THE BOMB!" );
 			}
 
 			@team = @G_GetTeam( attackingTeam );
 
 			for ( int i = 0; @team.ent( i ) != null; i++ )
 			{
-				G_CenterPrintMsg( team.ent( i ), S_COLOR_ORANGE + "DESTROY THE TARGETS!" );
+				G_CenterPrintMsg( team.ent( i ), S_COLOR_ORANGE + "PROTECT THE BOMB!" );
 			}
 
 			announce( ANNOUNCEMENT_STARTED );

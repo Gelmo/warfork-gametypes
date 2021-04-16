@@ -862,7 +862,7 @@ void GT_InitGametype()
 
 	gametype.mmCompatible = true;
 	
-	gametype.spawnpointRadius = 256;
+	gametype.spawnpointRadius = 512;
 
 	// set spawnsystem type to instant while players join
 	for ( int t = TEAM_PLAYERS; t < GS_MAX_TEAMS; t++ )

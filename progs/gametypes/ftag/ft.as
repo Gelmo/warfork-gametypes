@@ -668,7 +668,7 @@ void GT_InitGametype() {
 	// spawning entities from it is forbidden. ifyou want to make any entity
 	// spawning at initialization do it in GT_SpawnGametype, which is called
 	// right after the map entities spawning.
-	gametype.title = "Freeze Tag";
+	gametype.title = "Classic Freeze Tag";
 	gametype.version = "0.9.5.5";
 	gametype.author = "Mike^4JS";
 	// Forked by Gelmo

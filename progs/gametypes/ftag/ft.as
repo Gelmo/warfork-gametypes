@@ -19,7 +19,7 @@ bool[] spawnNextRound(maxClients);
 //String[] defrostMessage(maxClients);
 bool doRemoveRagdolls = false;
 
-Cvar ftagAllowPowerups("ftag_allowPowerups", "1", CVAR_ARCHIVE);
+Cvar ftagAllowPowerups("ftag_allowPowerups", "0", CVAR_ARCHIVE);
 Cvar ftagAllowPowerupDrop("ftag_powerupDrop", "1", CVAR_ARCHIVE);
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
@@ -748,7 +748,7 @@ void GT_InitGametype() {
 		config = "// '" + gametype.title + "' gametype configuration file\n"
 			+ "// This config will be executed each time the gametype is started\n"
 			+ "\n// " + gametype.title + " specific settings\n"
-			+ "set ftag_allowPowerups \"1\"\n"
+			+ "set ftag_allowPowerups \"0\"\n"
 			+ "set ftag_powerupDrop \"1\"\n"
 			+ "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
             + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"

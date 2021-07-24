@@ -68,7 +68,6 @@ int prcAnnouncerFlagScoreEnemy02;
 bool firstSpawn = false;
 
 Cvar ctfAllowPowerupDrop( "ctf_powerupDrop", "0", CVAR_ARCHIVE );
-Cvar ctfInstantFlag( "ctf_instantFlag", "0", CVAR_ARCHIVE );
 
 ///*****************************************************************
 /// LOCAL FUNCTIONS
@@ -249,36 +248,6 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
 
             return true;
         }
-        else if ( votename == "ctf_flag_instant" )
-        {
-            String voteArg = argsString.getToken( 1 );
-            if ( voteArg.len() < 1 )
-            {
-                client.printMessage( "Callvote " + votename + " requires at least one argument\n" );
-                return false;
-            }
-
-            int value = voteArg.toInt();
-            if ( voteArg != "0" && voteArg != "1" )
-            {
-                client.printMessage( "Callvote " + votename + " expects a 1 or a 0 as argument\n" );
-                return false;
-            }
-			
-            if ( voteArg == "0" && !ctfInstantFlag.boolean )
-            {
-                client.printMessage( "Instant flags are already disallowed\n" );
-                return false;
-            }
-
-            if ( voteArg == "1" && ctfInstantFlag.boolean )
-            {
-                client.printMessage( "Instant flags are already allowed\n" );
-                return false;
-            }
-
-            return true;
-        }
 
         client.printMessage( "Unknown callvote " + votename + "\n" );
         return false;
@@ -293,13 +262,6 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
                 ctfAllowPowerupDrop.set( 1 );
             else
                 ctfAllowPowerupDrop.set( 0 );
-        }
-        else if ( votename == "ctf_flag_instant" )
-        {
-            if ( argsString.getToken( 1 ).toInt() > 0 )
-                ctfInstantFlag.set( 1 );
-            else
-                ctfInstantFlag.set( 0 );
         }
 
         return true;
@@ -1075,7 +1037,6 @@ void GT_InitGametype()
     G_RegisterCommand( "gametype" );
 
     G_RegisterCallvote( "ctf_powerup_drop", "1 or 0", "bool", "Enables or disables the dropping of powerups at dying" );
-    G_RegisterCallvote( "ctf_flag_instant", "1 or 0", "bool", "Enables or disables instant flag captures and unlocks" );
 
 
     G_Print( "Gametype '" + gametype.title + "' initialized\n" );

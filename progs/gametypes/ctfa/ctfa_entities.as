@@ -190,7 +190,7 @@ class cFlagBase
             if ( ( activator.effects & EF_CARRIER ) == 0 )
                 return;
 
-            if ( CTF_CAPTURE_TIME > 0 && !ctfInstantFlag.boolean )
+            if ( CTF_CAPTURE_TIME > 0 )
             {
                 if ( this.captureTime < int( CTF_CAPTURE_TIME * 1000 ) )
                     return;
@@ -207,7 +207,7 @@ class cFlagBase
 
         if ( ( activator.effects & EF_CARRIER ) == 0 )
         {
-            if ( CTF_UNLOCK_TIME > 0 && !ctfInstantFlag.boolean )
+            if ( CTF_UNLOCK_TIME > 0 )
             {
                 if ( this.unlockTime < int( CTF_UNLOCK_TIME * 1000 ) )
                     return;
@@ -240,7 +240,7 @@ class cFlagBase
         Entity @target = null;
         Vec3 origin = this.owner.origin;
 
-        if ( CTF_UNLOCK_TIME > 0 && !ctfInstantFlag.boolean )
+        if ( CTF_UNLOCK_TIME > 0 )
         {
 			array<Entity @> @inradius = G_FindInRadius( origin, CTF_UNLOCK_RADIUS );
             for( uint i = 0; i < inradius.size(); i++ )
@@ -276,7 +276,7 @@ class cFlagBase
             }
         }
 
-        if ( CTF_CAPTURE_TIME > 0 && !ctfInstantFlag.boolean )
+        if ( CTF_CAPTURE_TIME > 0 )
         {
 			array<Entity @> @inradius = G_FindInRadius( origin, CTF_CAPTURE_RADIUS );
             for( uint i = 0; i < inradius.size(); i++ )

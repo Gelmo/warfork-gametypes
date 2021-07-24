@@ -914,9 +914,10 @@ void GT_SpawnGametype()
 
 void GT_InitGametype()
 {
-    gametype.title = "Capture the Flag";
-    gametype.version = "1.04";
+    gametype.title = "Capture the Flag Arena";
+    gametype.version = "0.9.0";
     gametype.author = "Warsow Development Team";
+    // Forked by Gelmo
 
     // if the gametype doesn't have a config file, create it
     if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )
@@ -931,13 +932,13 @@ void GT_InitGametype()
                  + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
                  + "set g_scorelimit \"0\"\n"
-                 + "set g_timelimit \"20\"\n"
+                 + "set g_timelimit \"10\"\n"
                  + "set g_warmup_timelimit \"1\"\n"
-                 + "set g_match_extendedtime \"5\"\n"
-                 + "set g_allow_falldamage \"1\"\n"
-                 + "set g_allow_selfdamage \"1\"\n"
+                 + "set g_match_extendedtime \"2\"\n"
+                 + "set g_allow_falldamage \"0\"\n"
+                 + "set g_allow_selfdamage \"0\"\n"
                  + "set g_allow_teamdamage \"0\"\n"
-                 + "set g_allow_stun \"1\"\n"
+                 + "set g_allow_stun \"0\"\n"
                  + "set g_teams_maxplayers \"5\"\n"
                  + "set g_teams_allow_uneven \"0\"\n"
                  + "set g_countdown_time \"5\"\n"
@@ -1037,7 +1038,6 @@ void GT_InitGametype()
     G_RegisterCommand( "gametype" );
 
     G_RegisterCallvote( "ctf_powerup_drop", "1 or 0", "bool", "Enables or disables the dropping of powerups at dying" );
-
 
     G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 float CTF_UNLOCK_TIME = 2.0f;
-float CTF_CAPTURE_TIME = 3.5f;
+float CTF_CAPTURE_TIME = 8.0f;
 float CTF_UNLOCK_RADIUS = 150.0f;
 float CTF_CAPTURE_RADIUS = 40.0f;
 

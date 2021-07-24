@@ -207,12 +207,6 @@ class cFlagBase
 
         if ( ( activator.effects & EF_CARRIER ) == 0 )
         {
-            if ( CTF_UNLOCK_TIME > 0 )
-            {
-                if ( this.unlockTime < int( CTF_UNLOCK_TIME * 1000 ) )
-                    return;
-            }
-
             this.unlockTime = 0;
             this.flagStolen( activator );
             this.owner.linkEntity();
@@ -239,42 +233,6 @@ class cFlagBase
         Vec3 center, mins, maxs;
         Entity @target = null;
         Vec3 origin = this.owner.origin;
-
-        if ( CTF_UNLOCK_TIME > 0 )
-        {
-			array<Entity @> @inradius = G_FindInRadius( origin, CTF_UNLOCK_RADIUS );
-            for( uint i = 0; i < inradius.size(); i++ )
-			{
-                @target = inradius[i];
-                if ( @target.client == null )
-                    continue;
-
-                if ( target.client.state() < CS_SPAWNED )
-                    continue;
-
-                if ( target.isGhosting() )
-                    continue;
-
-                if ( target.team == this.owner.team )
-                    continue;
-
-                // check if the player is visible from the base
-                target.getSize( mins, maxs );
-                center = target.origin + ( 0.5 * ( maxs + mins ) );
-                mins = 0;
-                maxs = 0;
-
-                if ( !tr.doTrace( origin, mins, maxs, center, target.entNum, MASK_SOLID ) )
-                {
-                    this.unlockTime += frameTime;
-                    if ( this.unlockTime > int( CTF_UNLOCK_TIME * 1000 ) )
-                        this.unlockTime = int( CTF_UNLOCK_TIME * 1000 );
-
-                    this.enemyInfluence = true;
-                    break;
-                }
-            }
-        }
 
         if ( CTF_CAPTURE_TIME > 0 )
         {

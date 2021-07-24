@@ -69,6 +69,9 @@ bool firstSpawn = false;
 
 Cvar ctfAllowPowerupDrop( "ctf_powerupDrop", "0", CVAR_ARCHIVE );
 
+Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
+
 ///*****************************************************************
 /// LOCAL FUNCTIONS
 ///*****************************************************************
@@ -547,35 +550,39 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     }
     else
     {
-        Item @item;
-        Item @ammoItem;
+    	// give the weapons and ammo as defined in cvars
+    	String token, weakammotoken, ammotoken;
+    	String itemList = g_noclass_inventory.string;
+    	String ammoCounts = g_class_strong_ammo.string;
 
-        // the gunblade can't be given (because it can't be dropped)
-        client.inventorySetCount( WEAP_GUNBLADE, 1 );
-        client.inventorySetCount( AMMO_GUNBLADE, 1 ); // enable gunblade blast
+    	client.inventoryClear();
 
-        if ( match.getState() <= MATCH_STATE_WARMUP )
+        for ( int i = 0; ;i++ )
         {
-            for ( int i = WEAP_GUNBLADE + 1; i < WEAP_TOTAL; i++ )
+            token = itemList.getToken( i );
+            if ( token.len() == 0 )
+                break; // done
+
+            Item @item = @G_GetItemByName( token );
+            if ( @item == null )
+                continue;
+
+            client.inventoryGiveItem( item.tag );
+
+            // if it's ammo, set the ammo count as defined in the cvar
+            if ( ( item.type & IT_AMMO ) != 0 )
             {
-                if ( i == WEAP_INSTAGUN ) // dont add instagun...
-                    continue;
+                token = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
 
-                client.inventoryGiveItem( i );
-
-                @item = @G_GetItem( i );
-
-                @ammoItem = @G_GetItem( item.ammoTag );
-                if ( @ammoItem != null )
-                    client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
-
-                @ammoItem = item.weakAmmoTag == AMMO_NONE ? null : @G_GetItem( item.weakAmmoTag );
-                if ( @ammoItem != null )
-                    client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
+                if ( token.len() > 0 )
+                {
+                    client.inventorySetCount( item.tag, token.toInt() );
+                }
             }
-
-            client.inventoryGiveItem( ARMOR_RA );
         }
+
+        // give armor
+        client.armor = 150;
     }
 
     // select rocket launcher if available
@@ -944,6 +951,9 @@ void GT_InitGametype()
                  + "set g_countdown_time \"5\"\n"
                  + "set g_maxtimeouts \"3\" // -1 = unlimited\n"
                  + "set ctf_powerupDrop \"0\"\n"
+                 + "\n// classes settings\n"
+                 + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
+                 + "set g_class_strong_ammo \"1 75 15 20 20 125 180 10\" // GB MG RG GL RL PG LG EB\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );

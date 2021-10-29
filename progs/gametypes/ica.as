@@ -318,20 +318,6 @@ class cCARound
                 soundIndex = G_SoundIndex( "sounds/announcer/ctf/score_enemy0" + (1 + (rand() & 1)) );
                 G_AnnouncerSound( null, soundIndex, TEAM_BETA, false, null );
 
-                if ( !gametype.isInstagib && count_alpha == 1 ) // he's the last man standing. Drop a bonus
-                {
-                    if ( count_beta_total > 1 )
-                    {
-                        lastManStanding.client.addAward( S_COLOR_GREEN + "Last Player Standing!" );
-                        // ch :
-                        if( alpha_oneVS > ONEVS_AWARD_COUNT )
-                        	// lastManStanding.client.addMetaAward( "Last Man Standing" );
-                        	lastManStanding.client.addAward( "Last Man Standing" );
-
-                        this.addPlayerBonus( lastManStanding.client, caLMSCounts[TEAM_ALPHA] * CA_LAST_MAN_STANDING_BONUS );
-                        GT_updateScore( lastManStanding.client );
-                    }
-                }
             }
             else if ( count_beta > count_alpha )
             {
@@ -342,20 +328,6 @@ class cCARound
                 soundIndex = G_SoundIndex( "sounds/announcer/ctf/score_enemy0" + (1 + (rand() & 1)) );
                 G_AnnouncerSound( null, soundIndex, TEAM_ALPHA, false, null );
 
-                if ( !gametype.isInstagib && count_beta == 1 ) // he's the last man standing. Drop a bonus
-                {
-                    if ( count_alpha_total > 1 )
-                    {
-                        lastManStanding.client.addAward( S_COLOR_GREEN + "Last Player Standing!" );
-                        // ch :
-                        if( beta_oneVS > ONEVS_AWARD_COUNT )
-                        	// lastManStanding.client.addMetaAward( "Last Man Standing" );
-                        	lastManStanding.client.addAward( "Last Man Standing" );
-
-                        this.addPlayerBonus( lastManStanding.client, caLMSCounts[TEAM_BETA] * CA_LAST_MAN_STANDING_BONUS );
-												GT_updateScore( lastManStanding.client );
-                    }
-                }
             }
 			else // draw round
             {
@@ -502,15 +474,7 @@ class cCARound
 
         if ( @target != null && @target.client != null && @attacker != null && @attacker.client != null )
         {
-			if ( gametype.isInstagib )
-			{
-				G_PrintMsg( target, "You were fragged by " + attacker.client.name + "\n" );
-			}
-			else
-			{
-				// report remaining health/armor of the killer
-				G_PrintMsg( target, "You were fragged by " + attacker.client.name + " (health: " + rint( attacker.health ) + ", armor: " + rint( attacker.client.armor ) + ")\n" );
-			}
+			G_PrintMsg( target, "You were fragged by " + attacker.client.name + "\n" );
 
             // if the attacker is the only remaining player on the team,
             // report number or remaining enemies
@@ -781,20 +745,10 @@ String @GT_ScoreboardMessage( uint maxlen )
 
             int playerID = ( ent.isGhosting() && ( match.getState() == MATCH_STATE_PLAYTIME ) ) ? -( ent.playerNum + 1 ) : ent.playerNum;
 
-            if ( gametype.isInstagib )
-            {
-                // "Name Clan Score Ping R"
-                entry = "&p " + playerID + " " + ent.client.clanName + " "
-                        + ent.client.stats.score + " "
-                        + ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
-            }
-            else
-            {
-                // "Name Clan Score Frags Ping R"
-                entry = "&p " + playerID + " " + ent.client.clanName + " "
-                        + ent.client.stats.score + " " + ent.client.stats.frags + " "
-                        + ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
-            }
+            // "Name Clan Score Ping R"
+            entry = "&p " + playerID + " " + ent.client.clanName + " "
+                    + ent.client.stats.score + " "
+                    + ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
 
             if ( scoreboardMessage.len() + entry.len() < maxlen )
                 scoreboardMessage += entry;
@@ -809,10 +763,7 @@ void GT_updateScore( Client @client )
 {
     if ( @client != null )
     {
-        if ( gametype.isInstagib )
-            client.stats.setScore( client.stats.frags + caRound.getPlayerBonusScore( client ) );
-        else
-            client.stats.setScore( int( client.stats.totalDamageGiven * 0.01 ) + caRound.getPlayerBonusScore( client ) );
+        client.stats.setScore( client.stats.frags + caRound.getPlayerBonusScore( client ) );
     }
 }
 
@@ -869,51 +820,9 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
         return;
 	}
 
-    if ( gametype.isInstagib )
-    {
-        ent.client.inventoryGiveItem( WEAP_INSTAGUN );
-        ent.client.inventorySetCount( AMMO_INSTAS, 1 );
-        ent.client.inventorySetCount( AMMO_WEAK_INSTAS, 1 );
-    }
-    else
-    {
-    	// give the weapons and ammo as defined in cvars
-    	String token, weakammotoken, ammotoken;
-    	String itemList = g_noclass_inventory.string;
-    	String ammoCounts = g_class_strong_ammo.string;
-
-    	ent.client.inventoryClear();
-
-        for ( int i = 0; ;i++ )
-        {
-            token = itemList.getToken( i );
-            if ( token.len() == 0 )
-                break; // done
-
-            Item @item = @G_GetItemByName( token );
-            if ( @item == null )
-                continue;
-
-            ent.client.inventoryGiveItem( item.tag );
-
-            // if it's ammo, set the ammo count as defined in the cvar
-            if ( ( item.type & IT_AMMO ) != 0 )
-            {
-                token = ammoCounts.getToken( item.tag - AMMO_GUNBLADE );
-
-                if ( token.len() > 0 )
-                {
-                    ent.client.inventorySetCount( item.tag, token.toInt() );
-                }
-            }
-        }
-
-        // give armor
-        ent.client.armor = 150;
-
-        // select rocket launcher
-        ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
-    }
+    ent.client.inventoryGiveItem( WEAP_INSTAGUN );
+    ent.client.inventorySetCount( AMMO_INSTAS, 1 );
+    ent.client.inventorySetCount( AMMO_WEAK_INSTAS, 1 );
 
     // auto-select best weapon in the inventory
     if( ent.client.pendingWeapon == WEAP_NONE )
@@ -1121,26 +1030,15 @@ void GT_InitGametype()
 
 	gametype.mmCompatible = true;
 	
-    gametype.spawnpointRadius = 256;
-
-    if ( gametype.isInstagib )
-        gametype.spawnpointRadius *= 2;
+    gametype.spawnpointRadius *= 2;
 
     // set spawnsystem type to instant while players join
     for ( int team = TEAM_PLAYERS; team < GS_MAX_TEAMS; team++ )
         gametype.setTeamSpawnsystem( team, SPAWNSYSTEM_INSTANT, 0, 0, false );
 
     // define the scoreboard layout
-    if ( gametype.isInstagib )
-    {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %l 48 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Ping R" );
-    }
-    else
-    {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Ping R" );
-    }
+    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %l 48 %r l1" );
+    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Ping R" );
 
     // add commands
     G_RegisterCommand( "gametype" );

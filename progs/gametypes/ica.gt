@@ -7,6 +7,6 @@ generic/matchstates.as;
 generic/bots.as;
 generic/awards.as;
 
-ca.as;
+ica.as;
 
 legacy/quake1.as;

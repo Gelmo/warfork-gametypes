@@ -20,6 +20,7 @@ Custom Gametypes for Warfork
   - Instagib Clan Arena (works on servers without g/sv_instagib set to 1, so you can play it on the Normal Weapons tab)
   - Gunblade Instagib (projectile instagib, splash damage does NOT count)
   - Rocket Instagib (projectile instagib, splash damage does count)
+  - Grenade Launcher Instagib (projectile instagib, splash damage does count)
   - Slide (rocket and grenade instagib (with splash damage) but CA style, typically played on slick maps)
   - SlideFFA (rocket and grenade instagib (with splash damage) but FFA style, typically played on slick maps)
 

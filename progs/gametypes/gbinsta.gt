@@ -9,7 +9,7 @@ generic/items.as;
 generic/spawnpoints.as;
 generic/awards.as;
 
-ginsta.as;
+gbinsta.as;
 
 legacy/quake1.as;
 

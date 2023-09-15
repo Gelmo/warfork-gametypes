@@ -5,6 +5,7 @@
 generic/quickmenu.as;
 generic/matchstates.as;
 generic/bots.as;
+generic/spawnpoints.as;
 generic/awards.as;
 
 clanless.as;

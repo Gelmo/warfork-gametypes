@@ -1096,7 +1096,7 @@ void GT_InitGametype()
     gametype.dropableItemsMask = 0;
     gametype.pickableItemsMask = 0;
 
-    gametype.isTeamBased = true;
+    gametype.isTeamBased = false;
     gametype.isRace = false;
     gametype.hasChallengersQueue = false;
     gametype.maxPlayersPerTeam = 0;

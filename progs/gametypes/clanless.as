@@ -42,8 +42,6 @@ class cCARound
     uint roundStateStartTime;
     uint roundStateEndTime;
     int countDown;
-    Entity @alphaSpawn;
-    Entity @betaSpawn;
 	uint minuteLeft;
 	int timelimit;
 	int alpha_oneVS;
@@ -58,54 +56,12 @@ class cCARound
         this.countDown = 0;
 		this.minuteLeft = 0;
 		this.timelimit = 0;
-        @this.alphaSpawn = null;
-        @this.betaSpawn = null;
         
         this.alpha_oneVS = 0;
         this.beta_oneVS = 0;
     }
 
     ~cCARound() {}
-
-    void setupSpawnPoints()
-    {
-        String className( "info_player_deathmatch" );
-        Entity @spot1;
-        Entity @spot2;
-        Entity @spawn;
-        float dist, bestDistance;
-
-        // pick a random spawn first
-        @spot1 = @GENERIC_SelectBestRandomSpawnPoint( null, className );
-
-        // pick the furthest spawn second
-		array<Entity @> @spawns = G_FindByClassname( className );
-		@spawn = null;
-        bestDistance = 0;
-        @spot2 = null;
-		
-        for( uint i = 0; i < spawns.size(); i++ )
-        {
-			@spawn = spawns[i];
-            dist = spot1.origin.distance( spawn.origin );
-            if ( dist > bestDistance || @spot2 == null )
-            {
-                bestDistance = dist;
-                @spot2 = @spawn;
-            }
-        }
-
-        if ( random() > 0.5f )
-        {
-            @this.alphaSpawn = @spot1;
-            @this.betaSpawn = @spot2;
-        }
-        else
-        {
-            @this.alphaSpawn = @spot2;
-            @this.betaSpawn = @spot1;
-        }
-    }
 
     void newGame()
     {
@@ -219,8 +175,6 @@ class cCARound
             // respawn everyone and disable shooting
             gametype.shootingDisabled = true;
             gametype.removeInactivePlayers = false;
-
-            this.setupSpawnPoints();
 	
 			this.alpha_oneVS = 0;
 			this.beta_oneVS = 0;
@@ -746,15 +700,6 @@ bool GT_UpdateBotStatus( Entity @ent )
 // select a spawning point for a player
 Entity @GT_SelectSpawnPoint( Entity @self )
 {
-    if ( caRound.state == CA_ROUNDSTATE_PREROUND )
-    {
-        if ( self.team == TEAM_ALPHA )
-            return @caRound.alphaSpawn;
-
-        if ( self.team == TEAM_BETA )
-            return @caRound.betaSpawn;
-    }
-
     return GENERIC_SelectBestRandomSpawnPoint( self, "info_player_deathmatch" );
 }
 
@@ -864,10 +809,7 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
 void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 {
     if ( ent.isGhosting() )
-	{
-		ent.svflags &= ~SVF_FORCETEAM;
         return;
-	}
 
     if ( gametype.isInstagib )
     {
@@ -918,8 +860,6 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     // auto-select best weapon in the inventory
     if( ent.client.pendingWeapon == WEAP_NONE )
 		ent.client.selectWeapon( -1 );
-
-	ent.svflags |= SVF_FORCETEAM;
 
     // add a teleportation effect
     ent.respawnEffect();

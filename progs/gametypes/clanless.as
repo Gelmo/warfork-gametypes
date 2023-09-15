@@ -940,10 +940,8 @@ void GT_ThinkRules()
 
     alive[TEAM_SPECTATOR] = 0;
     alive[TEAM_PLAYERS] = 0;
-    alive[TEAM_ALPHA] = 0;
-    alive[TEAM_BETA] = 0;
 
-    for ( int t = TEAM_ALPHA; t < GS_MAX_TEAMS; t++ )
+    for ( int t = TEAM_PLAYERS; t < GS_MAX_TEAMS; t++ )
     {
         @team = @G_GetTeam( t );
         for ( int i = 0; @team.ent( i ) != null; i++ )
@@ -953,8 +951,8 @@ void GT_ThinkRules()
         }
     }
 
-    G_ConfigString( CS_GENERAL, "" + alive[TEAM_ALPHA] );
-    G_ConfigString( CS_GENERAL + 1, "" + alive[TEAM_BETA] );
+    G_ConfigString( CS_GENERAL, "" + alive[TEAM_PLAYERS] );
+    G_ConfigString( CS_GENERAL + 1, "" + alive[TEAM_PLAYERS] );
 
     for ( int i = 0; i < maxClients; i++ )
     {

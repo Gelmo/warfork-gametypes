@@ -173,6 +173,9 @@ class cBRRound
             // respawn everyone and disable shooting
             gametype.shootingDisabled = true;
             gametype.removeInactivePlayers = false;
+
+            gametype.pickableItemsMask = 0; // disallow item pickup
+            gametype.dropableItemsMask = 0; // disallow item drop
 	
 			this.players_oneVS = 0;
 
@@ -197,6 +200,8 @@ class cBRRound
         {
             gametype.shootingDisabled = false;
             gametype.removeInactivePlayers = true;
+            gametype.pickableItemsMask = gametype.spawnableItemsMask;
+            gametype.dropableItemsMask = gametype.spawnableItemsMask;
             this.countDown = 0;
             this.roundStateEndTime = 0;
             int soundIndex = G_SoundIndex( "sounds/announcer/countdown/fight0" + (1 + (rand() & 1)) );
@@ -207,6 +212,8 @@ class cBRRound
 
         case BR_ROUNDSTATE_ROUNDFINISHED:
             gametype.shootingDisabled = true;
+            gametype.pickableItemsMask = 0; // disallow item pickup
+            gametype.dropableItemsMask = 0; // disallow item drop
             this.roundStateEndTime = levelTime + 1500;
             this.countDown = 0;
 			this.timelimit = 0;
@@ -783,18 +790,28 @@ void GT_MatchStateStarted()
     switch ( match.getState() )
     {
     case MATCH_STATE_WARMUP:
+        gametype.pickableItemsMask = gametype.spawnableItemsMask;
+        gametype.dropableItemsMask = gametype.spawnableItemsMask;
         BR_SetUpWarmup();
+        SpawnIndicators::Create( "info_player_deathmatch", TEAM_PLAYERS );
         break;
 
     case MATCH_STATE_COUNTDOWN:
+        gametype.pickableItemsMask = 0; // disallow item pickup
+        gametype.dropableItemsMask = 0; // disallow item drop
         BR_SetUpCountdown();
+        SpawnIndicators::Delete();
         break;
 
     case MATCH_STATE_PLAYTIME:
+        gametype.pickableItemsMask = gametype.spawnableItemsMask;
+        gametype.dropableItemsMask = gametype.spawnableItemsMask;
         brRound.newGame();
         break;
 
     case MATCH_STATE_POSTMATCH:
+        gametype.pickableItemsMask = 0; // disallow item pickup
+        gametype.dropableItemsMask = 0; // disallow item drop
         brRound.endGame();
         break;
 
@@ -867,10 +884,14 @@ void GT_InitGametype()
 	brTimelimit1v1 = g_br_timelimit1v1.integer;
     brRoundLimit = g_br_roundlimit.integer;
 
-    gametype.spawnableItemsMask = 0;
-    gametype.respawnableItemsMask = 0;
-    gametype.dropableItemsMask = 0;
-    gametype.pickableItemsMask = 0;
+    gametype.spawnableItemsMask = ( IT_WEAPON | IT_AMMO | IT_ARMOR | IT_HEALTH );
+
+    if ( gametype.isInstagib )
+        gametype.spawnableItemsMask &= ~uint(G_INSTAGIB_NEGATE_ITEMMASK);
+
+    gametype.respawnableItemsMask = gametype.spawnableItemsMask;
+    gametype.dropableItemsMask = gametype.spawnableItemsMask;
+    gametype.pickableItemsMask = gametype.spawnableItemsMask;
 
     gametype.isTeamBased = false;
     gametype.isRace = false;

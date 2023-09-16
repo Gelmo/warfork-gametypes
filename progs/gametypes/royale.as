@@ -887,12 +887,12 @@ void GT_InitGametype()
     gametype.hasChallengersQueue = false;
     gametype.maxPlayersPerTeam = 0;
 
-    gametype.ammoRespawn = 20;
-    gametype.armorRespawn = 25;
-    gametype.weaponRespawn = 15;
-    gametype.healthRespawn = 25;
-    gametype.powerupRespawn = 90;
-    gametype.megahealthRespawn = 20;
+    gametype.ammoRespawn = 60;
+    gametype.armorRespawn = 60;
+    gametype.weaponRespawn = 60;
+    gametype.healthRespawn = 60;
+    gametype.powerupRespawn = 60;
+    gametype.megahealthRespawn = 60;
     gametype.ultrahealthRespawn = 60;
 
     gametype.readyAnnouncementEnabled = false;

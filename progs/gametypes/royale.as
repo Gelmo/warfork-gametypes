@@ -829,6 +829,19 @@ void GT_Shutdown()
 // playing, but nothing has yet started.
 void GT_SpawnGametype()
 {
+    for ( int i = 0; i < numEntities; i++ )
+    {
+        Entity@ ent = @G_GetEntity( i );
+
+        if ( @ent.item != null && ent.item.tag == HEALTH_MEGA )
+        {
+            ent.freeEntity();
+        }
+        else if ( @ent.item != null && ent.item.tag == HEALTH_ULTRA )
+        {
+            ent.freeEntity();
+        }
+    }
 }
 
 // Important: This function is called before any entity is spawned, and

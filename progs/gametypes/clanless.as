@@ -24,16 +24,16 @@ Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "60", 0 );
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
+Cvar g_ca_lmsbonus( "g_ca_lmsbonus", "1", 0 );
+
 const int CA_ROUNDSTATE_NONE = 0;
 const int CA_ROUNDSTATE_PREROUND = 1;
 const int CA_ROUNDSTATE_ROUND = 2;
 const int CA_ROUNDSTATE_ROUNDFINISHED = 3;
 const int CA_ROUNDSTATE_POSTROUND = 4;
 
-const int CA_LAST_MAN_STANDING_BONUS = 0; // 0 points for each frag
-
 int[] caBonusScores( maxClients );
-int[] caLMSCounts( GS_MAX_TEAMS ); // last man standing bonus for each team
+int[] caLMSCounts( maxClients ); // last man standing bonus for each possible player
 
 class cCARound
 {
@@ -119,9 +119,8 @@ class cCARound
 
 	void clearLMSCounts()
 	{
-		// clear last-man-standing counts
-		for ( int i = TEAM_PLAYERS; i < GS_MAX_TEAMS; i++ )
-			caLMSCounts[i] = 0;
+        for ( int i = 0; i < maxClients; i++ )
+            caLMSCounts[i] = 0;
 	}
 
     void endGame()
@@ -253,7 +252,7 @@ class cCARound
                         	// lastManStanding.client.addMetaAward( "Last Man Standing" );
                         	lastManStanding.client.addAward( "Last Man Standing" );
 
-                        this.addPlayerBonus( lastManStanding.client, caLMSCounts[TEAM_PLAYERS] * CA_LAST_MAN_STANDING_BONUS );
+                        this.addPlayerBonus( lastManStanding.client, caLMSCounts[lastManStanding.playerNum] * g_ca_lmsbonus.integer );
                         GT_updateScore( lastManStanding.client );
                     }
                 }
@@ -415,9 +414,8 @@ class cCARound
                     playersCount++;
             }
 
-			// amount of enemies for the last-man-standing award
-			if ( playersCount == 2 && caLMSCounts[TEAM_PLAYERS] == 0 )
-				caLMSCounts[TEAM_PLAYERS] = playersCount;
+            // Increment a player's LMS score each time they get a kill
+            caLMSCounts[attacker.playerNum]++;
 
             if ( playersCount == 2 )
             {
@@ -599,10 +597,7 @@ void GT_updateScore( Client @client )
 {
     if ( @client != null )
     {
-        if ( gametype.isInstagib )
-            client.stats.setScore( client.stats.frags + caRound.getPlayerBonusScore( client ) );
-        else
-            client.stats.setScore( int( client.stats.totalDamageGiven * 0.01 ) + caRound.getPlayerBonusScore( client ) );
+        client.stats.setScore( client.stats.frags + caRound.getPlayerBonusScore( client ) );
     }
 }
 
@@ -852,6 +847,7 @@ void GT_InitGametype()
                  + "set g_maxtimeouts \"1\" // -1 = unlimited\n"
                  + "\n// gametype settings\n"
 				 + "set g_ca_timelimit1v1 \"60\"\n"
+                 + "set g_ca_lmsbonus \"1\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
                  + "set g_class_strong_ammo \"1 75 15 20 20 125 140 10\" // GB MG RG GL RL PG LG EB\n"

@@ -22,8 +22,8 @@ int brRoundLimit;
 
 Cvar g_br_timelimit1v1( "g_br_timelimit1v1", "60", 0 );
 
-Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets", 0 );
-Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
+Cvar g_noclass_inventory( "g_noclass_inventory", "gb cells", 0 );
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "1", 0 ); // GB
 
 Cvar g_br_lmsbonus( "g_br_lmsbonus", "1", 0 );
 Cvar g_br_roundlimit( "g_br_roundlimit", "10", 0 );
@@ -869,8 +869,8 @@ void GT_InitGametype()
                  + "set g_br_lmsbonus \"1\"\n"
                  + "set g_br_roundlimit \"10\"\n"
                  + "\n// classes settings\n"
-                 + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
-                 + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
+                 + "set g_noclass_inventory \"gb cells\"\n"
+                 + "set g_class_strong_ammo \"1\" // GB\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );

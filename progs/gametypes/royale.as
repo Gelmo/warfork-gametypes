@@ -540,38 +540,7 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
 // unless a weight is assigned here.
 bool GT_UpdateBotStatus( Entity @ent )
 {
-    Entity @goal;
-    Bot @bot;
-
-    @bot = @ent.client.getBot();
-    if ( @bot == null )
-        return false;
-
-    float offensiveStatus = GENERIC_OffensiveStatus( ent );
-
-    // loop all the goal entities
-    for ( int i = AI::GetNextGoal( AI::GetRootGoal() ); i != AI::GetRootGoal(); i = AI::GetNextGoal( i ) )
-    {
-        @goal = @AI::GetGoalEntity( i );
-
-        // by now, always full-ignore not solid entities
-        if ( goal.solid == SOLID_NOT )
-        {
-            bot.setGoalWeight( i, 0 );
-            continue;
-        }
-
-        if ( @goal.client != null )
-        {
-            bot.setGoalWeight( i, GENERIC_PlayerWeight( ent, goal ) * 2.5 * offensiveStatus );
-            continue;
-        }
-
-        // ignore it
-        bot.setGoalWeight( i, 0 );
-    }
-
-    return true; // handled by the script
+    return GENERIC_UpdateBotStatus( ent );
 }
 
 // select a spawning point for a player

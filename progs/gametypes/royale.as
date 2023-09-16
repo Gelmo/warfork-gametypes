@@ -692,11 +692,9 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
             }
         }
 
-        // give armor
-        ent.client.armor = 150;
-
-        // select rocket launcher
-        ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
+        // give armor and health
+        ent.client.armor = 100;
+        ent.health = 200;
     }
 
     // auto-select best weapon in the inventory

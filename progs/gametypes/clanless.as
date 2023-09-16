@@ -45,7 +45,6 @@ class cCARound
 	uint minuteLeft;
 	int timelimit;
 	int players_oneVS;
-	
 
     cCARound()
     {
@@ -612,14 +611,7 @@ void GT_updateScore( Client @client )
 // Warning: client can be null
 void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
 {
-    if ( score_event == "dmg" )
-    {
-        if ( match.getState() == MATCH_STATE_PLAYTIME )
-        {
-			GT_updateScore( client );
-        }
-    }
-    else if ( score_event == "kill" )
+    if ( score_event == "kill" )
     {
         Entity @attacker = null;
 
@@ -636,9 +628,6 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
 		{
 			GT_updateScore( client );
 		}
-    }
-    else if ( score_event == "award" )
-    {
     }
 	else if( score_event == "rebalance" || score_event == "shuffle" )
 	{

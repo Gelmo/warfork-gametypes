@@ -849,7 +849,7 @@ void GT_InitGametype()
                  + "set g_maplist \"wfca1\" // list of maps in automatic rotation\n"
                  + "set g_maprotation \"0\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
-                 + "set g_scorelimit \"11\"\n"
+                 + "set g_scorelimit \"0\"\n"
                  + "set g_timelimit \"0\"\n"
                  + "set g_warmup_timelimit \"1\"\n"
                  + "set g_match_extendedtime \"0\"\n"

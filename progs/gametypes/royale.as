@@ -176,6 +176,8 @@ class cBRRound
 
             gametype.pickableItemsMask = 0; // disallow item pickup
             gametype.dropableItemsMask = 0; // disallow item drop
+            G_Items_RespawnByType( 0, 0, 0 );
+            G_Items_RespawnByType( IT_ARMOR, 0, 0 );
 	
 			this.players_oneVS = 0;
 

@@ -637,6 +637,38 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
         ent.client.inventorySetCount( AMMO_INSTAS, 1 );
         ent.client.inventorySetCount( AMMO_WEAK_INSTAS, 1 );
     }
+    else if ( match.getState() <= MATCH_STATE_WARMUP )
+    {
+        Item @item;
+        Item @ammoItem;
+
+        // the gunblade can't be given (because it can't be dropped)
+        ent.client.inventorySetCount( WEAP_GUNBLADE, 1 );
+        ent.client.inventorySetCount( AMMO_GUNBLADE, 1 ); // enable gunblade blast
+
+        // give armor and health
+        ent.client.armor = 100;
+        ent.health = 200;
+
+        // give all weapons
+        for ( int i = WEAP_GUNBLADE + 1; i < WEAP_TOTAL; i++ )
+        {
+            if ( i == WEAP_INSTAGUN ) // dont add instagun...
+                continue;
+
+            ent.client.inventoryGiveItem( i );
+
+            @item = @G_GetItem( i );
+
+            @ammoItem = item.weakAmmoTag == AMMO_NONE ? null : @G_GetItem( item.weakAmmoTag );
+            if ( @ammoItem != null )
+                ent.client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
+
+            @ammoItem = @G_GetItem( item.ammoTag );
+            if ( @ammoItem != null )
+                ent.client.inventorySetCount( ammoItem.tag, ammoItem.inventoryMax );
+        }
+    }
     else
     {
     	// give the weapons and ammo as defined in cvars

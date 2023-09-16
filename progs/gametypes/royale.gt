@@ -9,7 +9,7 @@ generic/items.as;
 generic/spawnpoints.as;
 generic/awards.as;
 
-clanless.as;
+royale.as;
 
 legacy/quake1.as;
 

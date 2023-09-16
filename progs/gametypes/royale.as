@@ -17,27 +17,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-uint caTimelimit1v1;
-int caRoundLimit;
+uint brTimelimit1v1;
+int brRoundLimit;
 
-Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "60", 0 );
+Cvar g_br_timelimit1v1( "g_br_timelimit1v1", "60", 0 );
 
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
-Cvar g_ca_lmsbonus( "g_ca_lmsbonus", "1", 0 );
-Cvar g_ca_roundlimit( "g_ca_roundlimit", "10", 0 );
+Cvar g_br_lmsbonus( "g_br_lmsbonus", "1", 0 );
+Cvar g_br_roundlimit( "g_br_roundlimit", "10", 0 );
 
-const int CA_ROUNDSTATE_NONE = 0;
-const int CA_ROUNDSTATE_PREROUND = 1;
-const int CA_ROUNDSTATE_ROUND = 2;
-const int CA_ROUNDSTATE_ROUNDFINISHED = 3;
-const int CA_ROUNDSTATE_POSTROUND = 4;
+const int BR_ROUNDSTATE_NONE = 0;
+const int BR_ROUNDSTATE_PREROUND = 1;
+const int BR_ROUNDSTATE_ROUND = 2;
+const int BR_ROUNDSTATE_ROUNDFINISHED = 3;
+const int BR_ROUNDSTATE_POSTROUND = 4;
 
-int[] caBonusScores( maxClients );
-int[] caLMSCounts( maxClients ); // last man standing bonus for each possible player
+int[] brBonusScores( maxClients );
+int[] brLMSCounts( maxClients ); // last man standing bonus for each possible player
 
-class cCARound
+class cBRRound
 {
     int state;
     int numRounds;
@@ -48,9 +48,9 @@ class cCARound
 	int timelimit;
 	int players_oneVS;
 
-    cCARound()
+    cBRRound()
     {
-        this.state = CA_ROUNDSTATE_NONE;
+        this.state = BR_ROUNDSTATE_NONE;
         this.numRounds = 0;
         this.roundStateStartTime = 0;
         this.countDown = 0;
@@ -60,7 +60,7 @@ class cCARound
         this.players_oneVS = 0;
     }
 
-    ~cCARound() {}
+    ~cBRRound() {}
 
     void newGame()
     {
@@ -93,7 +93,7 @@ class cCARound
 
         // clear bonuses
         for ( i = 0; i < maxClients; i++ )
-            caBonusScores[i] = 0;
+            brBonusScores[i] = 0;
 
 		this.clearLMSCounts();
 
@@ -106,7 +106,7 @@ class cCARound
     // Check if the defined round limit has been reached
     bool GT_RoundlimitHit( void )
     {
-        if ( numRounds > caRoundLimit )
+        if ( numRounds > brRoundLimit )
         {
             return true;
         }
@@ -119,7 +119,7 @@ class cCARound
         if ( @client == null )
             return;
 
-        caBonusScores[ client.playerNum ] += bonus;
+        brBonusScores[ client.playerNum ] += bonus;
     }
 
     int getPlayerBonusScore( Client @client )
@@ -127,18 +127,18 @@ class cCARound
         if ( @client == null )
             return 0;
 
-        return caBonusScores[ client.playerNum ];
+        return brBonusScores[ client.playerNum ];
     }
 
 	void clearLMSCounts()
 	{
         for ( int i = 0; i < maxClients; i++ )
-            caLMSCounts[i] = 0;
+            brLMSCounts[i] = 0;
 	}
 
     void endGame()
     {
-        this.newRoundState( CA_ROUNDSTATE_NONE );
+        this.newRoundState( BR_ROUNDSTATE_NONE );
 
         GENERIC_SetUpEndMatch();
     }
@@ -148,13 +148,13 @@ class cCARound
         G_RemoveDeadBodies();
         G_RemoveAllProjectiles();
 
-        this.newRoundState( CA_ROUNDSTATE_PREROUND );
+        this.newRoundState( BR_ROUNDSTATE_PREROUND );
         this.numRounds++;
     }
 
     void newRoundState( int newState )
     {
-        if ( newState > CA_ROUNDSTATE_POSTROUND )
+        if ( newState > BR_ROUNDSTATE_POSTROUND )
         {
             this.newRound();
             return;
@@ -165,14 +165,14 @@ class cCARound
 
         switch ( this.state )
         {
-        case CA_ROUNDSTATE_NONE:
+        case BR_ROUNDSTATE_NONE:
             this.roundStateEndTime = 0;
             this.countDown = 0;
 			this.timelimit = 0;
 			this.minuteLeft = 0;
             break;
 
-        case CA_ROUNDSTATE_PREROUND:
+        case BR_ROUNDSTATE_PREROUND:
         {
             this.roundStateEndTime = levelTime + 7000;
             this.countDown = 5;
@@ -204,7 +204,7 @@ class cCARound
 	    }
         break;
 
-        case CA_ROUNDSTATE_ROUND:
+        case BR_ROUNDSTATE_ROUND:
         {
             gametype.shootingDisabled = false;
             gametype.removeInactivePlayers = true;
@@ -216,7 +216,7 @@ class cCARound
         }
         break;
 
-        case CA_ROUNDSTATE_ROUNDFINISHED:
+        case BR_ROUNDSTATE_ROUNDFINISHED:
             gametype.shootingDisabled = true;
             this.roundStateEndTime = levelTime + 1500;
             this.countDown = 0;
@@ -224,7 +224,7 @@ class cCARound
 			this.minuteLeft = 0;
             break;
 
-        case CA_ROUNDSTATE_POSTROUND:
+        case BR_ROUNDSTATE_POSTROUND:
         {
             this.roundStateEndTime = levelTime + 3000;
 
@@ -265,7 +265,7 @@ class cCARound
                         	// lastManStanding.client.addMetaAward( "Last Man Standing" );
                         	lastManStanding.client.addAward( "Last Man Standing" );
 
-                        this.addPlayerBonus( lastManStanding.client, caLMSCounts[lastManStanding.playerNum] * g_ca_lmsbonus.integer );
+                        this.addPlayerBonus( lastManStanding.client, brLMSCounts[lastManStanding.playerNum] * g_br_lmsbonus.integer );
                         GT_updateScore( lastManStanding.client );
                     }
                 }
@@ -284,7 +284,7 @@ class cCARound
 
     void think()
     {
-        if ( this.state == CA_ROUNDSTATE_NONE )
+        if ( this.state == BR_ROUNDSTATE_NONE )
             return;
 		
         if ( match.getState() != MATCH_STATE_PLAYTIME )
@@ -335,28 +335,28 @@ class cCARound
             }
         }
 
-        // if one of the teams has no player alive move from CA_ROUNDSTATE_ROUND
-        if ( this.state == CA_ROUNDSTATE_ROUND )
+        // if one of the teams has no player alive move from BR_ROUNDSTATE_ROUND
+        if ( this.state == BR_ROUNDSTATE_ROUND )
         {
 			// 1 minute left if 1v1
 			if( this.minuteLeft > 0 )
 			{
 				uint left = this.minuteLeft - levelTime;
 
-				if ( caTimelimit1v1 != 0 && ( caTimelimit1v1 * 1000 ) == left )
+				if ( brTimelimit1v1 != 0 && ( brTimelimit1v1 * 1000 ) == left )
 				{
-					if( caTimelimit1v1 < 60 )
+					if( brTimelimit1v1 < 60 )
 					{
-						G_CenterPrintMsg( null, caTimelimit1v1 + " seconds left. Hurry up!" );
+						G_CenterPrintMsg( null, brTimelimit1v1 + " seconds left. Hurry up!" );
 					}
 					else
 					{
 						uint minutes;					
-						uint seconds = caTimelimit1v1 % 60;
+						uint seconds = brTimelimit1v1 % 60;
 						
 						if( seconds == 0 )
 						{
-							minutes = caTimelimit1v1 / 60;
+							minutes = brTimelimit1v1 / 60;
 							if(minutes == 1) {
 								G_CenterPrintMsg( null, minutes + " minute left. Hurry up!");
 							} else {
@@ -365,7 +365,7 @@ class cCARound
 						}
 						else
 						{
-							minutes = ( caTimelimit1v1 - seconds ) / 60;
+							minutes = ( brTimelimit1v1 - seconds ) / 60;
 							G_CenterPrintMsg( null, minutes + " minutes and "+ seconds +" seconds left. Hurry up!"  );
 						}
 					}
@@ -385,7 +385,7 @@ class cCARound
 				}
 			}
 		
-			// if there's only one player alive move from CA_ROUNDSTATE_ROUND
+			// if there's only one player alive move from BR_ROUNDSTATE_ROUND
             Entity @ent;
             Team @team;
             int count;
@@ -412,7 +412,7 @@ class cCARound
         Entity @ent;
         Team @team;
 
-        if ( this.state != CA_ROUNDSTATE_ROUND )
+        if ( this.state != BR_ROUNDSTATE_ROUND )
             return;
 
         if ( @target != null && @target.client != null && @attacker != null && @attacker.client != null )
@@ -434,7 +434,7 @@ class cCARound
             }
 
             // Increment a player's LMS score each time they get a kill
-            caLMSCounts[attacker.playerNum]++;
+            brLMSCounts[attacker.playerNum]++;
 
             if ( playersCount == 2 )
             {
@@ -453,7 +453,7 @@ class cCARound
                     break;
                 }
 				
-				this.minuteLeft = levelTime + ( caTimelimit1v1 * 1000 );
+				this.minuteLeft = levelTime + ( brTimelimit1v1 * 1000 );
             }
             
 			award_playerKilled( @target, @attacker, @inflictor );
@@ -465,7 +465,7 @@ class cCARound
     }
 }
 
-cCARound caRound;
+cBRRound brRound;
 
 ///*****************************************************************
 /// NEW MAP ENTITY DEFINITIONS
@@ -476,7 +476,7 @@ cCARound caRound;
 /// LOCAL FUNCTIONS
 ///*****************************************************************
 
-void CA_SetUpWarmup()
+void BR_SetUpWarmup()
 {
     GENERIC_SetUpWarmup();
 
@@ -485,7 +485,7 @@ void CA_SetUpWarmup()
         gametype.setTeamSpawnsystem( team, SPAWNSYSTEM_INSTANT, 0, 0, false );
 }
 
-void CA_SetUpCountdown()
+void BR_SetUpCountdown()
 {
     gametype.shootingDisabled = true;
     gametype.readyAnnouncementEnabled = false;
@@ -616,7 +616,7 @@ void GT_updateScore( Client @client )
 {
     if ( @client != null )
     {
-        client.stats.setScore( client.stats.frags + caRound.getPlayerBonusScore( client ) );
+        client.stats.setScore( client.stats.frags + brRound.getPlayerBonusScore( client ) );
     }
 }
 
@@ -636,7 +636,7 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
         int arg2 = args.getToken( 1 ).toInt();
 
         // target, attacker, inflictor
-        caRound.playerKilled( G_GetEntity( arg1 ), attacker, G_GetEntity( arg2 ) );
+        brRound.playerKilled( G_GetEntity( arg1 ), attacker, G_GetEntity( arg2 ) );
 
 		if ( match.getState() == MATCH_STATE_PLAYTIME )
 		{
@@ -648,7 +648,7 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
 		// end round when in match
 		if ( ( @client == null ) && ( match.getState() == MATCH_STATE_PLAYTIME ) )
 		{
-			caRound.newRoundState( CA_ROUNDSTATE_ROUNDFINISHED );
+			brRound.newRoundState( BR_ROUNDSTATE_ROUNDFINISHED );
 		}	
 	}
 }
@@ -769,7 +769,7 @@ void GT_ThinkRules()
     if ( match.getState() >= MATCH_STATE_POSTMATCH )
         return;
 
-    caRound.think();
+    brRound.think();
 }
 
 // The game has detected the end of the match state, but it
@@ -797,19 +797,19 @@ void GT_MatchStateStarted()
     switch ( match.getState() )
     {
     case MATCH_STATE_WARMUP:
-        CA_SetUpWarmup();
+        BR_SetUpWarmup();
         break;
 
     case MATCH_STATE_COUNTDOWN:
-        CA_SetUpCountdown();
+        BR_SetUpCountdown();
         break;
 
     case MATCH_STATE_PLAYTIME:
-        caRound.newGame();
+        brRound.newGame();
         break;
 
     case MATCH_STATE_POSTMATCH:
-        caRound.endGame();
+        brRound.endGame();
         break;
 
     default:
@@ -835,7 +835,7 @@ void GT_SpawnGametype()
 
 void GT_InitGametype()
 {
-    gametype.title = "Clanless Arena";
+    gametype.title = "Warfork Royale";
     gametype.version = "0.0.1";
     gametype.author = "Warsow Development Team";
     // Forked by Gelmo
@@ -865,9 +865,9 @@ void GT_InitGametype()
                  + "set g_countdown_time \"3\"\n"
                  + "set g_maxtimeouts \"1\" // -1 = unlimited\n"
                  + "\n// gametype settings\n"
-				 + "set g_ca_timelimit1v1 \"60\"\n"
-                 + "set g_ca_lmsbonus \"1\"\n"
-                 + "set g_ca_roundlimit \"10\"\n"
+				 + "set g_br_timelimit1v1 \"60\"\n"
+                 + "set g_br_lmsbonus \"1\"\n"
+                 + "set g_br_roundlimit \"10\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
                  + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
@@ -878,8 +878,8 @@ void GT_InitGametype()
         G_CmdExecute( "exec configs/server/gametypes/" + gametype.name + ".cfg silent" );
     }
 
-	caTimelimit1v1 = g_ca_timelimit1v1.integer;
-    caRoundLimit = g_ca_roundlimit.integer;
+	brTimelimit1v1 = g_br_timelimit1v1.integer;
+    brRoundLimit = g_br_roundlimit.integer;
 
     gametype.spawnableItemsMask = 0;
     gametype.respawnableItemsMask = 0;

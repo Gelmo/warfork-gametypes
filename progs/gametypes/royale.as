@@ -35,7 +35,6 @@ const int BR_ROUNDSTATE_ROUNDFINISHED = 3;
 const int BR_ROUNDSTATE_POSTROUND = 4;
 
 int[] brBonusScores( maxClients );
-int[] brLMSCounts( maxClients ); // last man standing bonus for each possible player
 
 class cBRRound
 {
@@ -95,8 +94,6 @@ class cBRRound
         for ( i = 0; i < maxClients; i++ )
             brBonusScores[i] = 0;
 
-		this.clearLMSCounts();
-
         this.numRounds = 0;
         this.newRound();
         
@@ -129,12 +126,6 @@ class cBRRound
 
         return brBonusScores[ client.playerNum ];
     }
-
-	void clearLMSCounts()
-	{
-        for ( int i = 0; i < maxClients; i++ )
-            brLMSCounts[i] = 0;
-	}
 
     void endGame()
     {
@@ -199,8 +190,6 @@ class cBRRound
                     ent.client.respawn( false );
                 }
             }
-
-			this.clearLMSCounts();
 	    }
         break;
 
@@ -265,7 +254,7 @@ class cBRRound
                         	// lastManStanding.client.addMetaAward( "Last Man Standing" );
                         	lastManStanding.client.addAward( "Last Man Standing" );
 
-                        this.addPlayerBonus( lastManStanding.client, brLMSCounts[lastManStanding.playerNum] * g_br_lmsbonus.integer );
+                        this.addPlayerBonus( lastManStanding.client, g_br_lmsbonus.integer );
                         GT_updateScore( lastManStanding.client );
                     }
                 }
@@ -432,9 +421,6 @@ class cBRRound
                 if ( !ent.isGhosting() )
                     playersCount++;
             }
-
-            // Increment a player's LMS score each time they get a kill
-            brLMSCounts[attacker.playerNum]++;
 
             if ( playersCount == 2 )
             {

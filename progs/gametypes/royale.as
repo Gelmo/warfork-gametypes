@@ -20,12 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 uint brTimelimit1v1;
 int brRoundLimit;
 
-Cvar g_br_timelimit1v1( "g_br_timelimit1v1", "60", 0 );
+Cvar g_br_timelimit1v1( "g_br_timelimit1v1", "120", 0 );
 
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb cells", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "1", 0 ); // GB
 
-Cvar g_br_lmsbonus( "g_br_lmsbonus", "1", 0 );
+Cvar g_br_lmsbonus( "g_br_lmsbonus", "10", 0 );
 Cvar g_br_roundlimit( "g_br_roundlimit", "10", 0 );
 
 const int BR_ROUNDSTATE_NONE = 0;
@@ -849,24 +849,24 @@ void GT_InitGametype()
         config = "// '" + gametype.title + "' gametype configuration file\n"
                  + "// This config will be executed each time the gametype is started\n"
                  + "\n\n// map rotation\n"
-                 + "set g_maplist \"wfca1\" // list of maps in automatic rotation\n"
-                 + "set g_maprotation \"0\"   // 0 = same map, 1 = in order, 2 = random\n"
+                 + "set g_maplist \"wfbomb1 wfbomb2 wfbomb3 wfbomb4 wfbomb5 wfbomb6\" // list of maps in automatic rotation\n"
+                 + "set g_maprotation \"1\"   // 0 = same map, 1 = in order, 2 = random\n"
                  + "\n// game settings\n"
                  + "set g_scorelimit \"0\"\n"
                  + "set g_timelimit \"0\"\n"
                  + "set g_warmup_timelimit \"1\"\n"
                  + "set g_match_extendedtime \"0\"\n"
                  + "set g_allow_falldamage \"0\"\n"
-                 + "set g_allow_selfdamage \"0\"\n"
+                 + "set g_allow_selfdamage \"1\"\n"
                  + "set g_allow_teamdamage \"0\"\n"
-                 + "set g_allow_stun \"0\"\n"
-                 + "set g_teams_maxplayers \"8\"\n"
+                 + "set g_allow_stun \"1\"\n"
+                 + "set g_teams_maxplayers \"0\"\n"
                  + "set g_teams_allow_uneven \"0\"\n"
                  + "set g_countdown_time \"3\"\n"
                  + "set g_maxtimeouts \"1\" // -1 = unlimited\n"
                  + "\n// gametype settings\n"
-				 + "set g_br_timelimit1v1 \"60\"\n"
-                 + "set g_br_lmsbonus \"1\"\n"
+				 + "set g_br_timelimit1v1 \"120\"\n"
+                 + "set g_br_lmsbonus \"10\"\n"
                  + "set g_br_roundlimit \"10\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb cells\"\n"

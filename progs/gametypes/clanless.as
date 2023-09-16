@@ -18,6 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 uint caTimelimit1v1;
+int caRoundLimit;
 
 Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "60", 0 );
 
@@ -25,6 +26,7 @@ Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells 
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
 
 Cvar g_ca_lmsbonus( "g_ca_lmsbonus", "1", 0 );
+Cvar g_ca_roundlimit( "g_ca_roundlimit", "10", 0 );
 
 const int CA_ROUNDSTATE_NONE = 0;
 const int CA_ROUNDSTATE_PREROUND = 1;
@@ -99,6 +101,17 @@ class cCARound
         this.newRound();
         
         this.players_oneVS = 0;
+    }
+
+    // Check if the defined round limit has been reached
+    bool GT_RoundlimitHit( void )
+    {
+        if ( numRounds > caRoundLimit )
+        {
+            return true;
+        }
+
+    	return false;
     }
 
     void addPlayerBonus( Client @client, int bonus )
@@ -277,6 +290,12 @@ class cCARound
         if ( match.getState() != MATCH_STATE_PLAYTIME )
         {
             this.endGame();
+            return;
+        }
+
+        if ( GT_RoundlimitHit() )
+        {
+            match.launchState( match.getState() + 1 );
             return;
         }
 
@@ -848,6 +867,7 @@ void GT_InitGametype()
                  + "\n// gametype settings\n"
 				 + "set g_ca_timelimit1v1 \"60\"\n"
                  + "set g_ca_lmsbonus \"1\"\n"
+                 + "set g_ca_roundlimit \"10\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
                  + "set g_class_strong_ammo \"1 75 15 20 20 125 140 10\" // GB MG RG GL RL PG LG EB\n"
@@ -859,6 +879,7 @@ void GT_InitGametype()
     }
 
 	caTimelimit1v1 = g_ca_timelimit1v1.integer;
+    caRoundLimit = g_ca_roundlimit.integer;
 
     gametype.spawnableItemsMask = 0;
     gametype.respawnableItemsMask = 0;

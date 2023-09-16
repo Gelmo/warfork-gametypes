@@ -599,25 +599,6 @@ void CA_SetUpCountdown()
     gametype.countdownEnabled = false;
     G_RemoveAllProjectiles();
 
-    // lock teams
-    bool anyone = false;
-    if ( gametype.isTeamBased )
-    {
-        for ( int team = TEAM_ALPHA; team < GS_MAX_TEAMS; team++ )
-        {
-            if ( G_GetTeam( team ).lock() )
-                anyone = true;
-        }
-    }
-    else
-    {
-        if ( G_GetTeam( TEAM_PLAYERS ).lock() )
-            anyone = true;
-    }
-
-    if ( anyone )
-        G_PrintMsg( null, "Teams locked.\n" );
-
     // Countdowns should be made entirely client side, because we now can
 
     int soundIndex = G_SoundIndex( "sounds/announcer/countdown/get_ready_to_fight0" + (1 + (rand() & 1)) );

@@ -413,6 +413,13 @@ class cBRRound
 
         if ( @target != null && @target.client != null && @attacker != null && @attacker.client != null )
         {
+            // drop target's active weapon and ammo
+            if ( target.client.weapon != WEAP_GUNBLADE )
+            {
+                target.dropItem( target.client.weapon );
+                target.dropItem( AMMO_PACK );
+            }
+
 			G_PrintMsg( target, "You were fragged by " + attacker.client.name + "\n" );
 
             // if the attacker is the only remaining player on the team,

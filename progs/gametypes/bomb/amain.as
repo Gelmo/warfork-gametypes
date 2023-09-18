@@ -505,7 +505,7 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
 
 		float damage = args.getToken( 1 ).toFloat();
 
-		assert( damage > 0, "main.as GT_ScoreEvent: damage < 0" );
+		assert( damage > 0, "amain.as GT_ScoreEvent: damage < 0" );
 
 		uint protectTimeO3 = protectTime / 3; // protectTime over 3
 
@@ -818,9 +818,10 @@ void GT_SpawnGametype()
 // right after the map entities spawning.
 void GT_InitGametype()
 {
-	gametype.title = "Bomb and Defuse";
+	gametype.title = "Arena Bomb and Defuse";
 	gametype.version = "1.0";
 	gametype.author = "Warsow Development Team";
+	// Forked by Gelmo
 
 	gametype.spawnableItemsMask = 0;
 	gametype.respawnableItemsMask = 0;
@@ -927,7 +928,7 @@ void GT_InitGametype()
 		G_CmdExecute("exec configs/server/gametypes/" + gametype.name + ".cfg silent");
 	}*/
 
-	G_CmdExecute( "exec configs/server/gametypes/bomb.cfg silent" ); // TODO XXX FIXME
+	G_CmdExecute( "exec configs/server/gametypes/abomb.cfg silent" ); // TODO XXX FIXME
 
 	G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

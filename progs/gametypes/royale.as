@@ -860,7 +860,7 @@ void GT_SpawnGametype()
 void GT_InitGametype()
 {
     gametype.title = "Warfork Royale";
-    gametype.version = "0.0.1";
+    gametype.version = "0.0.2";
     gametype.author = "Warsow Development Team";
     // Forked by Gelmo
 

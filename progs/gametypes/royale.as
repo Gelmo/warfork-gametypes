@@ -890,7 +890,7 @@ void GT_InitGametype()
                  + "\n// gametype settings\n"
 				 + "set g_br_timelimit1v1 \"120\"\n"
                  + "set g_br_lmsbonus \"10\"\n"
-                 + "set g_br_roundlimit \"10\"\n"
+                 + "set g_br_roundlimit \"7\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb cells\"\n"
                  + "set g_class_strong_ammo \"1\" // GB\n"

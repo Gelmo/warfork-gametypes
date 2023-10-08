@@ -841,11 +841,7 @@ void GT_SpawnGametype()
     {
         Entity@ ent = @G_GetEntity( i );
 
-        if ( @ent.item != null && ent.item.tag == HEALTH_MEGA )
-        {
-            ent.freeEntity();
-        }
-        else if ( @ent.item != null && ent.item.tag == HEALTH_ULTRA )
+        if ( @ent.item != null && ( ent.item.tag == HEALTH_MEGA || ent.item.tag == HEALTH_ULTRA || ent.item.tag == HEALTH_LARGE ) )
         {
             ent.freeEntity();
         }

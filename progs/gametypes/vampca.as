@@ -508,8 +508,8 @@ class cCARound
 			}
 			else
 			{
-				// report remaining health/armor of the killer
-				G_PrintMsg( target, "You were fragged by " + attacker.client.name + " (health: " + rint( attacker.health ) + ", armor: " + rint( attacker.client.armor ) + ")\n" );
+				// report remaining health of the killer
+				G_PrintMsg( target, "You were fragged by " + attacker.client.name + " (health: " + rint( attacker.health ) + ")\n" );
 			}
 
             // if the attacker is the only remaining player on the team,
@@ -925,8 +925,9 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
             }
         }
 
-        // give armor
-        ent.client.armor = 150;
+        // Set armor and health
+        ent.client.armor = 0;
+        ent.health = 250;
 
         // select rocket launcher
         ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );

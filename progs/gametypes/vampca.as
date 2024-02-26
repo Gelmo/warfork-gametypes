@@ -1048,9 +1048,10 @@ void GT_SpawnGametype()
 
 void GT_InitGametype()
 {
-    gametype.title = "Clan Arena";
+    gametype.title = "Vampiric Clan Arena";
     gametype.version = "1.04";
     gametype.author = "Warsow Development Team";
+    // Forked by Gelmo
 
     // if the gametype doesn't have a config file, create it
     if ( !G_FileExists( "configs/server/gametypes/" + gametype.name + ".cfg" ) )
@@ -1080,7 +1081,7 @@ void GT_InitGametype()
 				 + "set g_ca_timelimit1v1 \"60\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
-                 + "set g_class_strong_ammo \"1 75 15 20 20 125 140 10\" // GB MG RG GL RL PG LG EB\n"
+                 + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );

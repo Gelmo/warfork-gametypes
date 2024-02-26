@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 uint caTimelimit1v1;
 
-Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "60", 0 );
+Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "90", 0 );
 
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "99 99 99 99 99 99 99 99", 0 ); // GB MG RG GL RL PG LG EB
@@ -1096,7 +1096,7 @@ void GT_InitGametype()
                  + "set g_countdown_time \"3\"\n"
                  + "set g_maxtimeouts \"1\" // -1 = unlimited\n"
                  + "\n// gametype settings\n"
-				 + "set g_ca_timelimit1v1 \"60\"\n"
+				 + "set g_ca_timelimit1v1 \"90\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
                  + "set g_class_strong_ammo \"99 99 99 99 99 99 99 99\" // GB MG RG GL RL PG LG EB\n"

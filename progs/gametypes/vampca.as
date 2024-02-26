@@ -827,6 +827,23 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
         {
 			GT_updateScore( client );
         }
+
+        // Vampire
+        Entity @attacker = null;
+        float damage = args.getToken(1).toFloat();
+        if ( @client != null )
+        {
+            float vampamount = ( damage * 0.75 );
+            @attacker = @client.getEnt();
+            if ( attacker.health + vampamount < 500 )
+            {
+                attacker.health += vampamount;
+            }
+            else
+            {
+                attacker.health = 500;
+            }
+        }
     }
     else if ( score_event == "kill" )
     {

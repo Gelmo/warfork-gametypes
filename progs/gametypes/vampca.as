@@ -22,7 +22,7 @@ uint caTimelimit1v1;
 Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "60", 0 );
 
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
-Cvar g_class_strong_ammo( "g_class_strong_ammo", "1 75 20 20 40 125 180 15", 0 ); // GB MG RG GL RL PG LG EB
+Cvar g_class_strong_ammo( "g_class_strong_ammo", "99 99 99 99 99 99 99 99", 0 ); // GB MG RG GL RL PG LG EB
 
 const int CA_ROUNDSTATE_NONE = 0;
 const int CA_ROUNDSTATE_PREROUND = 1;
@@ -1099,7 +1099,7 @@ void GT_InitGametype()
 				 + "set g_ca_timelimit1v1 \"60\"\n"
                  + "\n// classes settings\n"
                  + "set g_noclass_inventory \"gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bolts bullets\"\n"
-                 + "set g_class_strong_ammo \"1 75 20 20 40 125 180 15\" // GB MG RG GL RL PG LG EB\n"
+                 + "set g_class_strong_ammo \"99 99 99 99 99 99 99 99\" // GB MG RG GL RL PG LG EB\n"
                  + "\necho \"" + gametype.name + ".cfg executed\"\n";
 
         G_WriteFile( "configs/server/gametypes/" + gametype.name + ".cfg", config );
@@ -1132,7 +1132,7 @@ void GT_InitGametype()
     gametype.countdownEnabled = false;
     gametype.mathAbortDisabled = false;
     gametype.shootingDisabled = false;
-    gametype.infiniteAmmo = false;
+    gametype.infiniteAmmo = true;
     gametype.canForceModels = true;
     gametype.canShowMinimap = false;
     gametype.teamOnlyMinimap = true;

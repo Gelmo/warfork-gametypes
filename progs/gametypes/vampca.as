@@ -945,17 +945,16 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
         {
             float vampamount = ( damage * vampPercent.integer * 0.01 );
             @attacker = @client.getEnt();
-            if ( attacker.health == 0)
+            if ( !attacker.isGhosting() )
             {
-                return;
-            }
-            else if ( attacker.health + vampamount < vampHealthMax.integer )
-            {
-                attacker.health += vampamount;
-            }
-            else
-            {
-                attacker.health = vampHealthMax.integer;
+                if ( attacker.health + vampamount < vampHealthMax.integer )
+                {
+                    attacker.health += vampamount;
+                }
+                else
+                {
+                    attacker.health = vampHealthMax.integer;
+                }
             }
         }
     }

@@ -274,6 +274,7 @@ class cCARound
             Team @team;
             int count_alpha, count_beta;
             int count_alpha_total, count_beta_total;
+            float health_alpha, health_beta;
 
             count_alpha = count_alpha_total = 0;
             @team = @G_GetTeam( TEAM_ALPHA );
@@ -287,6 +288,8 @@ class cCARound
                     // ch : add round
                     if( @ent.client != null )
                     	ent.client.stats.addRound();
+                    // Save their ending health
+                    health_alpha = ent.health;
                 }
                 count_alpha_total++;
             }
@@ -303,13 +306,15 @@ class cCARound
                     // ch : add round
                     if( @ent.client != null )
                     	ent.client.stats.addRound();
+                    // Save their ending health
+                    health_beta = ent.health;
                 }
                 count_beta_total++;
             }
 
             int soundIndex;
 
-            if ( count_alpha > count_beta )
+            if ( count_alpha > count_beta || health_alpha > health_beta )
             {
                 G_GetTeam( TEAM_ALPHA ).stats.addScore( 1 );
 
@@ -333,7 +338,7 @@ class cCARound
                     }
                 }
             }
-            else if ( count_beta > count_alpha )
+            else if ( count_beta > count_alpha || health_beta > health_alpha )
             {
                 G_GetTeam( TEAM_BETA ).stats.addScore( 1 );
 

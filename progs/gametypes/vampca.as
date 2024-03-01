@@ -840,7 +840,11 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
         {
             float vampamount = ( damage * 0.75 );
             @attacker = @client.getEnt();
-            if ( attacker.health + vampamount < 500 )
+            if ( attacker.health == 0)
+            {
+                return;
+            }
+            else if ( attacker.health + vampamount < 500 )
             {
                 attacker.health += vampamount;
             }

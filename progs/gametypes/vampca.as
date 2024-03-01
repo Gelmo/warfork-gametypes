@@ -1000,6 +1000,22 @@ void GT_ThinkRules()
     if ( match.getState() >= MATCH_STATE_POSTMATCH )
         return;
 
+    // Decay health above starting health
+    for ( int i = 0; i < maxClients; i++ )
+    {
+        Entity @ent = @G_GetClient( i ).getEnt();
+        if ( ent.client.state() >= CS_SPAWNED && ent.team != TEAM_SPECTATOR )
+        {
+            if ( ent.health > 250 ) {
+                ent.health -= ( frameTime * 0.001f );
+				// fix possible rounding errors
+				if( ent.health < 250 ) {
+					ent.health = 250;
+				}
+			}
+        }
+    }
+
     caRound.think();
 }
 

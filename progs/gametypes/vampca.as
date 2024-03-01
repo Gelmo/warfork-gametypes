@@ -24,6 +24,10 @@ Cvar g_ca_timelimit1v1( "g_ca_timelimit1v1", "60", 0 );
 Cvar g_noclass_inventory( "g_noclass_inventory", "gb mg rg gl rl pg lg eb cells shells grens rockets plasma lasers bullets", 0 );
 Cvar g_class_strong_ammo( "g_class_strong_ammo", "99 99 99 99 99 99 99 99", 0 ); // GB MG RG GL RL PG LG EB
 
+Cvar vampHealthMax( "vamp_health_max", "500", 0 );
+Cvar vampHealthStart( "vamp_health_start", "250", 0 );
+Cvar vampPercent( "vamp_percent", "75", 0 );
+
 const int CA_ROUNDSTATE_NONE = 0;
 const int CA_ROUNDSTATE_PREROUND = 1;
 const int CA_ROUNDSTATE_ROUND = 2;
@@ -703,6 +707,107 @@ bool GT_Command( Client @client, const String &cmdString, const String &argsStri
         GENERIC_CheatVarResponse( client, cmdString, argsString, argc );
         return true;
     }
+    else if ( cmdString == "callvotevalidate" )
+    {
+        String votename = argsString.getToken( 0 );
+
+        if ( votename == "vamp_health_max" )
+        {
+            String voteArg = argsString.getToken( 1 );
+            if ( voteArg.len() < 1 )
+            {
+                client.printMessage( "Callvote " + votename + " requires at least one argument\n" );
+                return false;
+            }
+
+            int value = voteArg.toInt();
+            if ( value < 250 || value > 1000 )
+            {
+                client.printMessage( "Callvote " + votename + " expects an integer between 250 and 1000 as an argument\n" );
+                return false;
+            }
+
+            if ( value == vampHealthMax.integer )
+            {
+                client.printMessage( "Max health is already set to " + value + "\n" );
+                return false;
+            }
+
+            return true;
+        }
+        else if ( votename == "vamp_health_start" )
+        {
+            String voteArg = argsString.getToken( 1 );
+            if ( voteArg.len() < 1 )
+            {
+                client.printMessage( "Callvote " + votename + " requires at least one argument\n" );
+                return false;
+            }
+
+            int value = voteArg.toInt();
+            if ( value < 1 || value > 500 )
+            {
+                client.printMessage( "Callvote " + votename + " expects an integer between 1 and 500 as an argument\n" );
+                return false;
+            }
+
+            if ( value == vampHealthStart.integer )
+            {
+                client.printMessage( "Starting health is already set to " + value + "\n" );
+                return false;
+            }
+
+            return true;
+        }
+        else if ( votename == "vamp_percent" )
+        {
+            String voteArg = argsString.getToken( 1 );
+            if ( voteArg.len() < 1 )
+            {
+                client.printMessage( "Callvote " + votename + " requires at least one argument\n" );
+                return false;
+            }
+
+            int value = voteArg.toInt();
+            if ( value < 1 || value > 100 )
+            {
+                client.printMessage( "Callvote " + votename + " expects an integer between 1 and 100 as an argument\n" );
+                return false;
+            }
+
+            if ( value == vampPercent.integer )
+            {
+                client.printMessage( "Vamp percentage is already set to " + value + "\n" );
+                return false;
+            }
+
+            return true;
+        }
+
+        client.printMessage( "Unknown callvote " + votename + "\n" );
+        return false;
+    }
+    else if ( cmdString == "callvotepassed" )
+    {
+        String votename = argsString.getToken( 0 );
+
+        if ( votename == "vamp_health_max" )
+        {
+            vampHealthMax.set( argsString.getToken( 1 ).toInt() );
+        }
+
+        if ( votename == "vamp_health_start" )
+        {
+            vampHealthStart.set( argsString.getToken( 1 ).toInt() );
+        }
+
+        if ( votename == "vamp_percent" )
+        {
+            vampPercent.set( argsString.getToken( 1 ).toInt() );
+        }
+
+        return true;
+    }
 
     return false;
 }
@@ -838,19 +943,19 @@ void GT_ScoreEvent( Client @client, const String &score_event, const String &arg
         float damage = args.getToken(1).toFloat();
         if ( @client != null )
         {
-            float vampamount = ( damage * 0.75 );
+            float vampamount = ( damage * vampPercent.integer * 0.01 );
             @attacker = @client.getEnt();
             if ( attacker.health == 0)
             {
                 return;
             }
-            else if ( attacker.health + vampamount < 500 )
+            else if ( attacker.health + vampamount < vampHealthMax.integer )
             {
                 attacker.health += vampamount;
             }
             else
             {
-                attacker.health = 500;
+                attacker.health = vampHealthMax.integer;
             }
         }
     }
@@ -936,7 +1041,7 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 
         // Set armor and health
         ent.client.armor = 0;
-        ent.health = 250;
+        ent.health = vampHealthStart.integer;
 
         // select rocket launcher
         ent.client.selectWeapon( WEAP_ROCKETLAUNCHER );
@@ -1015,11 +1120,11 @@ void GT_ThinkRules()
         Entity @ent = @G_GetClient( i ).getEnt();
         if ( ent.client.state() >= CS_SPAWNED && ent.team != TEAM_SPECTATOR )
         {
-            if ( ent.health > 250 ) {
+            if ( ent.health > vampHealthStart.integer ) {
                 ent.health -= ( frameTime * 0.001f );
 				// fix possible rounding errors
-				if( ent.health < 250 ) {
-					ent.health = 250;
+				if( ent.health < vampHealthStart.integer ) {
+					ent.health = vampHealthStart.integer;
 				}
 			}
         }
@@ -1188,6 +1293,10 @@ void GT_InitGametype()
 
     // add commands
     G_RegisterCommand( "gametype" );
+
+    G_RegisterCallvote( "vamp_health_max", "250 to 1000", "integer", "Sets the maximum health in VampCA" );
+    G_RegisterCallvote( "vamp_health_start", "1 to 500", "integer", "Sets the starting health in VampCA" );
+    G_RegisterCallvote( "vamp_percent", "1 to 100", "integer", "Sets the percentage of given damage that is received as health in VampCA" );
 
     G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

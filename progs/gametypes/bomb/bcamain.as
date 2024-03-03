@@ -205,7 +205,7 @@ void BOMB_SetVoicecommQuickMenu( Client @client )
 	GENERIC_SetQuickMenu( @client, menuStr );
 }
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
 	if ( cmdString == "drop" )
 	{
@@ -456,7 +456,7 @@ void GT_updateScore( Client @client )
 
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
 	// XXX: i think this can be called but if the client then
 	//      doesn't connect (ie hits escape/crashes) then the

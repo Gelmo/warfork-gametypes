@@ -69,7 +69,7 @@ void DM_playerKilled( Entity @target, Entity @attacker, Entity @inflictor )
 /// MODULE SCRIPT CALLS
 ///*****************************************************************
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
     if ( cmdString == "drop" )
     {
@@ -177,7 +177,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
 // Warning: client can be null
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
     if ( score_event == "dmg" )
     {

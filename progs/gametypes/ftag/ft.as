@@ -152,7 +152,7 @@ void FTAG_ResetDefrostCounters() {
 	}
 }
 
-bool GT_Command(Client @client, const String &cmdString, const String &argsString, int argc) {
+bool GT_Command(Client @client, const String &in cmdString, const String &in argsString, int argc) {
 	if(cmdString == "drop") {
 		String token;
 		for(int i = 0; i < argc; i++) {
@@ -344,7 +344,7 @@ void GT_updateScore(Client @client) {
 	}
 }
 
-void GT_ScoreEvent(Client @client, const String &score_event, const String &args) {
+void GT_ScoreEvent(Client @client, const String &in score_event, const String &in args) {
 	// Some game actions trigger score events. These are events not related to killing
 	// oponents, like capturing a flag
 	if(score_event == "dmg") {

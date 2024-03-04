@@ -251,13 +251,13 @@ String @GT_ScoreboardMessage(uint maxlen) {
 			int playerID = (ent.isGhosting() && (match.getState() == MATCH_STATE_PLAYTIME)) ? -(ent.playerNum + 1) : ent.playerNum;
 
 			if(gametype.isInstagib) {
-				// "Name Clan Score Dfrst Ping R"
-				entry = "&p " + playerID + " " + ent.client.clanName + " "
+				// "AVATAR Name Clan Score Dfrst Ping R"
+				entry = "&p " + playerID + " " + playerID + " " + ent.client.clanName + " "
 					+ ent.client.stats.score + " " + defrosts[ent.client.playerNum] + " " +
 					+ ent.client.ping + " " + readyIcon + " ";
 			} else {
-				// "Name Clan Score Frags Dfrst Ping R"
-				entry = "&p " + playerID + " " + ent.client.clanName + " "
+				// "AVATAR Name Clan Score Frags Dfrst Ping R"
+				entry = "&p " + playerID + " " + playerID + " " + ent.client.clanName + " "
 					+ ent.client.stats.score + " " + ent.client.stats.frags + " " + defrosts[ent.client.playerNum] + " "
 					+ ent.client.ping + " " + readyIcon + " ";
 			}
@@ -693,11 +693,11 @@ void GT_InitGametype() {
 
 	// define the scoreboard layout
 	if(gametype.isInstagib) {
-		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18");
-		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Dfrst Ping R");
+		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 52 %i 52 %l 48 %p 18");
+		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Dfrst Ping R");
 	} else {
-		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %r l1" );
-		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Dfrst Ping R" );
+		G_ConfigString(CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 52 %i 52 %i 52 %l 48 %r l1" );
+		G_ConfigString(CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Frags Dfrst Ping R" );
 	}
 
 	// precache images that can be used by the scoreboard

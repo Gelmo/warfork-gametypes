@@ -979,15 +979,15 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 			if ( gametype.isInstagib )
 			{
-				// "Name Clan Score Respawn Ping R"
-				entry = "&p " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
+				// "AVATAR Delay Name Clan Score Respawn Ping R"
+				entry = "&p " + playerID + " " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
 						+ ent.client.stats.score + " "
 						+ ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
 			}
 			else
 			{
-				// "Name Clan Score Frags Respawn Ping R"
-				entry = "&p " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
+				// "AVATAR Delay Name Clan Score Frags Respawn Ping R"
+				entry = "&p " + playerID + " " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
 						+ ent.client.stats.score + " " + ent.client.stats.frags + " "
 						+ ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
 			}
@@ -1338,13 +1338,13 @@ void GT_InitGametype()
 	// define the scoreboard layout
 	if ( gametype.isInstagib )
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%s 16 %n 112 %s 52 %i 52 %l 48 %r l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "\u00A0 Name Clan Score Respawn Ping R" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %s 16 %n 112 %s 52 %i 52 %l 48 %r l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR \u00A0 Name Clan Score Respawn Ping R" );
 	}
 	else
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%s 16 %n 112 %s 52 %i 52 %i 52 %l 48 %r l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "\u00A0 Name Clan Score Frags Ping R" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %s 16 %n 112 %s 52 %i 52 %i 52 %l 48 %r l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR \u00A0 Name Clan Score Frags Ping R" );
 	}
 
 	// add commands

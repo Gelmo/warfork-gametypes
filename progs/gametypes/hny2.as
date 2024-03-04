@@ -995,8 +995,8 @@ String @GT_ScoreboardMessage( uint maxlen )
 
             int playerID = ( ent.isGhosting() && ( match.getState() == MATCH_STATE_PLAYTIME ) ) ? -( ent.playerNum + 1 ) : ent.playerNum;
 
-            // "Name Clan Score Frags TKs Ping R"
-            entry = "&p " + playerID + " "
+            // "AVATAR Name Clan Score Frags TKs Ping R"
+            entry = "&p " + playerID + " " + playerID + " "
                     + ent.client.clanName + " "
                     + ent.client.stats.score + " "
                     + ent.client.stats.frags + " "
@@ -1316,8 +1316,8 @@ void GT_InitGametype()
         gametype.setTeamSpawnsystem( team, SPAWNSYSTEM_INSTANT, 0, 0, false );
 
     // define the scoreboard layout
-    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 42 %i 40 %i 40 %l 40 %p 18" );
-    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Sco Fra Sui Ping R" );
+    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 42 %i 40 %i 40 %l 40 %p 18" );
+    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Sco Fra Sui Ping R" );
 
     // precache images that can be used by the scoreboard
     prcYesIcon = G_ImageIndex( "gfx/hud/icons/vsay/yes" );

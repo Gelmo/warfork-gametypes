@@ -737,15 +737,15 @@ String @GT_ScoreboardMessage( uint maxlen )
 
             if ( gametype.isInstagib )
             {
-                // "Name Clan Score Ping R"
-                entry = "&p " + playerID + " " + ent.client.clanName + " "
+                // "AVATAR Name Clan Score Ping R"
+                entry = "&p " + playerID + " " + playerID + " " + ent.client.clanName + " "
                         + ent.client.stats.score + " "
                         + ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
             }
             else
             {
-                // "Name Clan Score Frags Sui Ping R"
-                entry = "&p " + playerID + " "
+                // "AVATAR Name Clan Score Frags Sui Ping R"
+                entry = "&p " + playerID + " " + playerID + " "
                         + ent.client.clanName + " "
                         + ent.client.stats.score + " "
                         + ent.client.stats.frags + " "
@@ -1110,13 +1110,13 @@ void GT_InitGametype()
     // define the scoreboard layout
     if ( gametype.isInstagib )
     {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %l 48 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Ping R" );
+        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 52 %l 48 %r l1" );
+        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Ping R" );
     }
     else
     {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 44 %i 42 %i 38 %l 38 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Sui Ping R" );
+        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 44 %i 42 %i 38 %l 38 %r l1" );
+        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Frags Sui Ping R" );
     }
 
     // add commands

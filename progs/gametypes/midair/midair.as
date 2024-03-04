@@ -405,7 +405,7 @@ void MIDAIR_SetUpMatch()
 /// MODULE SCRIPT CALLS
 ///*****************************************************************
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
     if ( cmdString == "drop" )
     {
@@ -880,9 +880,9 @@ String @GT_ScoreboardMessage( uint maxlen )
             int playerID = ( ent.isGhosting() && ( match.getState() == MATCH_STATE_PLAYTIME ) ) ? -( ent.playerNum + 1 ) : ent.playerNum;
 			
 
-            // "Name Clan Score Frags TKs Ping R"
+            // "AVATAR Name Clan Score Frags TKs Ping R"
             // Team Kill added in scoreboard
-            entry = "&p " + playerID + " "
+            entry = "&p " + playerID + " " + playerID + " "
                     + ent.client.clanName + " "
                     + ent.client.stats.score + " "
                     + ent.client.stats.frags + " "
@@ -901,7 +901,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
     if ( score_event == "dmg" )
     {
@@ -1438,8 +1438,8 @@ void GT_InitGametype()
 
     // define the scoreboard layout
     //Team Kill added in the layout
-    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 42 %i 40 %i 40 %i 40 %l 40 %p 18" );
-    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Sco Fra Sui TK Ping R" );
+    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 42 %i 40 %i 40 %i 40 %l 40 %p 18" );
+    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Sco Fra Sui TK Ping R" );
 
     // precache images that can be used by the scoreboard
     prcYesIcon = G_ImageIndex( "gfx/hud/icons/vsay/yes" );

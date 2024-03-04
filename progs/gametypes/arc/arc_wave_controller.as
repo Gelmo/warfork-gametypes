@@ -63,7 +63,7 @@ class cWaveController
     {
         int chosenPoint;
 
-        chosenPoint = int(brandom(0, this.Spawn_Locations.length - 0.001f)); // it has to be less than the length
+        chosenPoint = int(brandom(0, this.Spawn_Locations.length() - 0.001f)); // it has to be less than the length
 
         return this.Spawn_Locations[chosenPoint];
     }
@@ -293,7 +293,7 @@ class cWaveController
 			if (enemyCountRemaining <= 0) 
 			{
 				// end the wave or the mission
-				if (this.Wave_Active[this.Wave_Active.length-1] == WAVE_END)
+				if (this.Wave_Active[this.Wave_Active.length()-1] == WAVE_END)
 				{
 					PlayerEndWave(true); // reports / resets wave stats
 
@@ -310,7 +310,7 @@ class cWaveController
 
 					return;
 				}
-				if (this.Wave_Active[this.Wave_Active.length-1] == MISSION_END)
+				if (this.Wave_Active[this.Wave_Active.length()-1] == MISSION_END)
 				{
 					//G_Print("^4YOU WIN!\n"); //debug
 					PlayerEndWave(true); // reports / resets wave stats
@@ -319,7 +319,7 @@ class cWaveController
 					ARC_ControlPoint.deactivate();
 					this.ResetEnemies();
 
-					this.Wave_Active[this.Wave_Active.length-1] = MISSION_VICTORY;
+					this.Wave_Active[this.Wave_Active.length()-1] = MISSION_VICTORY;
 
 					this.nextThink = levelTime + 5000;
 					return; // don't spawn anything
@@ -343,7 +343,7 @@ class cWaveController
                 }
 
                 // go to post game: its changed from MISSION_END to MISSION_VICTORY with timer on nextthink
-                if (this.Wave_Active[this.Wave_Active.length-1] == MISSION_VICTORY)
+                if (this.Wave_Active[this.Wave_Active.length()-1] == MISSION_VICTORY)
                 {
                     this.state = MISSION_VICTORY;
                     match.launchState( match.getState() + 1 );
@@ -503,7 +503,7 @@ class cWaveController
         }
     }
 
-    void Alert(String &message) // todo: parameter to set diff types of alerts
+    void Alert(const String &in message) // todo: parameter to set diff types of alerts
     {
         int i;
 
@@ -784,7 +784,7 @@ class cWaveController
         uint i = 0;
         waveCountTotal = 0;
 
-        while (i < Mission.length)
+        while (i < Mission.length())
         {
             if (Mission[i] == WAVE_END)
             {

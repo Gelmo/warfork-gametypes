@@ -499,7 +499,7 @@ void TeamIndicatorFollow()
     */
 }
 
-void MessagePlayers(String &message)
+void MessagePlayers(const String &in message)
 {
     int i;
 

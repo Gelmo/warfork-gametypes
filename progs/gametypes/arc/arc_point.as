@@ -166,7 +166,7 @@ class cCapturePoint
         }
     }
 
-    void Alert(String &message)
+    void Alert(const String &in message)
     {
         int i;
 

@@ -164,7 +164,7 @@ class cLoot
             {
                 lastLegendaries.insertLast(chosen);
                 // if the array has more than 5 entries, remove one
-                if (lastLegendaries.length > 5)
+                if (lastLegendaries.length() > 5)
                 {
                     lastLegendaries.removeAt(0);
                 }

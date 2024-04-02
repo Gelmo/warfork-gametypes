@@ -792,7 +792,7 @@ void CA_SetUpCountdown()
 /// MODULE SCRIPT CALLS
 ///*****************************************************************
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
 	if ( cmdString == "gametype" )
 	{
@@ -979,15 +979,15 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 			if ( gametype.isInstagib )
 			{
-				// "Name Clan Score Respawn Ping R"
-				entry = "&p " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
+				// "AVATAR Delay Name Clan Score Respawn Ping R"
+				entry = "&p " + playerID + " " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
 						+ ent.client.stats.score + " "
 						+ ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
 			}
 			else
 			{
-				// "Name Clan Score Frags Respawn Ping R"
-				entry = "&p " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
+				// "AVATAR Delay Name Clan Score Frags Respawn Ping R"
+				entry = "&p " + playerID + " " + player_respawn_delay_str + " " + playerID + " " + ent.client.clanName + " "
 						+ ent.client.stats.score + " " + ent.client.stats.frags + " "
 						+ ent.client.ping + " " + ( ent.client.isReady() ? "1" : "0" ) + " ";
 			}
@@ -1015,7 +1015,7 @@ void GT_updateScore( Client @client )
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
 // Warning: client can be null
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
 	if ( score_event == "dmg" )
 	{
@@ -1338,13 +1338,13 @@ void GT_InitGametype()
 	// define the scoreboard layout
 	if ( gametype.isInstagib )
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%s 16 %n 112 %s 52 %i 52 %l 48 %r l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "\u00A0 Name Clan Score Respawn Ping R" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %s 16 %n 112 %s 52 %i 52 %l 48 %r l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR \u00A0 Name Clan Score Respawn Ping R" );
 	}
 	else
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%s 16 %n 112 %s 52 %i 52 %i 52 %l 48 %r l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "\u00A0 Name Clan Score Frags Ping R" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %s 16 %n 112 %s 52 %i 52 %i 52 %l 48 %r l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR \u00A0 Name Clan Score Frags Ping R" );
 	}
 
 	// add commands

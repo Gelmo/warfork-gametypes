@@ -171,7 +171,7 @@ void BOMB_SetVoicecommQuickMenu( Client @client )
 	GENERIC_SetQuickMenu( @client, menuStr );
 }
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
 	if ( cmdString == "drop" )
 	{
@@ -387,9 +387,10 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 			if ( gametype.isInstagib )
 			{
-				// Name Clan Score Frags Ping R
+				// AVATAR Name Clan Score Frags Ping R
 
 				entry = "&p " + playerId
+					+ " " + playerId
 					+ " " + client.clanName
 					+ " " + client.stats.score
 					+ " " + client.stats.frags
@@ -399,9 +400,10 @@ String @GT_ScoreboardMessage( uint maxlen )
 			}
 			else
 			{
-				// Name Clan Score Frags W1 W2 W3 Ping R
+				// AVATAR Name Clan Score Frags W1 W2 W3 Ping R
 
 				entry = "&p " + playerId
+					+ " " + playerId
 					+ " " + client.clanName
 					+ " " + client.stats.score
 					+ " " + client.stats.frags
@@ -446,7 +448,7 @@ void GT_updateScore( Client @client )
 
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
 	// XXX: i think this can be called but if the client then
 	//      doesn't connect (ie hits escape/crashes) then the
@@ -865,13 +867,13 @@ void GT_InitGametype()
 	// define the scoreboard layout
 	if ( gametype.isInstagib )
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 42 %i 42 %l 36 %p l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags Ping S" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 42 %i 42 %l 36 %p l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Frags Ping S" );
 	}
 	else
 	{
-		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 42 %i 42 %p l1 %p l1 %p l1 %l 36 %p l1" );
-		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Frags " + S_COLOR_WHITE + " " + S_COLOR_WHITE + " " + S_COLOR_WHITE + " Ping S" );
+		G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 42 %i 42 %p l1 %p l1 %p l1 %l 36 %p l1" );
+		G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Frags " + S_COLOR_WHITE + " " + S_COLOR_WHITE + " " + S_COLOR_WHITE + " Ping S" );
 	}
 
 	// add commands

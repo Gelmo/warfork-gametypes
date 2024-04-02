@@ -238,7 +238,7 @@ void RDM_playerKilled( Entity @target, Entity @attacker, Entity @inflicter )
 /// MODULE SCRIPT CALLS
 ///*****************************************************************
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
     if ( cmdString == "gametype" )
     {
@@ -326,7 +326,7 @@ String @GT_ScoreboardMessage( uint maxlen )
               && ( match.getState() == MATCH_STATE_PLAYTIME ) ) ?
             -( ent.playerNum + 1 ) : ent.playerNum;
 
-        entry = "&p " + playerID + " "
+        entry = "&p " + playerID + " " + playerID + " "
               + ent.client.clanName + " "
               + ent.client.stats.score + " "
               + RDM_getTimeString( ent.playerNum ) + " "
@@ -342,7 +342,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
     if ( score_event == "connect" )
     {
@@ -567,8 +567,8 @@ void GT_InitGametype()
         gametype.setTeamSpawnsystem( team, SPAWNSYSTEM_INSTANT, 0, 0, false );
 
     // define the scoreboard layout
-    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 64 %s 64 %l 48 %p 18" );
-    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Time Ping R" );
+    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 64 %s 64 %l 48 %p 18" );
+    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Time Ping R" );
 
     // init per-client variables
     for ( int i = 0; i < maxClients; i++ )

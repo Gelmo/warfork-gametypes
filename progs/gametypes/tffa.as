@@ -115,7 +115,7 @@ void TDM_SetVoicecommQuickMenu( Client @client )
 /// MODULE SCRIPT CALLS
 ///*****************************************************************
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
     if ( cmdString == "drop" )
     {
@@ -263,8 +263,8 @@ String @GT_ScoreboardMessage( uint maxlen )
             
             if ( gametype.isInstagib )
             {
-                // "Name Clan Score Net Ping R"
-                entry = "&p " + playerID + " "
+                // "AVATAR Name Clan Score Net Ping R"
+                entry = "&p " + playerID + " " + playerID + " "
                         + ent.client.clanName + " "
                         + ( ent.client.stats.score + ent.client.stats.deaths - ent.client.stats.suicides) + " "
                         + ent.client.stats.score + " "
@@ -273,8 +273,8 @@ String @GT_ScoreboardMessage( uint maxlen )
             }
             else
             {
-                // "Name Clan Score Net Ping R"
-                entry = "&p " + playerID + " "
+                // "AVATAR Name Clan Score Net Ping R"
+                entry = "&p " + playerID + " " + playerID + " "
                         + ent.client.clanName + " "
                         + ( ent.client.stats.score + ent.client.stats.deaths - ent.client.stats.suicides) + " "
                         + ent.client.stats.score + " "
@@ -293,7 +293,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
 // Warning: client can be null
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
     if ( score_event == "dmg" )
     {
@@ -579,13 +579,13 @@ void GT_InitGametype()
     // define the scoreboard layout
     if ( gametype.isInstagib )
     {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 40 %i 36 %l 36 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Net Ping R" );
+        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 40 %i 36 %l 36 %r l1" );
+        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Net Ping R" );
     }
     else
     {
-        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 40 %i 36 %l 36 %r l1" );
-        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Net Ping R" );
+        G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 40 %i 36 %l 36 %r l1" );
+        G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Net Ping R" );
     }
 
     // add commands

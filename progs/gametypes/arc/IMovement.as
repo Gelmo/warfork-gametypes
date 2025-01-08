@@ -108,7 +108,7 @@ class IMovement
         Vec3 rusrs(this.walkingVel.x,this.walkingVel.y,this.selfEnt.velocity.z);
         this.selfEnt.velocity = rusrs;
 
-        //todo: figure out why the fuck the below doesn't work
+        //todo: figure out why the below doesn't work
         //G_Print("^1EntVel: "+this.selfEnt.velocity.x+" walkVel: "+this.walkingVel.x+" \n");
         //this.selfEnt.velocity.set(rusrs.x,rusrs.y, this.selfEnt.velocity.z); // leave Z independant for walkers
     }

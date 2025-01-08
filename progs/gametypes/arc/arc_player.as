@@ -1,6 +1,6 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
 // Enemy for the enemy gametype
 
@@ -60,6 +60,7 @@ class cARCPlayer
 
     int maxHealth;
     int maxArmor;
+
 
     void Init()
     {
@@ -169,7 +170,7 @@ class cARCPlayer
             doubleJumps = maxDoubleJumps;
         }
     }
-	
+
 	/* no longer used, only keep stats for single game
     void loadStats()
     {
@@ -196,7 +197,7 @@ class cARCPlayer
         }
 
     }
-	
+
 
     void saveStats()
     {
@@ -454,7 +455,7 @@ void PlayerThink()
         }
 
         int dmg = int(gtPlayers[i].waveDamage - gtPlayers[i].lastWaveDamage);
-		
+
 		// see if you've done enough dmg to get gold
 		if(gtPlayers[i].goldDmg>=GOLD_DMG_THRESH){
 			gtPlayers[i].goldDmg-=GOLD_DMG_THRESH;
@@ -499,7 +500,7 @@ void TeamIndicatorFollow()
     */
 }
 
-void MessagePlayers(const String &in message)
+void MessagePlayers(String &message)
 {
     int i;
 

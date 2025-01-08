@@ -1,6 +1,6 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
 
 //Multi-sploding grenades
@@ -40,7 +40,7 @@ void xanNade_replace()
     array<Entity @> @nade = @G_FindByClassname( "grenade");
     if (@nade != null)
     {
-        xanNade_Create(@nade[0]); 
+        xanNade_Create(@nade[0]);
     }
 }
 

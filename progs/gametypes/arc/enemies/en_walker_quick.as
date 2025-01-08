@@ -3,26 +3,24 @@ Arcade Gametype for Warsow / Warfork
 By Xanthus (originally made ~2014 or so)
 */
 
-void sniper_think( Entity @self)
+void walker_quick_think( Entity @self)
 {
     cEnemy @eC; // enemyClass
     @eC = @gtEnemies[self.count];
     self.nextThink = levelTime+10; //keep thinking for walking
 
-    //G_Print("^1Tell pig to think!\n"); // debug
+    //G_Print("^1Tell walker to think!\n"); // debug
 
     if (eC.active != true)
     {
         return;
     }
 
-    if ( eC.nextPhaseThink < levelTime) // scan and walk towards player
+    if ( (eC.phase == 0) && (eC.nextPhaseThink < levelTime) ) // scan and walk towards player
     {
         eC.move.GroundCheck();
-        Entity @target;
 
-        eC.nextPhaseThink = levelTime+200;
-        eC.speed = 350; //set speed: will get altered if shooting
+        Entity @target;
 
         @target = @eC.action.scanNearestPlayer(eC.range, true);
 
@@ -32,66 +30,19 @@ void sniper_think( Entity @self)
         {
             eC.lastSeenTime = levelTime;
             @eC.targetEnt = @target;
-            eC.lastSeenVec = target.origin;
+            eC.move.walkTowards(target.origin, eC.speed, eC.jumpSpeed);
 
-            if (eC.phase == 1)// if you're aiming, take aim and stop
+            if (eC.enemyEnt.origin.distance(target.origin) < 100)
             {
-                eC.enemyEnt.modelindex = G_ImageIndex("gfx/en/wheelbot_aim.tga");
-                eC.speed = 0;
-            }
-
-            // walk/jump away from target if not aiming (reloading)
-            if ( eC.move.onGround && (eC.phase != 1) )
-            {
-                eC.move.jumpTowards(eC.enemyEnt.origin,200);
-            }
-
-            eC.move.walkTowards(target.origin, eC.speed*-1, eC.jumpSpeed);
-
-            //shooting
-            if (eC.reloadTime < levelTime)
-            {
-                if (eC.phase == 1) // ready to shoot
-                {
-                    eC.action.Shoot(WEAP_ELECTROBOLT,@eC.enemyEnt,@target,800,eC.damage,200,1);
-                    eC.phase = 0;
-                    eC.enemyEnt.modelindex = G_ImageIndex("gfx/en/wheelbot_idle.tga");
-
-                    eC.reloadTime = int(levelTime + (eC.reloadDelay*0.5f)); // short delay after shooting. (reload Delay is charging before shooting, not reloading after)
-
-                    //pew pew
-                    int soundIndex = G_SoundIndex( "sounds/weapons/electrobolt_strong.ogg" ,true);
-                    G_Sound(self, CHAN_MUZZLEFLASH, soundIndex, 0.5f); // todo: fix attenuation
-                }
-                else
-                {
-                    eC.phase = 1;// make ready to shoot when you next think
-
-                    eC.reloadTime = levelTime + eC.reloadDelay; // delay before actual shot
-
-                    //charging
-                    int soundIndex = G_SoundIndex( "sounds/weapons/laser_weak_hum.ogg" ,true);
-                    G_Sound(self, CHAN_MUZZLEFLASH, soundIndex, 0.5f); // todo: fix attenuation
-                }
-
-                if (eC.reloadDelay < 200) // Reset think if you want to shoot faster than 200 ms
-                {
-                    eC.nextPhaseThink = levelTime+eC.reloadDelay;
-                }
+                target.sustainDamage( @self, @self, self.origin, eC.damage, 0, 0, MOD_HIT );
             }
         }
         else if ( (@eC.targetEnt != null) && (eC.lastSeenTime + 3000 > levelTime) ) // chase the player for the next two seconds still
         {
-            // walk towards
-            eC.phase = 0; // stop shooting
-            eC.enemyEnt.modelindex = G_ImageIndex("gfx/en/wheelbot_idle.tga");
-
-            eC.move.walkTowards(eC.lastSeenVec, eC.speed, eC.jumpSpeed);
-
-            // and try to jump towards them
+            // don't need to change speed, keep going in the last direction you saw player. Just jump
             if ( eC.move.onGround )
             {
-                eC.move.jumpTowards(eC.lastSeenVec, eC.jumpSpeed);
+                eC.move.jumpTowards(eC.targetEnt.origin, eC.jumpSpeed);
             }
         }
         else if ( (eC.lastSeenTime + 3000) < levelTime ) // after 3 seconds, roam
@@ -101,6 +52,8 @@ void sniper_think( Entity @self)
 
         eC.move.walking(); // keeps velocity at walkVel
         eC.move.unstuck();
+
+        eC.nextPhaseThink = levelTime+200;
 
         // play skitter sound on ground
         if ( eC.move.onGround )
@@ -112,7 +65,7 @@ void sniper_think( Entity @self)
 
 }
 
-void sniper_die( Entity @self , Entity @inflicter, Entity @attacker )
+void walker_quick_die( Entity @self , Entity @inflicter, Entity @attacker )
 {
     //G_Print("^6DEAD\n"); //debug
     self.explosionEffect(50);
@@ -120,7 +73,7 @@ void sniper_die( Entity @self , Entity @inflicter, Entity @attacker )
     gtEnemies[self.count].die(@attacker);
 }
 
-int sniper_spawn(Vec3 location)
+int walker_quick_spawn(Vec3 location)
 {
     int enemyIndex = available_enemy();
     cEnemy @eC;
@@ -135,27 +88,27 @@ int sniper_spawn(Vec3 location)
     }
 
     // actually spawn the enemy
-    //G_Print("^3Spawn PIG #"+enemyIndex+" "+"\n"); // debug
+    //G_Print("^3Spawn WALKER #"+enemyIndex+" "+"\n"); // debug
 
     // make temporary vec3 for the hitbox because i don't know how to
-    Vec3 tmins(-26,-26,-38);
-    Vec3 tmaxs(26,26,38);
+    Vec3 tmins(-28,-28,-12);
+    Vec3 tmaxs(28,28,12);
 
-    @eC.enemyEnt = @G_SpawnEntity("sniper");
-    @eC.enemyEnt.think = sniper_think;
-    @eC.enemyEnt.die = sniper_die;
+    @eC.enemyEnt = @G_SpawnEntity("walker_quick");
+    @eC.enemyEnt.think = walker_quick_think;
+    @eC.enemyEnt.die = walker_quick_die;
     eC.enemyEnt.moveType = MOVETYPE_TOSSSLIDE;
     eC.enemyEnt.solid = SOLID_YES;
     eC.enemyEnt.clipMask = MASK_PLAYERSOLID;
     eC.enemyEnt.setSize(tmins,tmaxs);
     eC.enemyEnt.type = ET_SPRITE;
     eC.enemyEnt.effects = EF_QUAD;
-    eC.enemyEnt.modelindex = G_ImageIndex("gfx/en/wheelbot_idle.tga");
+    eC.enemyEnt.modelindex = G_ImageIndex("gfx/en/walker.tga");
     eC.enemyEnt.frame = 40;
     eC.enemyEnt.takeDamage = DAMAGE_YES;
-    eC.enemyEnt.health = 50;
+    eC.enemyEnt.health = 60;
     eC.enemyEnt.svflags = uint(SVF_BROADCAST);
-    eC.enemyEnt.mass = 200;
+    eC.enemyEnt.mass = 100;
     eC.enemyEnt.linkEntity();
 
     // let it know where it's at in the array, set the entity's count to it's index in the array
@@ -170,19 +123,17 @@ int sniper_spawn(Vec3 location)
     }
     eC.enemyEnt.count = index;
 
-    location.z += 32; // move up due to hitbox
+
     eC.enemyEnt.origin = location;
     eC.enemyEnt.nextThink = levelTime;
     eC.nextPhaseThink = levelTime+500;
     eC.lastSeenTime = levelTime;
-    // TYPE is set after spawning pig, you have to give it a weapon after
-    // Damage also set after because it depends
+    eC.type = EN_WALKER;
     eC.active = true;
     eC.range = 99999;
-    eC.speed = 350;
-    eC.jumpSpeed = 100;
-    eC.reloadDelay = 1500;
-    eC.damage = 30;
+    eC.speed = 400;
+    eC.damage = 10;
+    eC.jumpSpeed = 300;
 
     eC.Set(); // sets up this entity with IMovement and IAction
 
@@ -190,6 +141,7 @@ int sniper_spawn(Vec3 location)
     if ( eC.move.unstuck() )
     {
         //G_Print("^1Spawned inside solid, try again!\n"); //debug
+
         eC.enemyEnt.freeEntity();
         eC.active = false;
 
@@ -206,7 +158,6 @@ int sniper_spawn(Vec3 location)
         eC.active = false;
         return NO_AVAILABLE_ENEMIES;
     }
-
 
     return enemyIndex;
 }

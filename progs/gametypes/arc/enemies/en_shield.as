@@ -1,6 +1,6 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
 
 void shield_think( Entity @self)

@@ -1,6 +1,6 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
 
 class cCapturePoint
@@ -53,9 +53,9 @@ class cCapturePoint
 
         @this.model = @G_SpawnEntity( "capture_indicator_model" );
         //this.model.team = TEAM_PLAYERS; // debug: was alpha
-        this.model.type = ET_GENERIC; 
+        this.model.type = ET_GENERIC;
         this.model.solid = SOLID_NOT;
-        this.model.setupModel( "models/objects/capture_area/indicator.md3" );	
+        this.model.setupModel( "models/objects/capture_area/indicator.md3" );
         this.model.svflags = uint(SVF_NOCLIENT);
         this.model.effects = EF_ROTATE_AND_BOB;
         this.model.linkEntity();
@@ -68,7 +68,7 @@ class cCapturePoint
         this.minimap.frame = 32;
         this.minimap.svflags = uint(SVF_NOCLIENT);
         this.minimap.linkEntity();
-		
+
 
 
         this.pointEnt.nextThink = levelTime+100;
@@ -166,7 +166,7 @@ class cCapturePoint
         }
     }
 
-    void Alert(const String &in message)
+    void Alert(String message)
     {
         int i;
 
@@ -182,7 +182,7 @@ class cCapturePoint
 
 }
 
-void point_think(Entity @self) //todo why the fuck can't i put this in cCapturePoint
+void point_think(Entity @self) //todo why can't i put this in cCapturePoint
 {
     if (ARC_ControlPoint.enabled = false)
     {
@@ -194,7 +194,7 @@ void point_think(Entity @self) //todo why the fuck can't i put this in cCaptureP
     }
 
     // see if anyone is touching it
-    array<Entity @> @target; 
+    array<Entity @> @target;
     Entity @stop = G_GetClient( maxClients - 1 ).getEnt(); // the last entity to be checked
     Vec3 origin = self.origin;
 
@@ -243,8 +243,8 @@ void point_think(Entity @self) //todo why the fuck can't i put this in cCaptureP
 		for(uint i=0;i<target.size();i++){
 			if ( @target[i] == null || @target[i].client == null )
 				break;
-				
-			
+
+
 
 			if ( target[i].client.state() < CS_SPAWNED )
 				continue;
@@ -265,10 +265,10 @@ void point_think(Entity @self) //todo why the fuck can't i put this in cCaptureP
 
 			ARC_ControlPoint.Alert("^5"+target[i].client.get_name()+" closed the Portal!");
 			WaveController.enemyCountRemaining-=1; // reduce enemies by 1 for closing portal
-			
+
 			gtPlayers[target[i].client.get_playerNum()].wavePortals += 1;
 		}
-    
+
     }
 
     //see when it'll spawn

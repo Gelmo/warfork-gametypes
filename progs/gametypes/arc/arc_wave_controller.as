@@ -1,8 +1,8 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
-int[] CLEAR_ARRAY(); //todo: figure out how to clear a fuckin array.
+int[] CLEAR_ARRAY(); //todo: figure out how to clear a array lol
 
 // define array position where info being accessed is located.
 const int MISSION_MAX_ENEMIES = 0;
@@ -23,6 +23,9 @@ class cWaveController
     int enemyCountTotal; // total amount in wave when it started
     int waveCountTotal; // total number of waves
     int waveIndex; // wave you're on
+	float waveDamageMod; // modification on damage done by enemies this wave
+	float waveHealthMod; // modification on health that enemies this wave have
+	float waveSpeedMod; // modification on speed that enemies this wave have
     int state;
     int mapSize;
     uint missionStartTime;
@@ -52,8 +55,11 @@ class cWaveController
         this.chestSpawn = CHEST_FREQUENCY;
         this.chestSpawned = 0;
         this.mapSize = arc_mapsize.get_integer();
-		
-		
+
+		this.waveDamageMod = 1.0f;
+		this.waveHealthMod = 1.0f;
+		this.waveSpeedMod = 1.0f;
+
 		deathSoundIndex = G_SoundIndex( "sounds/players/male/falldeath.ogg");
         portalActivated = false;
         enemyExplode = false;
@@ -78,10 +84,10 @@ class cWaveController
 
         @spawnEntity = @G_FindByClassname( spawnType);
 
-		
+
         for(i=0; i<spawnEntity.size(); i++){
             this.Spawn_Locations.insertLast(spawnEntity[i].origin);
-			
+
             spawnEntity[i].origin;
             //G_Print("^7"+spawnEntity.get_classname()+"!!\n"); // debug
             spawnEntity[i].set_classname("added_spawnpoint");
@@ -126,8 +132,8 @@ class cWaveController
     {
         // get sound before switch state (can't declare in case's)
         int soundIndex = G_SoundIndex( "sounds/announcer/countdown/fight0" + int( brandom( 1, 2 ) ) );
-		Client @client; 
-		
+		Client @client;
+
         switch (newState)
         {
             case MATCH_STATE_WARMUP:
@@ -143,7 +149,7 @@ class cWaveController
                 gametype.shootingDisabled = false;
                 //instant respawn
                 gametype.setTeamSpawnsystem( TEAM_ALPHA, SPAWNSYSTEM_INSTANT, 0, 0, true );
-				
+
                 break;
 
             case MATCH_STATE_COUNTDOWN: //prewave
@@ -160,14 +166,17 @@ class cWaveController
                 {
                     this.Alert("Final Wave #"+this.waveIndex+" Incoming!");
                 }
-				
-				// show shop for all clients
+
+				// show shop for all players in the game
 				for (int i=0; i < maxClients; i++)
 				{
 					@client = @G_GetClient(i);
-					GT_Command( @client, "gametypemenu", "", 0); // re-open the gametype menu
-				}	
-				
+					if(client.getEnt().team==TEAM_ALPHA)
+					{
+						GT_Command( @client, "gametypemenu", "", 0); // re-open the gametype menu
+					}
+				}
+
                 this.state = MATCH_STATE_COUNTDOWN;
                 this.ResetEnemies();
                 gametype.pickableItemsMask = gametype.spawnableItemsMask;
@@ -288,9 +297,9 @@ class cWaveController
             {
                 this.StartState(MATCH_STATE_POSTMATCH);
             }
-			
+
 			// If you're at the end of the wave
-			if (enemyCountRemaining <= 0) 
+			if (enemyCountRemaining <= 0)
 			{
 				// end the wave or the mission
 				if (this.Wave_Active[this.Wave_Active.length()-1] == WAVE_END)
@@ -329,7 +338,7 @@ class cWaveController
             // if there isn't max enemies spawned yet
             if ( (this.enemyCount < this.Wave_Active[MISSION_MAX_ENEMIES] )  )
             {
-               
+
                 // You haven't killed all enemies yet, don't spawn enemies / anything else until nexthink
                 if (this.nextThink > levelTime)
                 {
@@ -424,7 +433,7 @@ class cWaveController
         {
             if (@G_GetClient(i) != null)
             {
-                if ( (G_GetClient(i).getEnt().team == TEAM_ALPHA) ) 
+                if ( (G_GetClient(i).getEnt().team == TEAM_ALPHA) )
                 {
 
                     if ( deadOnly ) // if set, only respawn those ghosting (dead)
@@ -503,7 +512,7 @@ class cWaveController
         }
     }
 
-    void Alert(const String &in message) // todo: parameter to set diff types of alerts
+    void Alert(String message) // todo: parameter to set diff types of alerts
     {
         int i;
 
@@ -522,7 +531,7 @@ class cWaveController
         int selectSmall = int(brandom(0,2.999f)); // do this up here, can't do it during case
         int selectMed = int(brandom(0,2.999f));
         int selectPig = int(brandom(0,2.999f));
-		
+
         int enemyIndex;
         Vec3 chosenSpawn = this.ChooseSpawn();
 
@@ -612,6 +621,8 @@ class cWaveController
                 enemyIndex = shield_spawn( chosenSpawn ); break;
             case EN_WIZARD:
                 enemyIndex = wizard_spawn( chosenSpawn ); break;
+			case EN_WALKER_QUICK:
+                enemyIndex = walker_quick_spawn( chosenSpawn ); break;
             default: break;
         }
 
@@ -621,18 +632,6 @@ class cWaveController
         }
         else
         {
-            // see if it's at doom point first :: Taken out atm because I don't like it. I like having to fight enemies at a doom point, and now they won't
-            // spawn if you're too close anywxannode.com ay.
-            /*
-            chosenSpawn.z+=64;// move up to where control point is
-            if ( chosenSpawn == ARC_ControlPoint.pointEnt.origin)
-            {
-                // G_Print("Spawned at DoomPoint: Respawn\n");
-                gtEnemies[enemyIndex].enemy_respawn();
-                return;
-            }
-            */
-
             cEnemy @eC;
             @eC = @gtEnemies[enemyIndex];
 
@@ -646,18 +645,21 @@ class cWaveController
                     // Limited enemies: this.enemyCountRemaining-=1;
                 }
 
-
-
                 // change stats based on difficulty
                 eC.damage = int(eC.damage*float(arc_difficulty.get_integer()/100.0f));
                 //eC.enemyEnt.health = eC.enemyEnt.health*float(arc_difficulty.get_integer()/100.0f);
+
+				// change stats based on wave mods
+				eC.damage = int(eC.damage*waveDamageMod);
+				eC.speed = int(eC.speed*waveSpeedMod);
+				eC.enemyEnt.health = int(eC.enemyEnt.health*waveHealthMod);
 
                 eC.enemyEnt.team = TEAM_BETA; // todo: this crashed. no enemyEnt
             }
             else // for some reason it got to this point without having an enemy spawned which should be impossible
             {
                 match.launchState( MATCH_STATE_POSTMATCH );
-                this.Alert("^1Gametype Encountered Error: Tell Xanthus!");
+                this.Alert("^1Gametype Encountered Error: Tell xanthus1@gmail.com!");
                 G_Print("enemyIndex: "+enemyIndex+"\nEnemyType: "+eC.type+"\n");
             }
         }

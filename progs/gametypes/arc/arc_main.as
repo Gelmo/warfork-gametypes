@@ -1,6 +1,6 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
 int prcYesIcon;
 int prcShockIcon;
@@ -40,13 +40,13 @@ void ARCADE_SetVoicecommQuickMenu( Client @client )
 {
 	String menuStr = '';
 
-	menuStr += 
-		'"--- Arcade Menu ---" "" ' + 
-		'"Weapon Shop" "weapshop" ' + 
-		'"Armor Shop" "weapshop" ' + 
-		'"Legendary Weapon Shop" "legendweapshop" ' + 
-		'"Ability Shop" "abilityshop1" ' + 
-		'"Upgrade Shop" "upgradeshop" ' + 
+	menuStr +=
+		'"--- Arcade Menu ---" "" ' +
+		'"Weapon Shop" "weapshop" ' +
+		'"Armor Shop" "weapshop" ' +
+		'"Legendary Weapon Shop" "legendweapshop" ' +
+		'"Ability Shop" "abilityshop1" ' +
+		'"Upgrade Shop" "upgradeshop" ' +
 		'"Help" "helpmenu"';
 
 	GENERIC_SetQuickMenu( @client, menuStr );
@@ -123,7 +123,7 @@ void ARC_LoadConfig(String configName)
 		WaveController.Mission.insertLast(POOL_MED);
 		WaveController.Mission.insertLast(5); // number of POOL_MED to spawn
 		WaveController.Mission.insertLast(POOL_EASY);
-        WaveController.Mission.insertLast(999); // number of POOL_EASY to spawn ( this can be anything, limited by goal. )		
+        WaveController.Mission.insertLast(999); // number of POOL_EASY to spawn ( this can be anything, limited by goal. )
         WaveController.Mission.insertLast(MISSION_END);
         return;
     }
@@ -149,6 +149,7 @@ void ARC_LoadConfig(String configName)
             if ( value == "chest" ) { WaveController.Mission.insertLast(EN_CHEST); }
             if ( value == "shield" ) { WaveController.Mission.insertLast(EN_SHIELD); }
             if ( value == "wizard" ) { WaveController.Mission.insertLast(EN_WIZARD); }
+			if ( value == "walker_quick" ) { WaveController.Mission.insertLast(EN_WALKER_QUICK); }
 
             if ( value == "wave_end" ) { WaveController.Mission.insertLast(WAVE_END); }
 
@@ -182,7 +183,7 @@ void GT_UpdateScore()
     }
 }
 
-bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
+bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
 {
     // for adding custom spawns
     if ( cmdString == "addspawn")
@@ -223,7 +224,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
                 randWeap++;
             }
         }
-		gtPlayers[client.get_playerNum()].gold += 20; 
+		gtPlayers[client.get_playerNum()].gold += 20;
 
 
         //client.getEnt().dropItem( POWERUP_SHELL);
@@ -305,7 +306,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
     else if ( cmdString == "callvotevalidate" )
     {
         String votename = argsString.getToken( 0 );
-		
+
         if (votename == "arc_portal")
         {
             int arg = argsString.getToken( 1 ).toInt();
@@ -388,7 +389,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
                 return false;
             }
         }
-		
+
     }
     else if ( cmdString == "callvotepassed" )
     {
@@ -404,7 +405,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
             match.launchState( MATCH_STATE_POSTMATCH );
             return true;
         }
-		
+
         if ( votename == "arc_portal" )
         {
             int arg = argsString.getToken( 1 ).toInt();
@@ -469,7 +470,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
 			+"LaserGun:"+PRICE_ARRAY[WEAP_NORMAL+WEAP_LASERGUN]+" \"buy "+(WEAP_NORMAL+WEAP_LASERGUN)+" \" "
 			+"Electrobolt:"+PRICE_ARRAY[WEAP_NORMAL+WEAP_ELECTROBOLT]+" \"buy "+(WEAP_NORMAL+WEAP_ELECTROBOLT)+" \" "
 			+"Back \"gametypemenu\" ");
-			
+
     }
 	else if (cmdString == "armorshop")
     {
@@ -491,7 +492,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
     }
     else if (cmdString == "abilityshop1")
     {
-        client.execGameCommand( "mecu \"Ability_Shop (Max:2) | Gold:"+gtPlayers[client.get_playerNum()].gold+" \" " 
+        client.execGameCommand( "mecu \"Ability_Shop (Max:2) | Gold:"+gtPlayers[client.get_playerNum()].gold+" \" "
 		+"Weapon_Smith:"+PRICE_ARRAY[ABILITY_SMITH]+" \"buy "+ABILITY_SMITH+" \" "
 		+"Shield:"+PRICE_ARRAY[ABILITY_SHIELD]+" \"buy "+ABILITY_SHIELD+" \" "
 		+"Double_Jump:"+PRICE_ARRAY[ABILITY_DOUBLEJ]+" \"buy "+ABILITY_DOUBLEJ+" \" "
@@ -588,7 +589,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
 		// cannot buy during countdown before game starts
 		if(match.getState() == MATCH_STATE_COUNTDOWN)
 		{
-			return false; 
+			return false;
 		}
         String purchase;
         String explain;
@@ -676,7 +677,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
 			client.inventoryGiveItem( weap,1);
 			client.inventoryGiveItem( weap,1);
         }
-		
+
         // upgrades
         if ( (argsString.getToken(0).toInt() > 40) && (argsString.getToken(0).toInt() <50) )
         {
@@ -695,7 +696,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
 
             gtPlayers[client.get_playerNum()].upgrade = argsString.getToken(0).toInt();
         }
-		
+
 		// legendary weapons
 		if ( (argsString.getToken(0).toInt() > 60) && (argsString.getToken(0).toInt()<70) )
         {
@@ -705,7 +706,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
             Entity @legWeap = Legendary_Spawn(@legItem, weap );
 			legWeap.delay=0; // instant pickup on legendary object
 			legItem.freeEntity(); // free weapon object
-			
+
 			purchase = "Legendary weapon";
 		}
 
@@ -713,7 +714,7 @@ bool GT_Command( Client @client, const String &in cmdString, const String &in ar
         client.printMessage(""+explain+"\n");
 
         gtPlayers[client.get_playerNum()].gold -= PRICE_ARRAY[argsString.getToken(0).toInt()];
-		
+
 		GT_Command( @client, "gametypemenu", "", 0); // re-open the gametype menu
     }
     else if ( cmdString == "helpmenu")
@@ -782,7 +783,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 		int playerID = ( ent.isGhosting() && ( match.getState() == MATCH_STATE_PLAYTIME ) ) ? -( ent.playerNum + 1 ) : ent.playerNum;
 
-        entry = "&p " + playerID + " " + playerID + " " + ent.client.clanName + " " + ent.client.stats.score + " "
+        entry = "&p " + playerID + " " + ent.client.clanName + " " + ent.client.stats.score + " "
                 +gtPlayers[ent.client.get_playerNum()].gold+ " " + ent.client.ping
                 + " " + carrierIcon + " " + readyIcon + " ";
 
@@ -796,9 +797,9 @@ String @GT_ScoreboardMessage( uint maxlen )
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
 // Warning: client can be null
-void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
+void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
 {
-	
+
     if ( score_event == "dmg" )
     {
         int targetNum = args.getToken( 0 ).toInt(); // target entNum
@@ -950,9 +951,9 @@ void GT_ScoreEvent( Client @client, const String &in score_event, const String &
 // being moved to ghost state, be placed in respawn queue, being spawned from spawn queue, etc
 void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 {
+	cARCPlayer @player = @gtPlayers[ent.client.get_playerNum()];
     if ( new_team == TEAM_SPECTATOR )
     {
-        cARCPlayer @player = @gtPlayers[ent.client.get_playerNum()];
         if ( player.legendary != 0)
         {
             Entity @legItem;
@@ -966,9 +967,10 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
 
         player.reset(); //lose everything when you spec / somebody connects to server
     }
-    if (new_team == TEAM_PLAYERS)  // force to alpha team 
+
+    if (new_team == TEAM_PLAYERS)  // force to alpha team
     {
-        ent.team = TEAM_ALPHA; // debug, was alpha
+        ent.team = TEAM_ALPHA;
     }
 
     if ( ent.isGhosting() )
@@ -995,7 +997,7 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
         {
 			// 25 gold during warmup
 			gtPlayers[ent.client.get_playerNum()].gold=25;
-			
+
             ent.client.inventoryGiveItem( ARMOR_YA );
 			ent.client.inventoryGiveItem( ARMOR_YA );
 
@@ -1029,9 +1031,9 @@ void GT_PlayerRespawn( Entity @ent, int old_team, int new_team )
     }
 
 	ent.client.selectWeapon( -1 ); // auto-select best weapon in the inventory
-	
+
 	ARCADE_SetVoicecommQuickMenu( ent.client ); // set quickmenu for shops
-	
+
     // add a teleportation effect
     ent.respawnEffect();
 }
@@ -1237,7 +1239,7 @@ void GT_SpawnGametype()
 	for(int i=WEAP_LEGENDARY;i<WEAP_LEGENDARY+10;i++){
 		PRICE_ARRAY[i]=10;
 	}
-	
+
     if ( !G_FileExists( "configs/server/gametypes/arc_map/" + mapName.get_string() + ".cfg" ) )
     {
         WaveController.FindSpawns("info_player_deathmatch"); // finds possible spawns
@@ -1341,14 +1343,14 @@ void GT_InitGametype()
 		gametype.setTeamSpawnsystem( team, SPAWNSYSTEM_INSTANT, 0, 0, false );
 
     // define the scoreboard layout
-    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 52 %i 52 %l 48 %p 18 %p 18" );
-    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Gold Ping C R" );
+    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18 %p 18" );
+    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Gold Ping C R" );
 
     // precache images that can be used by the scoreboard
     prcYesIcon = G_ImageIndex( "gfx/hud/icons/vsay/yes" );
     prcShockIcon = G_ImageIndex( "gfx/hud/icons/powerup/quad" );
     prcShellIcon = G_ImageIndex( "gfx/hud/icons/powerup/warshell" );
-	
+
 
     // add commands
     G_RegisterCommand( "drop" );
@@ -1381,6 +1383,6 @@ void GT_InitGametype()
 
 	// make assets pure
 	G_ModelIndex("gfx/en/bat.tga",true);
-	
+
     G_Print( "Gametype '" + gametype.title + "' initialized\n" );
 }

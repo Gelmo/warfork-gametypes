@@ -25,6 +25,7 @@ arc/enemies/en_sniper.as;
 arc/enemies/en_chest.as;
 arc/enemies/en_shield.as;
 arc/enemies/en_wizard.as;
+arc/enemies/en_walker_quick.as;
 
 legacy/quake1.as;
 

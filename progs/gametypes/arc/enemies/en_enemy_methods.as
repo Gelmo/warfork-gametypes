@@ -1,6 +1,6 @@
 /*
 Arcade Gametype for Warsow / Warfork
-Xanthus 2019
+By Xanthus (originally made ~2014 or so)
 */
 
 // Enemy for the enemy gametype
@@ -16,7 +16,7 @@ const int POOL_EASY = 101;
 const int POOL_MED = 102;
 const int POOL_HARD = 103;
 
-const int ITEM_IGNORE_MAX = 524288; // 0x00080000
+const int ITEM_IGNORE_MAX = 524288; // 0x00080000 . used for hp bubbles/ megahealth to go above 100
 
 const int EN_BAT = 0;
 const int EN_WALKER = 1;
@@ -28,6 +28,7 @@ const int EN_SNIPER = 6;
 const int EN_CHEST = 7;
 const int EN_SHIELD = 8;
 const int EN_WIZARD = 9;
+const int EN_WALKER_QUICK = 10;
 
 class cLoot
 {
@@ -118,17 +119,17 @@ class cLoot
         if (drop != POWERUP_QUAD) {quad+=1;}
         if (drop != choose_legend) {legend+=1;} else {drop = 0;} // legendaries are more rare, and are manually dropped above
 
-	
+
         if (drop != 0)
         {
-            if ( (drop == ARMOR_SHARD) || (drop == HEALTH_SMALL) ) 
+            if ( (drop == ARMOR_SHARD) || (drop == HEALTH_SMALL) )
             {
 				// drop extra shards/bubbles
 				// ignore max for health / shards
                 DropItem(@player, source, drop).spawnFlags |= ITEM_IGNORE_MAX;
                 DropItem(@player, source, drop).spawnFlags |= ITEM_IGNORE_MAX;
             }
-			
+
             DropItem(@player, source, drop).spawnFlags |= ITEM_IGNORE_MAX;
         }
     }

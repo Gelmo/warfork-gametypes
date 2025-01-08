@@ -183,7 +183,7 @@ void GT_UpdateScore()
     }
 }
 
-bool GT_Command( Client @client, const String &cmdString, const String &argsString, int argc )
+bool GT_Command( Client @client, const String &in cmdString, const String &in argsString, int argc )
 {
     // for adding custom spawns
     if ( cmdString == "addspawn")
@@ -783,7 +783,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 
 		int playerID = ( ent.isGhosting() && ( match.getState() == MATCH_STATE_PLAYTIME ) ) ? -( ent.playerNum + 1 ) : ent.playerNum;
 
-        entry = "&p " + playerID + " " + ent.client.clanName + " " + ent.client.stats.score + " "
+        entry = "&p " + playerID + " " + playerID + " " + ent.client.clanName + " " + ent.client.stats.score + " "
                 +gtPlayers[ent.client.get_playerNum()].gold+ " " + ent.client.ping
                 + " " + carrierIcon + " " + readyIcon + " ";
 
@@ -797,7 +797,7 @@ String @GT_ScoreboardMessage( uint maxlen )
 // Some game actions trigger score events. These are events not related to killing
 // oponents, like capturing a flag
 // Warning: client can be null
-void GT_ScoreEvent( Client @client, const String &score_event, const String &args )
+void GT_ScoreEvent( Client @client, const String &in score_event, const String &in args )
 {
 
     if ( score_event == "dmg" )
@@ -1343,8 +1343,8 @@ void GT_InitGametype()
 		gametype.setTeamSpawnsystem( team, SPAWNSYSTEM_INSTANT, 0, 0, false );
 
     // define the scoreboard layout
-    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%n 112 %s 52 %i 52 %i 52 %l 48 %p 18 %p 18" );
-    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "Name Clan Score Gold Ping C R" );
+    G_ConfigString( CS_SCB_PLAYERTAB_LAYOUT, "%a l1 %n 112 %s 52 %i 52 %i 52 %l 48 %p 18 %p 18" );
+    G_ConfigString( CS_SCB_PLAYERTAB_TITLES, "AVATAR Name Clan Score Gold Ping C R" );
 
     // precache images that can be used by the scoreboard
     prcYesIcon = G_ImageIndex( "gfx/hud/icons/vsay/yes" );

@@ -512,7 +512,7 @@ class cWaveController
         }
     }
 
-    void Alert(String message) // todo: parameter to set diff types of alerts
+    void Alert(const String &in message) // todo: parameter to set diff types of alerts
     {
         int i;
 
